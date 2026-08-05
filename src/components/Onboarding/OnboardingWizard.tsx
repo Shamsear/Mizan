@@ -52,13 +52,14 @@ function WelcomeIllustration() {
 function IncomeIllustration() {
   return (
     <svg viewBox="0 0 120 80" className={styles.illustration} aria-hidden="true">
-      <rect x="20" y="55" width="14" height="20" rx="2" fill="var(--ok)" opacity="0.6" />
-      <rect x="40" y="42" width="14" height="33" rx="2" fill="var(--ok)" opacity="0.75" />
-      <rect x="60" y="30" width="14" height="45" rx="2" fill="var(--ok)" opacity="0.85" />
-      <rect x="80" y="18" width="14" height="57" rx="2" fill="var(--ok)" />
-      <path d="M20 58 L40 45 L60 33 L80 21" stroke="var(--ok)" strokeWidth="1.5" fill="none" strokeDasharray="3 2" />
-      <circle cx="80" cy="21" r="3" fill="var(--ok)" />
-      <ellipse cx="70" cy="75" rx="40" ry="3" fill="var(--panel-line)" />
+      {/* Outer ambient glow */}
+      <circle cx="60" cy="40" r="28" fill="var(--ok)" opacity="0.06" />
+      {/* Coin base */}
+      <circle cx="60" cy="40" r="20" stroke="var(--ok)" strokeWidth="1.75" fill="var(--panel-2)" />
+      {/* Mechanical inner ring */}
+      <circle cx="60" cy="40" r="14" stroke="var(--ok)" strokeWidth="1" strokeDasharray="2 2" fill="none" opacity="0.4" />
+      {/* Unified upward trending arrow */}
+      <path d="M52 48 L68 32 M58 32 H68 V42" stroke="var(--ok)" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
