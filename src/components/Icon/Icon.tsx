@@ -18,7 +18,7 @@ export type IconName =
   | "trash-2" | "alert-triangle" | "check-circle" | "plus" | "plus-circle"
   | "x" | "chevron-left" | "chevron-right" | "chevron-down" | "chevron-up"
   | "search" | "info" | "sparkles" | "arrow-up" | "arrow-down" | "tag" | "pen"
-  | "heart" | "users" | "bell" | "copy" | "check" | "star" | "gift";
+  | "heart" | "users" | "bell" | "copy" | "check" | "star" | "gift" | "minus";
 
 interface IconProps {
   name: IconName | string;
@@ -462,6 +462,12 @@ export function Icon({
           <line x1="12" x2="12" y1="22" y2="7" />
           <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z" />
           <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z" />
+        </svg>
+      );
+    case "minus":
+      return (
+        <svg {...baseProps}>
+          <line x1="5" x2="19" y1="12" y2="12" />
         </svg>
       );
     default:

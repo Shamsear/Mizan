@@ -77,8 +77,8 @@ ol {
   width: 100%;
   max-width: var(--maxw);
   margin-inline: auto;
-  /* Bottom padding = nav bar height + safe area + extra breathing room */
-  padding: var(--sp-4) var(--sp-4)
+  /* Top padding includes safe area to prevent notch/time overlap on mobile */
+  padding: calc(var(--sp-4) + env(safe-area-inset-top, 0px)) var(--sp-4)
     calc(var(--nav-h) + env(safe-area-inset-bottom) + var(--sp-5));
   min-height: 100dvh;
 }

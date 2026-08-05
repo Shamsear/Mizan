@@ -72,8 +72,7 @@
 .backBtn,
 .closeBtn {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  top: calc(max(1.5rem, env(safe-area-inset-top, 1rem)) + 8px);
   display: flex;
   align-items: center;
   justify-content: center;
