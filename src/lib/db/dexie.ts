@@ -152,7 +152,7 @@ export interface NotificationItem extends SyncMeta {
    Dexie Database
    ─────────────────────────────────────────────────────────────── */
 
-export class RunwayDB extends Dexie {
+export class MizanDB extends Dexie {
   transactions!: EntityTable<Transaction, "id">;
   categories!: EntityTable<Category, "id">;
   recurringRules!: EntityTable<RecurringRule, "id">;
@@ -165,7 +165,7 @@ export class RunwayDB extends Dexie {
   notifications!: EntityTable<NotificationItem, "id">;
 
   constructor() {
-    super("RunwayDB");
+    super("MizanDB");
 
     // Version 3: Added local notifications inbox
     this.version(3).stores({
@@ -212,4 +212,4 @@ export class RunwayDB extends Dexie {
   }
 }
 
-export const db = new RunwayDB();
+export const db = new MizanDB();

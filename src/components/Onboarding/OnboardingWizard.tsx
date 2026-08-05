@@ -297,7 +297,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
               <Icon name="chevron-left" size={20} />
             </button>
           )}
-          <div className={styles.wordmark}>▸ RUNWAY</div>
+          <div className={styles.wordmark}>▸ MIZAN</div>
           {step > 1 && (
             <button className={styles.closeBtn} onClick={onComplete} aria-label="Skip setup">
               <Icon name="x" size={18} />
@@ -319,7 +319,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
         {step === 1 && (
           <div className={styles.stepContent}>
             <WelcomeIllustration />
-            <h1 className={styles.headline}>Know your<br />runway.</h1>
+            <h1 className={styles.headline}>Know your<br />balance.</h1>
             <p className={styles.body}>
               Tell us about your income and bills — we'll calculate exactly how much is safe to spend each day.
             </p>
@@ -448,7 +448,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
           <div className={styles.stepContent}>
             <GoalIllustration />
             <h2 className={styles.headline}>Any savings<br />goals?</h2>
-            <p className={styles.body}>We'll factor daily contributions into your runway</p>
+            <p className={styles.body}>We'll factor daily contributions into your target balance.</p>
 
             <div className={styles.field}>
               <label className={styles.fieldLabel}>Goal name</label>
