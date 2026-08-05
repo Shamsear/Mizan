@@ -14,8 +14,7 @@ declare const self: ServiceWorkerGlobalScope & {
 installSerwist({
   precacheEntries: self.__SW_MANIFEST,
   skipWaiting: true,
-  clientsClaim: true,
-  navigationPreload: true,
+  clientsClaim: false,
   runtimeCaching: defaultCache,
   // Disable telemetry
   disableDevLogs: true,
