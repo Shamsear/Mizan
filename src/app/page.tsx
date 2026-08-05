@@ -29,7 +29,7 @@ import Link from "next/link";
 import styles from "./page.module.css";
 
 export default function Home() {
-  const { user } = useUser();
+  const { user, isLoaded } = useUser();
   const templates = useQuickAddTemplates();
   const transactions = useTransactions();
   const recurringRules = useRecurringRules();
@@ -94,6 +94,15 @@ export default function Home() {
   );
 
   const currency = useCurrency();
+
+  if (!isLoaded || recurringRules === undefined) {
+    return (
+      <div className={styles.loadingSplash}>
+        <div className={styles.splashBrand}>▸ MIZAN</div>
+        <div className={styles.splashSpinner} />
+      </div>
+    );
+  }
 
   return (
     <>

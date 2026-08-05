@@ -191,3 +191,43 @@
   font-size: var(--step--2);
   color: var(--ink-faint);
 }
+
+/* ── Loading Splash Screen ── */
+.loadingSplash {
+  position: fixed;
+  inset: 0;
+  background: var(--canvas);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+}
+
+.splashBrand {
+  font-family: var(--font-board);
+  font-size: var(--step-3);
+  color: var(--electric);
+  letter-spacing: 0.1em;
+  text-shadow: var(--shadow-glow);
+  margin-bottom: var(--sp-4);
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.splashSpinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--panel-line);
+  border-top-color: var(--electric);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
