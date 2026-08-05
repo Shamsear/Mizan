@@ -18,7 +18,7 @@ export type IconName =
   | "trash-2" | "alert-triangle" | "check-circle" | "plus" | "plus-circle"
   | "x" | "chevron-left" | "chevron-right" | "chevron-down" | "chevron-up"
   | "search" | "info" | "sparkles" | "arrow-up" | "arrow-down" | "tag" | "pen"
-  | "heart" | "users" | "bell";
+  | "heart" | "users" | "bell" | "copy" | "check";
 
 interface IconProps {
   name: IconName | string;
@@ -433,6 +433,19 @@ export function Icon({
         <svg {...baseProps}>
           <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
           <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+        </svg>
+      );
+    case "copy":
+      return (
+        <svg {...baseProps}>
+          <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
+          <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+        </svg>
+      );
+    case "check":
+      return (
+        <svg {...baseProps}>
+          <polyline points="20 6 9 17 4 12" />
         </svg>
       );
     default:

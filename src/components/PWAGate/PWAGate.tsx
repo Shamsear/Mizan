@@ -15,6 +15,7 @@ export function PWAGate({ children }: PWAGateProps) {
   const [isIOS, setIsIOS] = useState(false);
   const [isSafari, setIsSafari] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [isCopied, setIsCopied] = useState(false);
 
   useEffect(() => {
     // 1. Detect standalone mode (already installed & opened from home screen)
@@ -74,6 +75,10 @@ export function PWAGate({ children }: PWAGateProps) {
     if (typeof window !== "undefined") {
       navigator.clipboard.writeText(window.location.href);
       toast.success("Link copied! Open in Safari.");
+      setIsCopied(true);
+      setTimeout(() => {
+        setIsCopied(false);
+      }, 2000);
     }
   }
 
@@ -145,9 +150,12 @@ export function PWAGate({ children }: PWAGateProps) {
               <p className={styles.warningText}>
                 On iOS, Web App installation is only supported when opened directly inside the native Apple **Safari** browser.
               </p>
-              <button className={styles.copyBtn} onClick={handleCopyLink}>
-                <Icon name="copy" size={16} />
-                Copy Website Link
+              <button 
+                className={`${styles.copyBtn} ${isCopied ? styles.copied : ""}`} 
+                onClick={handleCopyLink}
+              >
+                <Icon name={isCopied ? "check" : "copy"} size={16} />
+                {isCopied ? "Copied" : "Copy Website Link"}
               </button>
             </div>
           )
