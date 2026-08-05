@@ -1,0 +1,9 @@
+{
+  "id": "2",
+  "subject": "Phase 1 — Local database (Dexie) + repository",
+  "description": "COMPLETED: Full Dexie schema with 9 tables (transactions, categories, recurringRules, routineItems, goals, savingsPlans, quickAddTemplates, accounts, settings) all with sync metadata. Seed function creates default categories, settings, and starter quick-add templates. Repository layer with CRUD operations scoped by userId. useLiveQuery hooks for reactive reads. DBInit component auto-seeds on first launch. Home page now reads real templates from Dexie and creates transactions on quick-add tap.",
+  "activeForm": "Database layer complete",
+  "status": "completed",
+  "blocks": [],
+  "blockedBy": []
+}

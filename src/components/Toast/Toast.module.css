@@ -1,0 +1,99 @@
+.region {
+  position: fixed;
+  bottom: calc(var(--nav-h) + env(safe-area-inset-bottom) + 0.75rem);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9000;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: min(calc(100vw - 2rem), 380px);
+  pointer-events: none;
+}
+
+.toast {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.75rem 0.875rem;
+  border-radius: var(--r-lg);
+  border: 1px solid var(--panel-line);
+  background: var(--panel-2);
+  box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.5);
+  pointer-events: all;
+  animation: toastIn 0.3s var(--ease-out) both;
+  overflow: hidden;
+}
+
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.message {
+  flex: 1;
+  font-size: var(--step--1);
+  font-family: var(--font-body);
+  color: var(--ink);
+  line-height: 1.4;
+}
+
+.close {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-radius: var(--r-sm);
+  color: var(--ink-mute);
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+
+.close:hover {
+  color: var(--ink);
+  background: var(--surface-hover);
+}
+
+/* Drain bar — shrinks from 100% to 0 over 3.5s */
+.drain {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  border-radius: 0 0 var(--r-lg) var(--r-lg);
+  animation: drain 3.5s linear forwards;
+}
+
+@keyframes drain {
+  from { width: 100%; }
+  to   { width: 0%; }
+}
+
+/* ── Variants ────────────────────────────────────────────────────────────── */
+.success .icon { color: var(--ok); }
+.success .drain { background: var(--ok); }
+
+.error .icon { color: var(--over); }
+.error .drain { background: var(--over); }
+
+.info .icon { color: var(--electric); }
+.info .drain { background: var(--electric); }

@@ -1,0 +1,9 @@
+{
+  "id": "3",
+  "subject": "Phase 1 — Full Add form (non-quick entries)",
+  "description": "COMPLETED: Full transaction entry form with react-hook-form + Zod validation. FAB positioned bottom-right opens modal sheet with amount input (parses to cents), income/expense toggle, category picker (filters by type), date picker, optional note. Form writes to Dexie. Quick-add now uses correct categoryId (fixed bug from Task 2). Mobile-first responsive design with slide-up animation. Form validates and shows errors inline.",
+  "activeForm": "Transaction form complete",
+  "status": "completed",
+  "blocks": [],
+  "blockedBy": []
+}

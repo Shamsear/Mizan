@@ -1,0 +1,92 @@
+.card {
+  position: relative;
+  padding: var(--sp-5) var(--sp-4) var(--sp-6);
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-panel);
+  overflow: hidden;
+}
+
+/* subtle top scanline like a lit board header */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--electric) 60%, transparent),
+    transparent
+  );
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: var(--sp-4);
+}
+
+.date {
+  font-family: var(--font-board);
+  font-size: var(--step--1);
+  letter-spacing: 0.14em;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-family: var(--font-board);
+  font-size: var(--step--1);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ok);
+  box-shadow: 0 0 8px var(--ok);
+}
+
+.label {
+  display: block;
+  margin-bottom: var(--sp-3);
+  font-size: var(--step-0);
+  color: var(--ink-mute);
+}
+
+.flapRow {
+  display: flex;
+  justify-content: center;
+  padding: var(--sp-2) 0 var(--sp-4);
+}
+
+.hint {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--step--1);
+  color: var(--ink-mute);
+}
+
+.hintAhead {
+  color: var(--ok);
+}
+.hintBehind {
+  color: var(--over);
+}
+
+.rule {
+  height: 1px;
+  margin: var(--sp-3) 0;
+  background: var(--panel-line);
+}

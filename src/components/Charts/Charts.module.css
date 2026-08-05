@@ -1,0 +1,158 @@
+.chartContainer {
+  padding: var(--sp-5) var(--sp-4);
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-panel);
+  margin-bottom: var(--sp-4);
+}
+
+.chartHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: var(--sp-4);
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+.chartTitle {
+  font-family: var(--font-board);
+  font-size: var(--step-1);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+}
+
+.chartTotal {
+  font-family: var(--font-board);
+  font-size: var(--step-0);
+  color: var(--ink-dim);
+  letter-spacing: 0.05em;
+}
+
+/* Empty states */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-6) var(--sp-4);
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--r-lg);
+  margin-bottom: var(--sp-4);
+  min-height: 300px;
+}
+
+.emptyText {
+  font-size: var(--step-1);
+  color: var(--ink-dim);
+  margin-bottom: var(--sp-2);
+}
+
+.emptyHint {
+  font-size: var(--step--1);
+  color: var(--ink-mute);
+}
+
+/* Tooltip */
+.tooltip {
+  padding: var(--sp-3);
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-float);
+  font-family: var(--font-board);
+}
+
+.tooltipHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-2);
+  padding-bottom: var(--sp-2);
+  border-bottom: 1px solid var(--panel-line);
+}
+
+.tooltipIcon {
+  font-size: var(--step-0);
+}
+
+.tooltipName {
+  font-size: var(--step-0);
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.tooltipAmount {
+  font-size: var(--step-1);
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: var(--sp-1);
+}
+
+.tooltipPercent {
+  font-size: var(--step--1);
+  color: var(--ink-dim);
+}
+
+.tooltipRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-1);
+}
+
+.tooltipLabel {
+  font-size: var(--step--1);
+  color: var(--ink-dim);
+}
+
+.tooltipValue {
+  font-size: var(--step-0);
+  font-weight: 500;
+  color: var(--ink);
+}
+
+/* Legend */
+.legend {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  margin-top: var(--sp-4);
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--panel-line);
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--step--1);
+}
+
+.legendDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legendIcon {
+  font-size: var(--step-0);
+  flex-shrink: 0;
+}
+
+.legendName {
+  flex: 1;
+  color: var(--ink);
+}
+
+.legendAmount {
+  font-family: var(--font-board);
+  font-weight: 500;
+  color: var(--ink-dim);
+  letter-spacing: 0.02em;
+}

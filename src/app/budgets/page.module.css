@@ -1,0 +1,364 @@
+.page {
+  padding-top: 0;
+}
+
+.header {
+  padding: 1.5rem 0 0.75rem;
+}
+
+.title {
+  font-family: var(--font-board);
+  font-size: var(--step-3);
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+}
+
+/* ── Overall row ─────────────────────────────────────────────────────── */
+.overallRow {
+  display: flex;
+  align-items: center;
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--r-lg);
+  padding: 0.875rem 1rem;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.overallMeta,
+.overallRight {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.overallMeta { flex: 1; }
+.overallRight { align-items: center; }
+
+.overallLabel {
+  font-size: var(--step--2);
+  font-family: var(--font-board);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-mute);
+}
+
+.overallBudget,
+.overallSpent {
+  font-family: var(--font-board);
+  font-size: var(--step-0);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.overallRemaining {
+  font-family: var(--font-board);
+  font-size: var(--step-0);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Content / sections ──────────────────────────────────────────────── */
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sectionTitle {
+  font-family: var(--font-board);
+  font-size: var(--step--2);
+  font-weight: 700;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* ── Budget card ─────────────────────────────────────────────────────── */
+.card {
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--r-xl);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.cardIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.cardMeta {
+  flex: 1;
+  min-width: 0;
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: var(--step-0);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.cardSubtitle {
+  margin: 0.15rem 0 0;
+  font-size: var(--step--2);
+  color: var(--ink-mute);
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--r-sm);
+  font-size: var(--step--2);
+  font-weight: 600;
+  font-family: var(--font-board);
+  flex-shrink: 0;
+}
+
+.onTrack {
+  background: rgba(87, 217, 163, 0.12);
+  color: var(--ok);
+}
+
+.over {
+  background: rgba(255, 107, 90, 0.12);
+  color: var(--over);
+}
+
+/* ── Progress ────────────────────────────────────────────────────────── */
+.progressSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.progressTrack {
+  position: relative;
+  height: 8px;
+  background: var(--panel-line);
+  border-radius: 4px;
+  overflow: visible;
+}
+
+.progressFill {
+  height: 100%;
+  width: var(--pct, 0%);
+  background: var(--electric);
+  border-radius: 4px;
+  animation: barGrow 0.6s var(--ease-out) 0.1s both;
+}
+
+.progressFill.progressOver {
+  background: var(--over);
+}
+
+@keyframes barGrow {
+  from { width: 0 !important; }
+  to   { width: var(--pct, 0%); }
+}
+
+.paceMarker {
+  position: absolute;
+  top: -3px;
+  width: 2px;
+  height: 14px;
+  background: var(--ink-mute);
+  border-radius: 1px;
+  transform: translateX(-50%);
+}
+
+.progressLegend {
+  display: flex;
+  gap: 1rem;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: var(--step--2);
+  color: var(--ink-mute);
+}
+
+.legendDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── Details ─────────────────────────────────────────────────────────── */
+.details {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  background: var(--panel-2);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--r-md);
+  padding: 0.75rem;
+}
+
+.detailItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.detailLabel {
+  font-size: var(--step--2);
+  font-family: var(--font-board);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-mute);
+}
+
+.detailValue {
+  font-family: var(--font-board);
+  font-size: var(--step-0);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+/* ── Card actions ────────────────────────────────────────────────────── */
+.cardActions {
+  display: flex;
+  gap: 0.5rem;
+  padding-top: 0.625rem;
+  border-top: 1px solid var(--panel-line);
+}
+
+.editBtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--panel-2);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--r-md);
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--ink-mute);
+  cursor: pointer;
+  transition: all 0.15s;
+  min-height: 36px;
+}
+
+.editBtn:hover {
+  color: var(--ink);
+  background: var(--surface-hover);
+}
+
+.removeBtn:hover {
+  color: var(--over);
+  background: rgba(255, 107, 90, 0.06);
+  border-color: rgba(255, 107, 90, 0.25);
+}
+
+/* ── Unbudgeted simple list ──────────────────────────────────────────── */
+.simpleList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.simpleCard {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.75rem 1rem;
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--r-lg);
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  transition: background 0.15s;
+  min-height: var(--tap);
+}
+
+.simpleCard:hover {
+  background: var(--surface-hover);
+}
+
+.simpleIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.simpleMeta {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.simpleName {
+  font-size: var(--step-0);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.simpleSpent {
+  font-size: var(--step--2);
+  color: var(--ink-mute);
+}
+
+/* ── Empty ───────────────────────────────────────────────────────────── */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.emptyText {
+  font-size: var(--step-1);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.emptyHint {
+  font-size: var(--step--1);
+  color: var(--ink-faint);
+}

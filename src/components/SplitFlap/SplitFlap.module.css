@@ -1,0 +1,89 @@
+.board {
+  display: inline-flex;
+  gap: 3px;
+  padding: 6px;
+  background: var(--flap-slot);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-panel);
+}
+
+/* A single character cell */
+.cell {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0.72em;
+  height: 1.28em;
+  padding: 0 0.06em;
+  font-family: var(--font-board);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: var(--amber);
+  background: linear-gradient(180deg, #20252e 0%, #171b22 49%, #10141a 51%, #0c1015 100%);
+  border-radius: var(--r-flap);
+  box-shadow: var(--shadow-flap);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* the hairline where the two flaps meet */
+.cell::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 50%;
+  height: 1px;
+  background: var(--flap-slot);
+  transform: translateY(-0.5px);
+  z-index: 5;
+}
+
+.char {
+  display: block;
+  transform: translateZ(0);
+}
+
+/* Non-digit glyphs (currency, comma) sit quieter and don't flip */
+.static {
+  color: var(--amber-dim);
+  min-width: 0.4em;
+}
+
+/* ---- Flip animation ---- */
+.flipper {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  backface-visibility: hidden;
+  animation: flapDown var(--flip-ms) var(--ease-flap);
+  transform-origin: 50% 50%;
+  z-index: 4;
+}
+
+@keyframes flapDown {
+  0% {
+    transform: rotateX(0deg);
+    filter: brightness(1);
+  }
+  50% {
+    transform: rotateX(-90deg);
+    filter: brightness(0.6);
+  }
+  50.01% {
+    transform: rotateX(90deg);
+    filter: brightness(0.6);
+  }
+  100% {
+    transform: rotateX(0deg);
+    filter: brightness(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flipper {
+    animation: none;
+  }
+}

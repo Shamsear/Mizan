@@ -1,0 +1,15 @@
+PWA Icons Required:
+- icon-192.png (192x192)
+- icon-512.png (512x512)
+- icon-192-maskable.png (192x192 with safe zone)
+- icon-512-maskable.png (512x512 with safe zone)
+- screenshot-mobile.png (390x844)
+- screenshot-desktop.png (1920x1080)
+
+Design direction: 
+- "▸" arrow mark as the icon (from the wordmark)
+- Dark background (#0a0a0f)
+- Electric teal accent (#2dd4e8)
+- Mechanical/aviation aesthetic
+
+Maskable icons need the content within the safe zone (center 80% circle).

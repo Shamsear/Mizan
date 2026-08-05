@@ -1,0 +1,9 @@
+{
+  "id": "1",
+  "subject": "Phase 0 — Scaffold Next.js + Clerk + PWA",
+  "description": "COMPLETED: Next.js 16 app with custom CSS, design tokens, SplitFlap component, money utils, SafeToSpendCard + QuickAdd. Clerk auth fully configured with sign-in/sign-up routes. Serwist PWA integrated: manifest.ts, service worker with push notification handlers, PWA registration component. Icons placeholders documented (need design). App is installable and offline-capable.",
+  "activeForm": "Scaffolding complete",
+  "status": "completed",
+  "blocks": [],
+  "blockedBy": []
+}

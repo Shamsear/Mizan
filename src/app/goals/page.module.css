@@ -1,0 +1,289 @@
+.page {
+  padding-top: 0;
+}
+
+.header {
+  padding: 1.5rem 0 0.75rem;
+}
+
+.title {
+  font-family: var(--font-board);
+  font-size: var(--step-3);
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.emptyText {
+  font-size: var(--step-1);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.emptyHint {
+  font-size: var(--step--1);
+  color: var(--ink-faint);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* ── Card ────────────────────────────────────────────────────────────── */
+.card {
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--r-xl);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.cardIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: rgba(245, 185, 66, 0.12);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.cardMeta {
+  flex: 1;
+  min-width: 0;
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: var(--step-1);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.cardSubtitle {
+  margin: 0.2rem 0 0;
+  font-size: var(--step--2);
+  color: var(--ink-mute);
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.daysLeft {
+  color: var(--amber);
+}
+
+.completeIcon {
+  flex-shrink: 0;
+}
+
+/* ── Progress ────────────────────────────────────────────────────────── */
+.progressSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.progressHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.progressAmount {
+  font-family: var(--font-board);
+  font-size: var(--step-2);
+  font-weight: 700;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.progressTarget {
+  font-size: var(--step--1);
+  color: var(--ink-mute);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Animated progress track */
+.progressTrack {
+  height: 8px;
+  background: var(--panel-line);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  width: var(--pct, 0%);
+  background: linear-gradient(90deg, var(--electric), var(--amber));
+  border-radius: 4px;
+  animation: barGrow 0.6s var(--ease-out) 0.1s both;
+}
+
+.progressFill.progressComplete {
+  background: var(--ok);
+}
+
+@keyframes barGrow {
+  from { width: 0 !important; }
+  to   { width: var(--pct, 0%); }
+}
+
+.progressFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.progressPct {
+  font-size: var(--step--2);
+  font-weight: 600;
+  color: var(--ink-mute);
+  font-family: var(--font-board);
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--r-sm);
+  font-size: var(--step--2);
+  font-weight: 600;
+  font-family: var(--font-board);
+}
+
+.onTrack {
+  background: rgba(87, 217, 163, 0.12);
+  color: var(--ok);
+}
+
+.behind {
+  background: rgba(245, 185, 66, 0.12);
+  color: var(--warn);
+}
+
+/* ── Contribution stats ──────────────────────────────────────────────── */
+.contributionGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  background: var(--panel-2);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--r-md);
+  padding: 0.875rem;
+}
+
+.contributionItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  align-items: center;
+}
+
+.contLabel {
+  font-size: var(--step--2);
+  font-family: var(--font-board);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-mute);
+}
+
+.contValue {
+  font-family: var(--font-board);
+  font-size: var(--step-0);
+  font-weight: 700;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Complete message ────────────────────────────────────────────────── */
+.completeMessage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem;
+  background: color-mix(in srgb, var(--electric) 10%, transparent);
+  border-radius: var(--r-md);
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--electric);
+}
+
+/* ── Actions ─────────────────────────────────────────────────────────── */
+.cardActions {
+  display: flex;
+  gap: 0.5rem;
+  padding-top: 0.875rem;
+  border-top: 1px solid var(--panel-line);
+}
+
+.actionBtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--panel-2);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--r-md);
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--ink-mute);
+  cursor: pointer;
+  transition: all 0.15s;
+  min-height: 36px;
+}
+
+.actionBtn:hover {
+  color: var(--ink);
+  background: var(--surface-hover);
+}
+
+.addBtn {
+  background: var(--electric);
+  color: var(--on-electric);
+  border-color: transparent;
+  flex: 2;
+}
+
+.addBtn:hover {
+  opacity: 0.9;
+}
+
+.deleteBtn {
+  flex: 0 0 44px;
+}
+
+.deleteBtn:hover {
+  color: var(--over);
+  background: rgba(255, 107, 90, 0.06);
+  border-color: rgba(255, 107, 90, 0.25);
+}

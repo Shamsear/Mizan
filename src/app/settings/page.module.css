@@ -1,0 +1,267 @@
+.page {
+  padding-top: 0;
+}
+
+.header {
+  padding: 1.5rem 0 1rem;
+}
+
+.title {
+  font-family: var(--font-board);
+  font-size: var(--step-3);
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+}
+
+/* ── Sections ─────────────────────────────────────────────────────────── */
+.section {
+  margin-bottom: 2rem;
+}
+
+.sectionTitle {
+  font-family: var(--font-board);
+  font-size: var(--step--2);
+  font-weight: 700;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.75rem;
+}
+
+/* ── Card ─────────────────────────────────────────────────────────────── */
+.card {
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+
+.divider {
+  height: 1px;
+  background: var(--panel-line);
+  margin: 0;
+}
+
+/* ── Rows ─────────────────────────────────────────────────────────────── */
+.cardRow,
+.linkRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  min-height: var(--tap);
+  width: 100%;
+  background: transparent;
+  border: none;
+  text-align: left;
+  cursor: default;
+  transition: background 0.15s;
+  text-decoration: none;
+  color: var(--ink);
+}
+
+.linkRow {
+  cursor: pointer;
+}
+
+.linkRow:hover,
+.linkRow:focus-visible {
+  background: var(--surface-hover);
+}
+
+.dangerRow:hover {
+  background: rgba(255, 107, 90, 0.06);
+}
+
+.rowIcon {
+  display: flex;
+  align-items: center;
+  color: var(--ink-mute);
+  flex-shrink: 0;
+}
+
+.rowLabel {
+  flex: 1;
+  font-size: var(--step-0);
+  color: var(--ink);
+}
+
+.rowValue {
+  font-size: var(--step-0);
+  color: var(--ink-mute);
+  font-family: var(--font-board);
+}
+
+/* ── Profile ──────────────────────────────────────────────────────────── */
+.profileRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.profileInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.profileName {
+  font-size: var(--step-0);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.profileEmail {
+  font-size: var(--step--1);
+  color: var(--ink-mute);
+}
+
+/* ── Select ───────────────────────────────────────────────────────────── */
+.select {
+  background: var(--panel-2);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--r-md);
+  padding: 0.375rem 0.75rem;
+  font-size: var(--step--1);
+  color: var(--ink);
+  cursor: pointer;
+  max-width: 180px;
+}
+
+.select:focus {
+  outline: 2px solid var(--electric);
+  outline-offset: 2px;
+  border-color: transparent;
+}
+
+/* ── Pill Toggle ──────────────────────────────────────────────────────── */
+.pillToggle {
+  display: flex;
+  gap: 0.25rem;
+  background: var(--panel-2);
+  padding: 0.25rem;
+  border-radius: var(--r-md);
+  border: 1px solid var(--panel-line);
+}
+
+.pill {
+  padding: 0.3rem 0.75rem;
+  border-radius: calc(var(--r-md) - 2px);
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--ink-mute);
+  cursor: pointer;
+  transition: all 0.15s;
+  background: transparent;
+  border: none;
+}
+
+.pillActive {
+  background: var(--electric);
+  color: var(--on-electric);
+}
+
+/* ── Stepper ────────────────────────────────────────────────────────── */
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--panel-2);
+  border: 1px solid var(--panel-line);
+  padding: 0.2rem;
+  border-radius: var(--r-md);
+}
+
+.stepperBtn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  color: var(--ink);
+  font-weight: bold;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.stepperBtn:hover:not(:disabled) {
+  background: var(--surface-hover);
+}
+
+.stepperBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.stepperVal {
+  font-family: var(--font-board);
+  font-size: var(--step--1);
+  font-weight: bold;
+  color: var(--ink);
+  min-width: 50px;
+  text-align: center;
+}
+
+/* ── Toggle Switch ───────────────────────────────────────────────────── */
+.toggleCheckbox {
+  appearance: none;
+  width: 44px;
+  height: 24px;
+  background: var(--panel-line);
+  border-radius: 12px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+  outline: none;
+}
+
+.toggleCheckbox:checked {
+  background: var(--electric);
+}
+
+.toggleCheckbox::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--ink);
+  transition: transform 0.2s;
+}
+
+.toggleCheckbox:checked::before {
+  transform: translateX(20px);
+  background: var(--on-electric);
+}
+
+/* ── Notification Button ──────────────────────────────────────────────── */
+.permissionBtn {
+  background: var(--panel-2);
+  border: 1px solid var(--panel-line);
+  padding: 0.375rem 0.875rem;
+  border-radius: var(--r-md);
+  font-size: var(--step--1);
+  font-weight: 700;
+  color: var(--electric);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.permissionBtn:hover:not(:disabled) {
+  background: var(--electric);
+  color: var(--on-electric);
+  border-color: transparent;
+}
+
+.permissionBtn:disabled {
+  color: var(--ink-faint);
+  cursor: default;
+}
+

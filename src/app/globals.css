@@ -1,0 +1,127 @@
+@import "../styles/tokens.css";
+
+/* ---- Reset ---- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  height: 100%;
+  color-scheme: dark;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  min-height: 100%;
+  background:
+    radial-gradient(120% 80% at 50% -10%, var(--gradient-start) 0%, var(--canvas) 60%) fixed,
+    var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  -webkit-tap-highlight-color: transparent;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+/* Numbers should be tabular by default across the app */
+.tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* ---- Accessible focus ---- */
+:focus-visible {
+  outline: 2px solid var(--electric);
+  outline-offset: 2px;
+  border-radius: var(--r-sm);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--electric) 35%, transparent);
+}
+
+/* App shell: single mobile-first column, centered on larger screens */
+.app-shell {
+  width: 100%;
+  max-width: var(--maxw);
+  margin-inline: auto;
+  /* Bottom padding = nav bar height + safe area + extra breathing room */
+  padding: var(--sp-4) var(--sp-4)
+    calc(var(--nav-h) + env(safe-area-inset-bottom) + var(--sp-5));
+  min-height: 100dvh;
+}
+
+/* Page transition fade — applied to page wrappers */
+.page-enter {
+  animation: pageEnter 0.15s var(--ease-out) both;
+}
+
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Offline / update sticky banner */
+.sticky-banner {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  font-size: var(--step--1);
+  font-family: var(--font-body);
+  border-bottom: 1px solid var(--panel-line);
+}
+
+.sticky-banner-offline {
+  background: color-mix(in srgb, var(--over) 12%, var(--panel));
+  color: var(--over);
+}
+
+.sticky-banner-update {
+  background: color-mix(in srgb, var(--electric) 12%, var(--panel));
+  color: var(--electric);
+}
+
+/* Eyebrow / label treatment — mechanical, wide-tracked */
+.eyebrow {
+  font-family: var(--font-board);
+  font-size: var(--step--1);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-mute);
+}

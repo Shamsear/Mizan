@@ -1,0 +1,193 @@
+.page {
+  padding-top: 0;
+}
+
+/* ── Header ─────────────────────────────────────────────────────────── */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 1.25rem 0 1.25rem;
+  height: var(--header-h);
+}
+
+.mark {
+  color: var(--electric);
+  font-size: var(--step-1);
+  line-height: 1;
+}
+
+.wordmark {
+  font-family: var(--font-board);
+  font-weight: 700;
+  letter-spacing: 0.34em;
+  font-size: var(--step-0);
+  color: var(--ink);
+}
+
+.spacer {
+  flex: 1;
+}
+
+.headerBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-md);
+  color: var(--ink-mute);
+  transition: color 0.15s, background 0.15s;
+}
+
+.headerBtn:hover {
+  color: var(--ink);
+  background: var(--surface-hover);
+}
+
+.bellBadge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: var(--over);
+  color: var(--ink-invert);
+  font-family: var(--font-board);
+  font-size: 8px;
+  font-weight: 700;
+  min-width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  box-shadow: 0 0 0 2px var(--canvas);
+}
+
+/* ── Recent section ──────────────────────────────────────────────────── */
+.recentSection {
+  margin-top: 1.5rem;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.sectionTitle {
+  font-family: var(--font-board);
+  font-size: var(--step--2);
+  font-weight: 700;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  flex: 1;
+}
+
+.seeAll {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  font-size: var(--step--2);
+  font-weight: 600;
+  color: var(--electric);
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+
+.seeAll:hover { opacity: 0.75; }
+
+/* ── Recent list ─────────────────────────────────────────────────────── */
+.recentList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.recentRow {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.75rem 1rem;
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--r-lg);
+  text-decoration: none;
+  color: var(--ink);
+  transition: background 0.15s;
+}
+
+.recentRow:hover {
+  background: var(--surface-hover);
+}
+
+.recentIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.recentMeta {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.recentCat {
+  font-size: var(--step--1);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.recentNote {
+  font-size: var(--step--2);
+  color: var(--ink-mute);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.recentRight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.15rem;
+  flex-shrink: 0;
+}
+
+.recentAmount {
+  font-family: var(--font-board);
+  font-size: var(--step-0);
+  font-weight: 700;
+}
+
+.recentTime {
+  font-size: var(--step--2);
+  color: var(--ink-faint);
+}
+
+/* ── Empty state ─────────────────────────────────────────────────────── */
+.recentEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 2rem 1rem;
+  color: var(--ink-faint);
+  font-size: var(--step--1);
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--r-lg);
+}
+
+.recentEmptyHint {
+  font-size: var(--step--2);
+  color: var(--ink-faint);
+}

@@ -1,0 +1,9 @@
+{
+  "id": "5",
+  "subject": "Phase 2 — Finance engine (real Safe-to-Spend) + onboarding",
+  "description": "COMPLETED: Finance engine built in lib/finance/ with pure functions: calculateSafeToSpend (core algorithm with rollover), normalizeRoutineToDailyRate (converts cadences), calculateGoalContribution (required savings per day/month), calculateCategoryBudgetPacing (per-category tracking), isGoalOnTrack (projection). useSafeToSpend hook pulls from Dexie (transactions, recurring rules, savings plans) and calculates real number. Dashboard now shows actual Safe-to-Spend based on user data. Onboarding wizard (3 steps: income → bills → goal) captures initial setup so Safe-to-Spend works from day one. Shows on first launch when no recurring rules exist.",
+  "activeForm": "Finance engine + onboarding complete",
+  "status": "completed",
+  "blocks": [],
+  "blockedBy": []
+}

@@ -1,0 +1,346 @@
+.page {
+  padding-top: 0;
+}
+
+/* ── Header ──────────────────────────────────────────────────────────── */
+.header {
+  padding: 1.5rem 0 0.75rem;
+}
+
+.title {
+  font-family: var(--font-board);
+  font-size: var(--step-3);
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+}
+
+/* ── Summary strip ───────────────────────────────────────────────────── */
+.summaryStrip {
+  display: flex;
+  align-items: center;
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--r-lg);
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.summaryItem {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.875rem 0.5rem;
+}
+
+.summaryLabel {
+  font-size: var(--step--2);
+  font-weight: 600;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-family: var(--font-board);
+}
+
+.summaryValue {
+  font-family: var(--font-board);
+  font-size: var(--step-0);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.summaryValue.income { color: var(--ok); }
+.summaryValue.expense { color: var(--over); }
+
+.stripDivider {
+  width: 1px;
+  height: 36px;
+  background: var(--panel-line);
+  flex-shrink: 0;
+}
+
+/* ── Filters ─────────────────────────────────────────────────────────── */
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.searchWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchWrap > svg,
+.searchWrap > span {
+  position: absolute;
+  left: 0.875rem;
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 0.75rem 2.5rem 0.75rem 2.5rem;
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--r-lg);
+  font-size: var(--step-0);
+  color: var(--ink);
+  transition: border-color 0.15s;
+}
+
+.searchInput:focus {
+  outline: 2px solid var(--electric);
+  outline-offset: 2px;
+  border-color: transparent;
+}
+
+.clearSearch {
+  position: absolute;
+  right: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: var(--panel-line);
+  border: none;
+  border-radius: 50%;
+  color: var(--ink-mute);
+  cursor: pointer;
+}
+
+.typeFilters {
+  display: flex;
+  gap: 0.375rem;
+}
+
+.filterBtn {
+  flex: 1;
+  padding: 0.5rem 0.5rem;
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--r-md);
+  font-size: var(--step--2);
+  font-weight: 600;
+  font-family: var(--font-board);
+  color: var(--ink-mute);
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.04em;
+}
+
+.filterBtn.active {
+  background: var(--electric);
+  color: var(--on-electric);
+  border-color: transparent;
+}
+
+/* ── List ────────────────────────────────────────────────────────────── */
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.skeletonList {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Empty ───────────────────────────────────────────────────────────── */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.emptyText {
+  font-size: var(--step-1);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.emptyHint {
+  font-size: var(--step--1);
+  color: var(--ink-faint);
+}
+
+/* ── Groups ──────────────────────────────────────────────────────────── */
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.dateLabel {
+  font-family: var(--font-board);
+  font-size: var(--step--2);
+  font-weight: 700;
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.transactions {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+/* ── Transaction row ─────────────────────────────────────────────────── */
+.transaction {
+  display: flex;
+  align-items: stretch;
+  background: var(--board);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--r-lg);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.transaction::-webkit-scrollbar {
+  display: none;
+}
+
+.swipeContainer {
+  display: flex;
+  width: calc(100% + 56px); /* 56px is delete zone width */
+  flex-shrink: 0;
+  background: var(--panel);
+}
+
+/* Colored left border indicating income/expense */
+.typeBorder {
+  width: 3px;
+  flex-shrink: 0;
+}
+
+.txnContent {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.875rem 0.875rem 0.875rem 0.75rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s;
+  min-height: var(--tap);
+  scroll-snap-align: start;
+}
+
+.txnContent:hover {
+  background: var(--surface-hover);
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.txnMeta {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.categoryName {
+  font-size: var(--step-0);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.note {
+  font-size: var(--step--2);
+  color: var(--ink-mute);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.amount {
+  font-family: var(--font-board);
+  font-size: var(--step-0);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+/* ── Delete zone ─────────────────────────────────────────────────────── */
+.deleteZone {
+  width: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--over);
+  color: #fff;
+  border: none;
+  border-left: 1px solid var(--panel-line);
+  cursor: pointer;
+  transition: opacity 0.15s;
+  flex-shrink: 0;
+  scroll-snap-align: end;
+}
+
+.deleteZone:hover {
+  opacity: 0.9;
+}
+
+/* ── Month Picker ────────────────────────────────────────────────────── */
+.monthPicker {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  padding: 0.375rem 0.5rem;
+  border-radius: var(--r-md);
+}
+
+.pickerBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: var(--panel-2);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--r-sm);
+  color: var(--ink-mute);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.pickerBtn:hover {
+  color: var(--ink);
+  background: var(--surface-hover);
+}
+
+.pickerLabel {
+  font-family: var(--font-board);
+  font-size: var(--step--1);
+  font-weight: 700;
+  color: var(--ink);
+}

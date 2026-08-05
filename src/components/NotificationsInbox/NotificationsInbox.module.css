@@ -1,0 +1,190 @@
+.header {
+  padding: var(--sp-5) var(--sp-4) var(--sp-3);
+  border-bottom: 1px solid var(--panel-line);
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-2);
+}
+
+.title {
+  font-family: var(--font-board);
+  font-size: var(--step-1);
+  color: var(--ink);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.badge {
+  background: var(--over);
+  color: var(--ink-invert);
+  font-family: var(--font-board);
+  font-size: var(--step--2);
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: var(--r-sm);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-top: var(--sp-2);
+}
+
+.actionBtn {
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  color: var(--electric);
+  transition: color 0.15s var(--ease-out);
+}
+
+.actionBtn:hover {
+  color: var(--electric-press);
+}
+
+.dotSeparator {
+  font-size: var(--step--2);
+  color: var(--ink-faint);
+}
+
+.inboxBody {
+  max-height: 60dvh;
+  overflow-y: auto;
+  padding-bottom: calc(env(safe-area-inset-bottom) + var(--sp-5));
+}
+
+.emptyInbox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-8) var(--sp-5);
+  text-align: center;
+}
+
+.emptyIconCircle {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--panel-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--sp-4);
+  border: 1px dashed var(--panel-line);
+}
+
+.emptyTitle {
+  font-family: var(--font-board);
+  font-size: var(--step-0);
+  color: var(--ink);
+  margin-bottom: var(--sp-2);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.emptyText {
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  color: var(--ink-mute);
+  max-width: 280px;
+  line-height: 1.5;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  position: relative;
+  display: flex;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  border-bottom: 1px solid var(--panel-line);
+  cursor: pointer;
+  background: transparent;
+  transition: background 0.15s var(--ease-out);
+}
+
+.item:hover {
+  background: var(--surface-hover);
+}
+
+.unreadItem {
+  background: color-mix(in srgb, var(--electric) 3%, transparent);
+}
+
+.unreadItem::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--electric);
+}
+
+.iconCol {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-md);
+  background: var(--panel-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--panel-line);
+}
+
+.contentCol {
+  flex-grow: 1;
+  padding-right: var(--sp-5);
+}
+
+.itemTitle {
+  font-family: var(--font-board);
+  font-size: var(--step--1);
+  color: var(--ink);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.itemBody {
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  color: var(--ink-mute);
+  line-height: 1.4;
+  margin-bottom: var(--sp-1);
+}
+
+.itemMeta {
+  font-family: var(--font-body);
+  font-size: var(--step--2);
+  color: var(--ink-faint);
+}
+
+.deleteBtn {
+  position: absolute;
+  right: var(--sp-3);
+  top: var(--sp-4);
+  color: var(--ink-faint);
+  opacity: 0;
+  transition: opacity 0.15s var(--ease-out), color 0.15s var(--ease-out);
+  padding: 4px;
+}
+
+.item:hover .deleteBtn {
+  opacity: 1;
+}
+
+.deleteBtn:hover {
+  color: var(--over);
+}
