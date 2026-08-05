@@ -157,17 +157,32 @@ export default function BudgetsPage() {
                             {formatCents(pacing.monthlyBudgetCents, currency, { symbol: true })}
                           </p>
                         </div>
-                        <span
-                          className={`${styles.statusBadge} ${
-                            pacing.onTrack ? styles.onTrack : styles.over
-                          }`}
-                        >
-                          {pacing.onTrack ? (
-                            <><Icon name="check-circle" size={11} /> On pace</>
-                          ) : (
-                            <><Icon name="alert-triangle" size={11} /> Over pace</>
-                          )}
-                        </span>
+                        {(() => {
+                          const spent = pacing.spentCents;
+                          const limit = pacing.monthlyBudgetCents;
+                          const overLimit = spent > limit;
+                          const nearLimit = spent >= limit * 0.9 && spent <= limit;
+
+                          if (overLimit) {
+                            return (
+                              <span className={`${styles.statusBadge} ${styles.over}`}>
+                                <Icon name="alert-triangle" size={11} /> Over budget
+                              </span>
+                            );
+                          }
+                          if (nearLimit) {
+                            return (
+                              <span className={`${styles.statusBadge} ${styles.warn}`}>
+                                <Icon name="alert-triangle" size={11} /> Near limit
+                              </span>
+                            );
+                          }
+                          return (
+                            <span className={`${styles.statusBadge} ${styles.onTrack}`}>
+                              <Icon name="check-circle" size={11} /> Within budget
+                            </span>
+                          );
+                        })()}
                       </div>
 
                       {/* Progress bar */}

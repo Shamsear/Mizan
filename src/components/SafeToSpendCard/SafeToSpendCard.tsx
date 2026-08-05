@@ -1,7 +1,7 @@
 "use client";
 
 import { SplitFlap } from "@/components/SplitFlap/SplitFlap";
-import { boardString, formatCents, type Cents } from "@/lib/money";
+import { currencySymbol, formatCents, type Cents } from "@/lib/money";
 import styles from "./SafeToSpendCard.module.css";
 
 type Props = {
@@ -40,8 +40,9 @@ export function SafeToSpendCard({
       </span>
 
       <div className={styles.flapRow}>
+        <span className={styles.currency}>{currencySymbol(currency)}</span>
         <SplitFlap
-          value={boardString(safeToSpend, currency)}
+          value={formatCents(Math.abs(safeToSpend), currency, { symbol: false, compactZeros: true })}
           size="var(--step-hero)"
           label={`Safe to spend today: ${formatCents(safeToSpend, currency)}`}
         />

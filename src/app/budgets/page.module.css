@@ -155,6 +155,11 @@
   color: var(--over);
 }
 
+.warn {
+  background: rgba(245, 185, 66, 0.12);
+  color: var(--warn);
+}
+
 /* ── Progress ────────────────────────────────────────────────────────── */
 .progressSection {
   display: flex;

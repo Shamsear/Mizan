@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useTransactions, useRecurringRules, useSavingsPlans } from "../db/hooks";
+import { useTransactions, useRecurringRules, useSavingsPlans, useSettings } from "../db/hooks";
 import { calculateSafeToSpend, calculateBalance, type SafeToSpendResult } from "./safeToSpend";
 import { startOfMonth, endOfMonth } from "date-fns";
 import type { Cents } from "../money";
@@ -15,6 +15,7 @@ export function useSafeToSpend(date = new Date()): SafeToSpendResult & {
   const transactions = useTransactions();
   const recurringRules = useRecurringRules();
   const savingsPlans = useSavingsPlans();
+  const settings = useSettings();
 
   const result = useMemo(() => {
     if (!transactions || !recurringRules || !savingsPlans) {
@@ -106,6 +107,20 @@ export function useSafeToSpend(date = new Date()): SafeToSpendResult & {
       })
       .reduce((sum, txn) => sum + txn.amountCents, 0);
 
+    // Calculate discretionary spending today
+    const discretionarySpentToday = transactions
+      .filter((txn) => {
+        if (txn.type !== "expense") return false;
+        if (txn.recurringId) return false;
+        const txnDate = new Date(txn.date);
+        return (
+          txnDate.getFullYear() === date.getFullYear() &&
+          txnDate.getMonth() === date.getMonth() &&
+          txnDate.getDate() === date.getDate()
+        );
+      })
+      .reduce((sum, txn) => sum + txn.amountCents, 0);
+
     // Calculate total balance (all-time)
     const totalIncome = transactions
       .filter((txn) => txn.type === "income")
@@ -123,7 +138,9 @@ export function useSafeToSpend(date = new Date()): SafeToSpendResult & {
       monthlyFixedBillsCents: monthlyFixedBills,
       monthlyRequiredSavingsCents: monthlyRequiredSavings,
       spentSoFarCents: discretionarySpent,
+      spentTodayCents: discretionarySpentToday,
       date,
+      rolloverEnabled: settings ? settings.rolloverEnabled !== false : true,
     });
 
     return {
@@ -131,7 +148,7 @@ export function useSafeToSpend(date = new Date()): SafeToSpendResult & {
       totalBalance,
       isLoading: false,
     };
-  }, [transactions, recurringRules, savingsPlans, date]);
+  }, [transactions, recurringRules, savingsPlans, settings, date]);
 
   return result;
 }

@@ -25,10 +25,11 @@ const SYMBOLS: Record<string, string> = {
   JPY: "¥",
   AUD: "A$",
   CAD: "C$",
+  QAR: "QR",
 };
 
 export function currencySymbol(code: string): string {
-  return SYMBOLS[code] ?? code + " ";
+  return SYMBOLS[code] ?? code;
 }
 
 export type FormatOpts = {

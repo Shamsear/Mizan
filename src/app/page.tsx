@@ -3,7 +3,6 @@
 import { useMemo, useState, useEffect } from "react";
 import { UserButton } from "@clerk/nextjs";
 import { SafeToSpendCard } from "@/components/SafeToSpendCard/SafeToSpendCard";
-import { QuickAdd, type QuickTemplate } from "@/components/QuickAdd/QuickAdd";
 import { FAB } from "@/components/FAB/FAB";
 import { TransactionForm } from "@/components/TransactionForm/TransactionForm";
 import { OnboardingWizard } from "@/components/Onboarding/OnboardingWizard";
@@ -30,7 +29,6 @@ import styles from "./page.module.css";
 
 export default function Home() {
   const { user, isLoaded } = useUser();
-  const templates = useQuickAddTemplates();
   const transactions = useTransactions();
   const recurringRules = useRecurringRules();
   const categories = useCategories();
@@ -40,6 +38,9 @@ export default function Home() {
   const [showForm, setShowForm] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [smartInput, setSmartInput] = useState("");
+  const [isListening, setIsListening] = useState(false);
+  const [recognition, setRecognition] = useState<any>(null);
   const unreadCount = useUnreadNotificationsCount() ?? 0;
 
   useEffect(() => {
@@ -47,6 +48,58 @@ export default function Home() {
       setShowOnboarding(true);
     }
   }, [recurringRules]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        const rec = new SpeechRecognition();
+        rec.lang = "en-US";
+        rec.continuous = false;
+        rec.interimResults = false;
+
+        rec.onstart = () => {
+          setIsListening(true);
+        };
+
+        rec.onend = () => {
+          setIsListening(false);
+        };
+
+        rec.onerror = (e: any) => {
+          console.error("Speech recognition error:", e);
+          setIsListening(false);
+        };
+
+        rec.onresult = (event: any) => {
+          const transcript = event.results[0][0].transcript;
+          if (transcript) {
+            setSmartInput(transcript);
+            toast.success("Voice captured! Tap + to log.");
+          }
+        };
+
+        setRecognition(rec);
+      }
+    }
+  }, [toast]);
+
+  function toggleListening() {
+    if (!recognition) {
+      toast.error("Voice logging not supported on this browser.");
+      return;
+    }
+
+    if (isListening) {
+      recognition.stop();
+    } else {
+      try {
+        recognition.start();
+      } catch (err) {
+        console.error("Failed to start voice logging:", err);
+      }
+    }
+  }
 
   const dateLabel = useMemo(
     () =>
@@ -65,27 +118,79 @@ export default function Home() {
     [categories]
   );
 
-  async function handleAdd(t: QuickTemplate) {
-    if (!user?.id) return;
-    await createTransaction(user.id, {
-      type: t.type,
-      amountCents: t.amountCents,
-      currency,
-      categoryId: t.categoryId,
-      date: new Date(),
-      note: `Quick add: ${t.label}`,
-    });
-    toast.success(`Added ${t.label}`);
-  }
+  async function handleSmartLog(e?: React.FormEvent) {
+    if (e) e.preventDefault();
+    if (!smartInput.trim() || !user?.id || !categories) return;
 
-  const quickTemplates: QuickTemplate[] = templates?.map((t) => ({
-    id: t.id,
-    label: t.label,
-    icon: t.icon,
-    amountCents: t.amountCents,
-    type: t.type,
-    categoryId: t.categoryId,
-  })) ?? [];
+    // Parse the input
+    const match = smartInput.match(/\d+([.,]\d{1,2})?/);
+    if (!match) {
+      toast.error("Include an amount, e.g. '12 Karak'");
+      return;
+    }
+
+    const amountStr = match[0];
+    const amountCents = Math.round(parseFloat(amountStr.replace(",", ".")) * 100);
+    const note = smartInput.replace(amountStr, "").trim();
+
+    if (amountCents <= 0) {
+      toast.error("Amount must be greater than zero");
+      return;
+    }
+
+    // Determine category
+    const noteLower = note.toLowerCase();
+    let matchedCatId = "";
+    
+    // Quick keyword matcher (with Qatari specific entries)
+    const keywords: Record<string, string[]> = {
+      food: ["food", "dining", "coffee", "lunch", "dinner", "breakfast", "cafe", "restaurant", "mcdonalds", "starbucks", "tea", "karak", "snacks"],
+      grocery: ["grocery", "groceries", "supermarket", "carrefour", "lulu", "spinneys", "foodstuff"],
+      transport: ["transport", "car", "uber", "taxi", "petrol", "fuel", "gas", "metro", "bus", "parking", "karwa"],
+      housing: ["rent", "mortgage", "housing", "room", "flat", "apartment"],
+      utilities: ["utility", "utilities", "electricity", "water", "internet", "wifi", "bill", "phone", "mobile", "ooredoo", "vodafone", "kahramaa"],
+      entertainment: ["movie", "netflix", "spotify", "game", "cinema", "show", "leisure", "fun", "subscription", "gym", "fitness"],
+    };
+
+    for (const [catKey, keys] of Object.entries(keywords)) {
+      if (keys.some(k => noteLower.includes(k))) {
+        const found = categories.find(c => {
+          const nameLower = c.name.toLowerCase();
+          return nameLower.includes(catKey) || catKey.includes(nameLower);
+        });
+        if (found) {
+          matchedCatId = found.id;
+          break;
+        }
+      }
+    }
+
+    // Default fallback: first expense category
+    if (!matchedCatId) {
+      const expenseCat = categories.find(c => c.kind === "expense");
+      matchedCatId = expenseCat?.id || "other";
+    }
+
+    try {
+      await createTransaction(user.id, {
+        type: "expense",
+        amountCents,
+        currency,
+        categoryId: matchedCatId,
+        date: new Date(),
+        note: note.trim() || "Quick expense",
+      });
+
+      if (typeof navigator !== "undefined" && navigator.vibrate) {
+        navigator.vibrate(10);
+      }
+
+      toast.success(`Logged ${formatCents(amountCents, currency)} for "${note.trim() || "Expense"}"`);
+      setSmartInput("");
+    } catch {
+      toast.error("Failed to log transaction");
+    }
+  }
 
   // 3 most recent transactions
   const recentTransactions = useMemo(
@@ -138,8 +243,44 @@ export default function Home() {
           online={isOnline}
         />
 
-        {/* ── Quick Add ── */}
-        <QuickAdd templates={quickTemplates} onAdd={handleAdd} />
+        {/* ── Smart Log Bar ── */}
+        <form onSubmit={handleSmartLog} className={styles.smartLogWrap}>
+          <div className={styles.smartLogInputBar}>
+            <Icon name="sparkles" size={18} color="var(--electric)" />
+            <input
+              type="text"
+              placeholder="Quick log... e.g. '10 Karak' or '150 Lulu'"
+              className={styles.smartLogInput}
+              value={smartInput}
+              onChange={(e) => setSmartInput(e.target.value)}
+            />
+            {recognition && (
+              <button
+                type="button"
+                className={`${styles.micBtn} ${isListening ? styles.listening : ""}`}
+                onClick={toggleListening}
+                aria-label="Start voice logging"
+              >
+                <Icon name={isListening ? "mic-off" : "mic"} size={16} />
+              </button>
+            )}
+            <button type="submit" className={styles.smartLogSubmit} aria-label="Log transaction">
+              <Icon name="plus" size={16} />
+            </button>
+          </div>
+          <div className={styles.smartLogHints}>
+            <span className={styles.hintLabel}>Try:</span>
+            <button type="button" className={styles.smartLogHintChip} onClick={() => setSmartInput("10 Karak")}>
+              "10 Karak"
+            </button>
+            <button type="button" className={styles.smartLogHintChip} onClick={() => setSmartInput("35 Uber")}>
+              "35 Uber"
+            </button>
+            <button type="button" className={styles.smartLogHintChip} onClick={() => setSmartInput("180 Lulu")}>
+              "180 Lulu"
+            </button>
+          </div>
+        </form>
 
         {/* ── Recent Transactions ── */}
         <section className={styles.recentSection}>

@@ -358,7 +358,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
         {step === 1 && (
           <div className={styles.stepContent}>
             <WelcomeIllustration />
-            <h1 className={styles.headline}>Know your<br />balance.</h1>
+            <h1 className={styles.headline}>Know your balance.</h1>
             <p className={styles.body}>
               Tell us about your income and bills — we'll calculate exactly how much is safe to spend each day.
             </p>
@@ -378,7 +378,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
         {step === 2 && (
           <div className={styles.stepContent}>
             <IncomeIllustration />
-            <h2 className={styles.headline}>What comes in<br />each month?</h2>
+            <h2 className={styles.headline}>What comes in each month?</h2>
             <p className={styles.body}>Your monthly take-home salary (tax-free in Qatar)</p>
 
             <div className={styles.amountField}>
@@ -428,7 +428,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
         {step === 3 && (
           <div className={styles.stepContent}>
             <BillsIllustration />
-            <h2 className={styles.headline}>What goes out<br />each month?</h2>
+            <h2 className={styles.headline}>What goes out each month?</h2>
             <p className={styles.body}>Rent, subscriptions, utilities — your fixed costs</p>
 
             <div className={styles.billList}>
@@ -491,7 +491,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
         {step === 4 && (
           <div className={styles.stepContent}>
             <GoalIllustration />
-            <h2 className={styles.headline}>Any savings<br />goals?</h2>
+            <h2 className={styles.headline}>Any savings goals?</h2>
             <p className={styles.body}>We'll factor daily contributions into your target balance.</p>
 
             <div className={styles.field}>

@@ -51,6 +51,12 @@ export default function SettingsPage() {
     toast.success(enabled ? "Bill reminders enabled" : "Bill reminders disabled");
   }
 
+  async function handleRolloverToggle(enabled: boolean) {
+    if (!userId) return;
+    await updateSettings(userId, { rolloverEnabled: enabled });
+    toast.success(enabled ? "Daily rollover enabled" : "Daily rollover disabled");
+  }
+
   async function handleReminderDaysChange(days: number) {
     if (!userId) return;
     if (days < 1 || days > 7) return;
@@ -214,6 +220,21 @@ export default function SettingsPage() {
                 </button>
               ))}
             </div>
+          </div>
+
+          <div className={styles.divider} />
+
+          {/* Rollover */}
+          <div className={styles.cardRow}>
+            <span className={styles.rowIcon}><Icon name="repeat" size={18} /></span>
+            <span className={styles.rowLabel}>Daily Rollover</span>
+            <input
+              type="checkbox"
+              className={styles.toggleCheckbox}
+              checked={settings?.rolloverEnabled ?? true}
+              onChange={(e) => handleRolloverToggle(e.target.checked)}
+              aria-label="Toggle daily rollover"
+            />
           </div>
         </div>
       </section>

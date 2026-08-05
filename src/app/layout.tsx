@@ -52,9 +52,15 @@ export default function RootLayout({
           colorBackground: "#171b22",
           colorPrimary: "#2dd4e8",
           borderRadius: "8px",
+          fontSize: "0.85rem",      // Compact text sizing (default is 0.9375rem)
+          spacingUnit: "0.85rem",   // Compact padding/margins (default is 1rem)
         },
         elements: {
-          card: { boxShadow: "0 12px 32px -12px rgba(0,0,0,0.6)" },
+          card: { 
+            boxShadow: "0 12px 32px -12px rgba(0,0,0,0.6)",
+            maxWidth: "380px",      // Narrower card for modern, compact layouts
+            width: "100%",
+          },
         },
       }}
     >

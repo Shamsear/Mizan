@@ -20,8 +20,14 @@ export interface SafeToSpendInput {
   /** Discretionary expenses spent so far this month (in cents). */
   spentSoFarCents: Cents;
 
+  /** Discretionary expenses spent today (in cents). */
+  spentTodayCents: Cents;
+
   /** Current date (defaults to today). */
   date?: Date;
+
+  /** Enable unspent daily allowance rollover (default true). */
+  rolloverEnabled?: boolean;
 }
 
 export interface SafeToSpendResult {
@@ -60,7 +66,9 @@ export function calculateSafeToSpend(input: SafeToSpendInput): SafeToSpendResult
     monthlyFixedBillsCents,
     monthlyRequiredSavingsCents,
     spentSoFarCents,
+    spentTodayCents,
     date = new Date(),
+    rolloverEnabled = true,
   } = input;
 
   // Step 1: Calculate discretionary pool (what's left after bills + savings)
@@ -76,10 +84,14 @@ export function calculateSafeToSpend(input: SafeToSpendInput): SafeToSpendResult
   const elapsedAllowance = dailyAllowance * dayOfMonth;
 
   // Step 4: Safe to spend today (what's left after actual spending)
-  const safeToSpendToday = elapsedAllowance - spentSoFarCents;
+  const safeToSpendToday = rolloverEnabled
+    ? elapsedAllowance - spentSoFarCents
+    : dailyAllowance - spentTodayCents;
 
-  // Step 5: Pace delta (same as safe-to-spend in this model)
-  const paceDelta = safeToSpendToday;
+  // Step 5: Pace delta (same as safe-to-spend in rollover model, or monthly delta in strict model)
+  const paceDelta = rolloverEnabled
+    ? safeToSpendToday
+    : elapsedAllowance - spentSoFarCents;
 
   return {
     safeToSpendToday,

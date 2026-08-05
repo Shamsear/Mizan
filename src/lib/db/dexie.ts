@@ -138,6 +138,8 @@ export interface Settings extends SyncMeta {
   notificationsEnabled: boolean;
   /** Bill reminder days before due (e.g. 1 = remind 1 day before). */
   billReminderDays: number;
+  /** Unspent allowance rollover enabled (default true). */
+  rolloverEnabled: boolean;
 }
 
 export interface NotificationItem extends SyncMeta {

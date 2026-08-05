@@ -18,7 +18,7 @@ export type IconName =
   | "trash-2" | "alert-triangle" | "check-circle" | "plus" | "plus-circle"
   | "x" | "chevron-left" | "chevron-right" | "chevron-down" | "chevron-up"
   | "search" | "info" | "sparkles" | "arrow-up" | "arrow-down" | "tag" | "pen"
-  | "heart" | "users" | "bell" | "copy" | "check" | "star" | "gift" | "minus";
+  | "heart" | "users" | "bell" | "copy" | "check" | "star" | "gift" | "minus" | "mic" | "mic-off";
 
 interface IconProps {
   name: IconName | string;
@@ -468,6 +468,23 @@ export function Icon({
       return (
         <svg {...baseProps}>
           <line x1="5" x2="19" y1="12" y2="12" />
+        </svg>
+      );
+    case "mic":
+      return (
+        <svg {...baseProps}>
+          <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+          <path d="M19 10v1a7 7 0 0 1-14 0v-1" />
+          <line x1="12" x2="12" y1="19" y2="22" />
+        </svg>
+      );
+    case "mic-off":
+      return (
+        <svg {...baseProps}>
+          <line x1="2" x2="22" y1="2" y2="22" />
+          <path d="M18.89 13.23A7.12 7.12 0 0 0 19 11v-1M5 10v1a7 7 0 0 0 12 5" />
+          <path d="M15 9.34V5a3 3 0 0 0-5.68-1.33" />
+          <line x1="12" x2="12" y1="19" y2="22" />
         </svg>
       );
     default:
