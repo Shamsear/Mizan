@@ -57,15 +57,34 @@ export default function RootLayout({
     >
       <html lang="en" className={`${mech.variable} ${grotesk.variable}`}>
         <body>
-          <PWARegister />
-          <DBInit />
-          <ToastProvider>
-            <OfflineBanner />
-            <ConfirmProvider>
-              <PageTransition>{children}</PageTransition>
-              <BottomNav />
-            </ConfirmProvider>
-          </ToastProvider>
+          <div className="desktop-blocker">
+            <div className="blocker-content">
+              <div className="blocker-brand">▸ MIZAN</div>
+              <div className="blocker-graphic">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="28" y="10" width="44" height="80" rx="8" stroke="var(--ink)" strokeWidth="4" />
+                  <circle cx="50" cy="80" r="4" fill="var(--ink)" />
+                  <circle cx="50" cy="45" r="14" stroke="var(--electric)" strokeWidth="3" />
+                  <path d="M42 45 H58 M50 37 V53" stroke="var(--electric)" strokeWidth="3" strokeLinecap="round" />
+                </svg>
+              </div>
+              <h1 className="blocker-title">Mobile & Tablet Only</h1>
+              <p className="blocker-text">
+                Mizan is designed to be a premium, tactical, mobile-first budgeting assistant. Please scan the QR code or open this URL on your mobile phone or tablet device.
+              </p>
+            </div>
+          </div>
+          <div className="app-layout-wrapper">
+            <PWARegister />
+            <DBInit />
+            <ToastProvider>
+              <OfflineBanner />
+              <ConfirmProvider>
+                <PageTransition>{children}</PageTransition>
+                <BottomNav />
+              </ConfirmProvider>
+            </ToastProvider>
+          </div>
         </body>
       </html>
     </ClerkProvider>

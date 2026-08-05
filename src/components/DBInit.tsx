@@ -5,6 +5,7 @@ import { useUser } from "@clerk/nextjs";
 import { seedUserData } from "@/lib/db/seed";
 import { useSettings } from "@/lib/db/hooks";
 import { checkBillReminders } from "@/lib/notifications/scheduler";
+import { triggerCloudSync } from "@/lib/db/sync";
 
 /**
  * Initializes the local database and reactive theme settings.
@@ -19,11 +20,27 @@ export function DBInit() {
       seedUserData(user.id)
         .then(() => {
           // Check upcoming bills on database seed/load
-          return checkBillReminders(user.id);
+          checkBillReminders(user.id);
+          // Trigger first cloud sync backup
+          return triggerCloudSync(user.id);
         })
         .catch((err) => {
-          console.error("Failed to seed/check notifications:", err);
+          console.error("Failed to seed/check notifications/sync:", err);
         });
+
+      // Periodically sync changes (every 30 seconds)
+      const syncInterval = setInterval(() => {
+        triggerCloudSync(user.id);
+      }, 30000);
+
+      // Sync immediately when back online
+      const handleOnline = () => triggerCloudSync(user.id);
+      window.addEventListener("online", handleOnline);
+
+      return () => {
+        clearInterval(syncInterval);
+        window.removeEventListener("online", handleOnline);
+      };
     }
   }, [user?.id, isLoaded]);
 
