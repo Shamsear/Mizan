@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef, useId } from "react";
+import { useState, useRef, useId, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { useUser } from "@clerk/nextjs";
 import { db } from "@/lib/db/dexie";
 import { useCategories, useSettings } from "@/lib/db/hooks";
@@ -111,6 +112,12 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
   const toast = useToast();
   const uid = useId();
 
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+    return () => setMounted(false);
+  }, []);
+
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
   const [direction, setDirection] = useState<"forward" | "back">("forward");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -149,7 +156,14 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
       return;
     }
     setIncomeError("");
-    if (!user?.id || !salaryCategory) {
+
+    // Guest onboarding path: just navigate forward
+    if (!user?.id) {
+      navigate(3, "forward");
+      return;
+    }
+
+    if (!salaryCategory) {
       toast.error("Setup data not ready. Please try again.");
       return;
     }
@@ -194,7 +208,14 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
       return;
     }
     setBillError("");
-    if (!user?.id || !housingCategory) {
+
+    // Guest onboarding path: just navigate forward
+    if (!user?.id) {
+      navigate(4, "forward");
+      return;
+    }
+
+    if (!housingCategory) {
       toast.error("Setup data not ready.");
       return;
     }
@@ -297,7 +318,9 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
   const TOTAL_STEPS = 4;
   const slideClass = direction === "forward" ? styles.slideForward : styles.slideBack;
 
-  return (
+  if (!mounted) return null;
+
+  return createPortal(
     <div className={styles.overlay} aria-modal="true" role="dialog" aria-label="Setup wizard">
       <div className={`${styles.screen} ${slideClass}`} key={step}>
 
@@ -355,7 +378,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
           <div className={styles.stepContent}>
             <IncomeIllustration />
             <h2 className={styles.headline}>What comes in<br />each month?</h2>
-            <p className={styles.body}>Your take-home pay after tax</p>
+            <p className={styles.body}>Your monthly take-home salary (tax-free in Qatar)</p>
 
             <div className={styles.amountField}>
               <span className={styles.currencyMark}>{currencySymbol}</span>
@@ -535,6 +558,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
         )}
 
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

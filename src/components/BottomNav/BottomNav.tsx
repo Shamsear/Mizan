@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icon, type IconName } from "@/components/Icon/Icon";
 import { useUser } from "@clerk/nextjs";
-import { useRecurringRules } from "@/lib/db/hooks";
 import styles from "./BottomNav.module.css";
 
 interface Tab {
@@ -29,7 +28,6 @@ const TABS: Tab[] = [
  */
 export function BottomNav() {
   const { user, isLoaded } = useUser();
-  const recurringRules = useRecurringRules();
   const pathname = usePathname();
 
   function isActive(tab: Tab): boolean {
@@ -37,14 +35,12 @@ export function BottomNav() {
     return pathname.startsWith(tab.href);
   }
 
-  // Hide nav bar on auth pages, during loading, or if onboarding is active (no recurring rules configured yet)
+  // Hide nav bar on auth pages, during loading, or if no user is signed in
   if (
     !isLoaded ||
     !user ||
     pathname === "/sign-in" ||
-    pathname === "/sign-up" ||
-    recurringRules === undefined ||
-    recurringRules.length === 0
+    pathname === "/sign-up"
   ) {
     return null;
   }

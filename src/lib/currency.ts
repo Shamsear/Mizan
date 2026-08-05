@@ -61,6 +61,13 @@ export function detectCurrency(locale?: string): string {
     // Extract region code (e.g. "US" from "en-US", "QA" from "en-QA")
     const parts = l.replace("_", "-").split("-");
     const region = parts.length > 1 ? parts[parts.length - 1].toUpperCase() : "";
+    
+    // For Mizan (Qatari app), we map South Asian locales (IN, PK, BD, LK, NP) to QAR 
+    // since expats from these regions living in Qatar earn/spend in Qatari Riyals.
+    if (["IN", "PK", "BD", "LK", "NP"].includes(region)) {
+      return "QAR";
+    }
+    
     return REGION_TO_CURRENCY[region] ?? "QAR";
   } catch {
     return "QAR";
