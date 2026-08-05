@@ -166,12 +166,20 @@
   align-items: center;
   gap: 8px;
   cursor: pointer;
-  transition: opacity 0.15s;
+  transition: opacity 0.15s, background-color 0.25s ease, transform 0.1s ease;
   text-transform: uppercase;
 }
 
 .copyBtn:hover {
   opacity: 0.9;
+}
+
+.copyBtn:active {
+  transform: scale(0.97);
+}
+
+.copyBtn.copied {
+  background: var(--ok);
 }
 
 /* ── Android Prompt ── */
