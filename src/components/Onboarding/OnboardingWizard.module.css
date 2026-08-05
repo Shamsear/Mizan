@@ -464,3 +464,23 @@
   width: 100%;
   margin-bottom: 0.5rem;
 }
+
+.signInPrompt {
+  margin-top: var(--sp-4);
+  font-family: var(--font-body);
+  font-size: var(--step--1);
+  color: var(--ink-mute);
+  text-align: center;
+}
+
+.signInLink {
+  color: var(--electric);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s;
+}
+
+.signInLink:hover {
+  color: var(--electric-press);
+  text-decoration: underline;
+}

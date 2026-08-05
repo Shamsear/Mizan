@@ -8,6 +8,8 @@ import { addMonths } from "date-fns";
 import { Icon } from "@/components/Icon/Icon";
 import { useToast } from "@/components/Toast/Toast";
 import { getCurrencySymbol } from "@/lib/currency";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import styles from "./OnboardingWizard.module.css";
 
 /* ─── Interfaces ──────────────────────────────────────────────────────────── */
@@ -103,6 +105,7 @@ function GoalIllustration() {
 /* ─── Main Component ─────────────────────────────────────────────────────── */
 export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
   const { user } = useUser();
+  const router = useRouter();
   const categories = useCategories();
   const settings = useSettings();
   const toast = useToast();
@@ -237,7 +240,19 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
   async function handleGoalSubmit() {
     const cents = Math.round(parseFloat(goalAmount.replace(/,/g, "")) * 100);
     if (!goalName.trim() || isNaN(cents) || cents <= 0) return;
-    if (!user?.id) return;
+    if (!user?.id) {
+      const setupData = {
+        incomeAmount,
+        incomeFrequency,
+        bills,
+        goalName,
+        goalAmount,
+        goalMonths,
+      };
+      localStorage.setItem("mizan_onboarding_temp", JSON.stringify(setupData));
+      router.push("/sign-up");
+      return;
+    }
 
     setIsSubmitting(true);
     try {
@@ -327,6 +342,11 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
               Get started
               <Icon name="chevron-right" size={18} />
             </button>
+            {!user?.id && (
+              <div className={styles.signInPrompt}>
+                Already have an account? <Link href="/sign-in" className={styles.signInLink}>Sign in</Link>
+              </div>
+            )}
           </div>
         )}
 

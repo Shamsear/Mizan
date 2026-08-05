@@ -1,5 +1,6 @@
 import { db, type Category, type Settings, type QuickAddTemplate } from "./dexie";
 import { detectCurrency } from "@/lib/currency";
+import { addMonths } from "date-fns";
 
 /**
  * Seed default categories, settings, and quick-add templates for new users.
@@ -348,6 +349,93 @@ export async function seedUserData(userId: string): Promise<void> {
         updatedAt: now,
       })),
     );
+
+    // Check for temporary guest onboarding data to import
+    if (typeof window !== "undefined" && window.localStorage) {
+      const temp = localStorage.getItem("mizan_onboarding_temp");
+      if (temp) {
+        try {
+          const data = JSON.parse(temp);
+          const detected = detectCurrency(userId);
+          const currency = detected || "QAR";
+
+          // Add Income rule
+          const incomeCents = Math.round(parseFloat(data.incomeAmount) * 100);
+          if (incomeCents > 0) {
+            await db.recurringRules.add({
+              id: `${Date.now()}-income`,
+              userId,
+              name: "Salary",
+              amountCents: incomeCents,
+              currency,
+              categoryId: "income",
+              frequency: data.incomeFrequency || "monthly",
+              interval: 1,
+              startDate: now,
+              nextDueDate: now,
+              createdAt: now,
+              updatedAt: now,
+              deletedAt: null,
+              dirty: true,
+            });
+          }
+
+          // Add Bills rules
+          const billsCategory = await db.categories
+            .where("userId")
+            .equals(userId)
+            .filter((c) => c.name === "Bills" || c.name === "Housing" || c.name === "Utilities")
+            .first();
+          const billsCatId = billsCategory?.id || "bills";
+
+          for (const bill of data.bills) {
+            const billCents = Math.round(parseFloat(bill.amount) * 100);
+            if (bill.label.trim() && billCents > 0) {
+              await db.recurringRules.add({
+                id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+                userId,
+                name: bill.label.trim(),
+                amountCents: billCents,
+                currency,
+                categoryId: billsCatId,
+                frequency: "monthly",
+                interval: 1,
+                startDate: now,
+                nextDueDate: now,
+                createdAt: now,
+                updatedAt: now,
+                deletedAt: null,
+                dirty: true,
+              });
+            }
+          }
+
+          // Add Goal
+          const goalCents = Math.round(parseFloat(data.goalAmount) * 100);
+          if (data.goalName.trim() && goalCents > 0) {
+            await db.goals.add({
+              id: `${Date.now()}-goal`,
+              userId,
+              name: data.goalName.trim(),
+              targetCents: goalCents,
+              savedCents: 0,
+              targetDate: addMonths(now, data.goalMonths || 6),
+              currency,
+              priority: 1,
+              icon: "target",
+              createdAt: now,
+              updatedAt: now,
+              deletedAt: null,
+              dirty: true,
+            });
+          }
+
+          localStorage.removeItem("mizan_onboarding_temp");
+        } catch (e) {
+          console.error("Failed to parse temp guest onboarding:", e);
+        }
+      }
+    }
   }
 }
 

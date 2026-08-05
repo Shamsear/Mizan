@@ -8,6 +8,7 @@ import { ToastProvider } from "@/components/Toast/Toast";
 import { ConfirmProvider } from "@/components/ConfirmDialog/ConfirmDialog";
 import { BottomNav } from "@/components/BottomNav/BottomNav";
 import { PageTransition } from "@/components/PageTransition/PageTransition";
+import { PWAGate } from "@/components/PWAGate/PWAGate";
 import "./globals.css";
 
 /* Display / board: Space Mono — wide, mechanical, signage-like character. */
@@ -78,11 +79,13 @@ export default function RootLayout({
             <PWARegister />
             <DBInit />
             <ToastProvider>
-              <OfflineBanner />
-              <ConfirmProvider>
-                <PageTransition>{children}</PageTransition>
-                <BottomNav />
-              </ConfirmProvider>
+              <PWAGate>
+                <OfflineBanner />
+                <ConfirmProvider>
+                  <PageTransition>{children}</PageTransition>
+                  <BottomNav />
+                </ConfirmProvider>
+              </PWAGate>
             </ToastProvider>
           </div>
         </body>
