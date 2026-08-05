@@ -129,7 +129,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
 
   // Step 3 — Bills (dynamic list)
   const [bills, setBills] = useState<BillRow[]>([
-    { id: "bill-0", label: "Rent / Mortgage", amount: "" },
+    { id: "bill-0", label: "Rent", amount: "" },
   ]);
   const [billError, setBillError] = useState("");
 
@@ -435,7 +435,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                 <div key={bill.id} className={styles.billRow}>
                   <input
                     type="text"
-                    placeholder="Rent / Mortgage"
+                    placeholder="Rent"
                     className={styles.billLabel}
                     value={bill.label}
                     onChange={(e) => updateBill(bill.id, "label", e.target.value)}

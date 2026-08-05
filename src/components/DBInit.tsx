@@ -70,5 +70,42 @@ export function DBInit() {
     }
   }, [settings?.theme]);
 
+  // Prevent zoom gestures on mobile (pinch-to-zoom and double-tap zoom)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    // Prevent pinch-to-zoom (multitouch)
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches.length > 1) {
+        e.preventDefault();
+      }
+    };
+
+    // Prevent double-tap to zoom (tap events within 300ms)
+    let lastTouchEnd = 0;
+    const handleTouchEnd = (e: TouchEvent) => {
+      const now = Date.now();
+      if (now - lastTouchEnd <= 300) {
+        e.preventDefault();
+      }
+      lastTouchEnd = now;
+    };
+
+    // Prevent Safari gesture scaling
+    const handleGestureStart = (e: Event) => {
+      e.preventDefault();
+    };
+
+    document.addEventListener("touchstart", handleTouchStart, { passive: false });
+    document.addEventListener("touchend", handleTouchEnd, { passive: false });
+    document.addEventListener("gesturestart", handleGestureStart);
+
+    return () => {
+      document.removeEventListener("touchstart", handleTouchStart);
+      document.removeEventListener("touchend", handleTouchEnd);
+      document.removeEventListener("gesturestart", handleGestureStart);
+    };
+  }, []);
+
   return null;
 }
