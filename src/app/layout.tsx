@@ -53,7 +53,6 @@ export default function RootLayout({
           colorPrimary: "#2dd4e8",
           borderRadius: "8px",
           fontSize: "0.85rem",      // Compact text sizing (default is 0.9375rem)
-          spacingUnit: "0.85rem",   // Compact padding/margins (default is 1rem)
         },
         elements: {
           card: { 
