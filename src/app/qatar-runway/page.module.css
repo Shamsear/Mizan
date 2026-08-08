@@ -598,3 +598,61 @@
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+.sliderHeaderRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 0.5rem;
+}
+
+.sliderTitleGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.toggleInput {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--electric);
+  cursor: pointer;
+}
+
+.categoryInput {
+  font-family: var(--font-board);
+  font-size: var(--step-0);
+  font-weight: 700;
+  color: var(--electric);
+  background: var(--canvas);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--r-sm);
+  width: 90px;
+  text-align: right;
+  padding: 0.125rem 0.35rem;
+  outline: none;
+  -moz-appearance: textfield;
+}
+
+.categoryInput::-webkit-inner-spin-button,
+.categoryInput::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.categoryInput:focus {
+  border-color: var(--electric);
+}
+
+.categoryInput:disabled {
+  opacity: 0.5;
+  background: transparent;
+  border-color: transparent;
+  cursor: not-allowed;
+}
+
+.sliderDisabled {
+  opacity: 0.45;
+}
+

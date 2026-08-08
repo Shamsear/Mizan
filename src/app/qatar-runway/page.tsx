@@ -34,6 +34,13 @@ export default function QatarRunwayPage() {
   const [dataQAR, setDataQAR] = useState(30);
   const [miscQAR, setMiscQAR] = useState(50); // CV, job hunt, clothing
 
+  // Enable/Disable toggles for each expense category
+  const [rentEnabled, setRentEnabled] = useState(true);
+  const [foodEnabled, setFoodEnabled] = useState(true);
+  const [transportEnabled, setTransportEnabled] = useState(true);
+  const [dataEnabled, setDataEnabled] = useState(true);
+  const [miscEnabled, setMiscEnabled] = useState(true);
+
   // Presets definition
   const presets = {
     survival: { rent: 450, food: 200, transport: 70, data: 30, misc: 50, total: 750 },
@@ -66,6 +73,12 @@ export default function QatarRunwayPage() {
       setTransportQAR(settings.qatarCustomTransportCents ? Math.round(settings.qatarCustomTransportCents / 100) : 70);
       setDataQAR(settings.qatarCustomDataCents ? Math.round(settings.qatarCustomDataCents / 100) : 30);
       setMiscQAR(settings.qatarCustomMiscCents ? Math.round(settings.qatarCustomMiscCents / 100) : 50);
+
+      setRentEnabled(settings.qatarRentEnabled !== false);
+      setFoodEnabled(settings.qatarFoodEnabled !== false);
+      setTransportEnabled(settings.qatarTransportEnabled !== false);
+      setDataEnabled(settings.qatarDataEnabled !== false);
+      setMiscEnabled(settings.qatarMiscEnabled !== false);
     }
   }, [settings]);
 
@@ -79,7 +92,7 @@ export default function QatarRunwayPage() {
     }
   };
 
-  // Apply a preset
+  // Apply a preset (automatically re-enables all categories)
   const applyPreset = (presetKey: "survival" | "standard" | "comfortable") => {
     const preset = presets[presetKey];
     setBudgetPreset(presetKey);
@@ -89,6 +102,12 @@ export default function QatarRunwayPage() {
     setDataQAR(preset.data);
     setMiscQAR(preset.misc);
 
+    setRentEnabled(true);
+    setFoodEnabled(true);
+    setTransportEnabled(true);
+    setDataEnabled(true);
+    setMiscEnabled(true);
+
     handleSaveToSettings({
       qatarBudgetPreset: presetKey,
       qatarCustomRentCents: preset.rent * 100,
@@ -96,32 +115,63 @@ export default function QatarRunwayPage() {
       qatarCustomTransportCents: preset.transport * 100,
       qatarCustomDataCents: preset.data * 100,
       qatarCustomMiscCents: preset.misc * 100,
+      qatarRentEnabled: true,
+      qatarFoodEnabled: true,
+      qatarTransportEnabled: true,
+      qatarDataEnabled: true,
+      qatarMiscEnabled: true,
     });
     toast.success(`Applied ${presetKey.toUpperCase()} preset`);
   };
 
-  // Sliders and individual changes
-  const handleSliderChange = (field: string, val: number) => {
+  // Toggle category on/off
+  const handleToggle = (field: string, checked: boolean) => {
     setBudgetPreset("custom");
     if (field === "rent") {
-      setRentQAR(val);
-      handleSaveToSettings({ qatarCustomRentCents: val * 100, qatarBudgetPreset: "custom" });
+      setRentEnabled(checked);
+      handleSaveToSettings({ qatarRentEnabled: checked, qatarBudgetPreset: "custom" });
     }
     if (field === "food") {
-      setFoodQAR(val);
-      handleSaveToSettings({ qatarCustomFoodCents: val * 100, qatarBudgetPreset: "custom" });
+      setFoodEnabled(checked);
+      handleSaveToSettings({ qatarFoodEnabled: checked, qatarBudgetPreset: "custom" });
     }
     if (field === "transport") {
-      setTransportQAR(val);
-      handleSaveToSettings({ qatarCustomTransportCents: val * 100, qatarBudgetPreset: "custom" });
+      setTransportEnabled(checked);
+      handleSaveToSettings({ qatarTransportEnabled: checked, qatarBudgetPreset: "custom" });
     }
     if (field === "data") {
-      setDataQAR(val);
-      handleSaveToSettings({ qatarCustomDataCents: val * 100, qatarBudgetPreset: "custom" });
+      setDataEnabled(checked);
+      handleSaveToSettings({ qatarDataEnabled: checked, qatarBudgetPreset: "custom" });
     }
     if (field === "misc") {
-      setMiscQAR(val);
-      handleSaveToSettings({ qatarCustomMiscCents: val * 100, qatarBudgetPreset: "custom" });
+      setMiscEnabled(checked);
+      handleSaveToSettings({ qatarMiscEnabled: checked, qatarBudgetPreset: "custom" });
+    }
+  };
+
+  // Slider or Direct Keyboard Input changes
+  const handleAmountChange = (field: string, val: number) => {
+    setBudgetPreset("custom");
+    const clampedVal = Math.max(0, val);
+    if (field === "rent") {
+      setRentQAR(clampedVal);
+      handleSaveToSettings({ qatarCustomRentCents: clampedVal * 100, qatarBudgetPreset: "custom" });
+    }
+    if (field === "food") {
+      setFoodQAR(clampedVal);
+      handleSaveToSettings({ qatarCustomFoodCents: clampedVal * 100, qatarBudgetPreset: "custom" });
+    }
+    if (field === "transport") {
+      setTransportQAR(clampedVal);
+      handleSaveToSettings({ qatarCustomTransportCents: clampedVal * 100, qatarBudgetPreset: "custom" });
+    }
+    if (field === "data") {
+      setDataQAR(clampedVal);
+      handleSaveToSettings({ qatarCustomDataCents: clampedVal * 100, qatarBudgetPreset: "custom" });
+    }
+    if (field === "misc") {
+      setMiscQAR(clampedVal);
+      handleSaveToSettings({ qatarCustomMiscCents: clampedVal * 100, qatarBudgetPreset: "custom" });
     }
   };
 
@@ -132,8 +182,14 @@ export default function QatarRunwayPage() {
   const savingsHomeCents = parseFloat(savingsInput.replace(/,/g, "")) * 100 || 0;
   const savingsQARCents = Math.round(savingsHomeCents / exchangeRate);
 
-  // Total monthly expensess
-  const totalMonthlyQAR = rentQAR + foodQAR + transportQAR + dataQAR + miscQAR;
+  // Total monthly expenses (counting only enabled categories)
+  const activeRent = rentEnabled ? rentQAR : 0;
+  const activeFood = foodEnabled ? foodQAR : 0;
+  const activeTransport = transportEnabled ? transportQAR : 0;
+  const activeData = dataEnabled ? dataQAR : 0;
+  const activeMisc = miscEnabled ? miscQAR : 0;
+
+  const totalMonthlyQAR = activeRent + activeFood + activeTransport + activeData + activeMisc;
   const dailySpendQAR = totalMonthlyQAR / 30;
 
   // Runway duration (days)
@@ -373,18 +429,38 @@ export default function QatarRunwayPage() {
         {/* Sliders Card */}
         <div className={styles.card}>
           {/* Rent */}
-          <div className={styles.sliderGroup}>
-            <div className={styles.sliderLabelRow}>
-              <span className={styles.sliderName}>Rent (Accommodation)</span>
-              <span className={styles.sliderValue}>QR {rentQAR} / mo</span>
+          <div className={`${styles.sliderGroup} ${!rentEnabled ? styles.sliderDisabled : ""}`}>
+            <div className={styles.sliderHeaderRow}>
+              <div className={styles.sliderTitleGroup}>
+                <input
+                  type="checkbox"
+                  checked={rentEnabled}
+                  onChange={(e) => handleToggle("rent", e.target.checked)}
+                  className={styles.toggleInput}
+                  aria-label="Toggle Rent"
+                />
+                <span className={styles.sliderName}>Rent (Accommodation)</span>
+              </div>
+              <div>
+                <input
+                  type="number"
+                  value={rentEnabled ? rentQAR : 0}
+                  disabled={!rentEnabled}
+                  onChange={(e) => handleAmountChange("rent", parseInt(e.target.value) || 0)}
+                  className={styles.categoryInput}
+                  aria-label="Rent amount"
+                />
+                <span className={styles.sliderValue} style={{ color: "var(--ink-mute)", fontWeight: 500 }}> QR</span>
+              </div>
             </div>
             <input
               type="range"
-              min="300"
+              min="0"
               max="4000"
               step="50"
-              value={rentQAR}
-              onChange={(e) => handleSliderChange("rent", parseInt(e.target.value))}
+              value={rentEnabled ? rentQAR : 0}
+              disabled={!rentEnabled}
+              onChange={(e) => handleAmountChange("rent", parseInt(e.target.value) || 0)}
               className={styles.slider}
               aria-label="Rent slider"
             />
@@ -394,18 +470,38 @@ export default function QatarRunwayPage() {
           <div className={styles.divider} />
 
           {/* Food */}
-          <div className={styles.sliderGroup}>
-            <div className={styles.sliderLabelRow}>
-              <span className={styles.sliderName}>Food & Groceries</span>
-              <span className={styles.sliderValue}>QR {foodQAR} / mo</span>
+          <div className={`${styles.sliderGroup} ${!foodEnabled ? styles.sliderDisabled : ""}`}>
+            <div className={styles.sliderHeaderRow}>
+              <div className={styles.sliderTitleGroup}>
+                <input
+                  type="checkbox"
+                  checked={foodEnabled}
+                  onChange={(e) => handleToggle("food", e.target.checked)}
+                  className={styles.toggleInput}
+                  aria-label="Toggle Food"
+                />
+                <span className={styles.sliderName}>Food & Groceries</span>
+              </div>
+              <div>
+                <input
+                  type="number"
+                  value={foodEnabled ? foodQAR : 0}
+                  disabled={!foodEnabled}
+                  onChange={(e) => handleAmountChange("food", parseInt(e.target.value) || 0)}
+                  className={styles.categoryInput}
+                  aria-label="Food amount"
+                />
+                <span className={styles.sliderValue} style={{ color: "var(--ink-mute)", fontWeight: 500 }}> QR</span>
+              </div>
             </div>
             <input
               type="range"
-              min="150"
+              min="0"
               max="2000"
               step="25"
-              value={foodQAR}
-              onChange={(e) => handleSliderChange("food", parseInt(e.target.value))}
+              value={foodEnabled ? foodQAR : 0}
+              disabled={!foodEnabled}
+              onChange={(e) => handleAmountChange("food", parseInt(e.target.value) || 0)}
               className={styles.slider}
               aria-label="Food slider"
             />
@@ -415,18 +511,38 @@ export default function QatarRunwayPage() {
           <div className={styles.divider} />
 
           {/* Transport */}
-          <div className={styles.sliderGroup}>
-            <div className={styles.sliderLabelRow}>
-              <span className={styles.sliderName}>Transport (Metro / Uber)</span>
-              <span className={styles.sliderValue}>QR {transportQAR} / mo</span>
+          <div className={`${styles.sliderGroup} ${!transportEnabled ? styles.sliderDisabled : ""}`}>
+            <div className={styles.sliderHeaderRow}>
+              <div className={styles.sliderTitleGroup}>
+                <input
+                  type="checkbox"
+                  checked={transportEnabled}
+                  onChange={(e) => handleToggle("transport", e.target.checked)}
+                  className={styles.toggleInput}
+                  aria-label="Toggle Transport"
+                />
+                <span className={styles.sliderName}>Transport (Metro / Uber)</span>
+              </div>
+              <div>
+                <input
+                  type="number"
+                  value={transportEnabled ? transportQAR : 0}
+                  disabled={!transportEnabled}
+                  onChange={(e) => handleAmountChange("transport", parseInt(e.target.value) || 0)}
+                  className={styles.categoryInput}
+                  aria-label="Transport amount"
+                />
+                <span className={styles.sliderValue} style={{ color: "var(--ink-mute)", fontWeight: 500 }}> QR</span>
+              </div>
             </div>
             <input
               type="range"
-              min="50"
+              min="0"
               max="1500"
               step="10"
-              value={transportQAR}
-              onChange={(e) => handleSliderChange("transport", parseInt(e.target.value))}
+              value={transportEnabled ? transportQAR : 0}
+              disabled={!transportEnabled}
+              onChange={(e) => handleAmountChange("transport", parseInt(e.target.value) || 0)}
               className={styles.slider}
               aria-label="Transport slider"
             />
@@ -436,18 +552,38 @@ export default function QatarRunwayPage() {
           <div className={styles.divider} />
 
           {/* Mobile & Data */}
-          <div className={styles.sliderGroup}>
-            <div className={styles.sliderLabelRow}>
-              <span className={styles.sliderName}>Mobile & Internet (SIM)</span>
-              <span className={styles.sliderValue}>QR {dataQAR} / mo</span>
+          <div className={`${styles.sliderGroup} ${!dataEnabled ? styles.sliderDisabled : ""}`}>
+            <div className={styles.sliderHeaderRow}>
+              <div className={styles.sliderTitleGroup}>
+                <input
+                  type="checkbox"
+                  checked={dataEnabled}
+                  onChange={(e) => handleToggle("data", e.target.checked)}
+                  className={styles.toggleInput}
+                  aria-label="Toggle Mobile & Internet"
+                />
+                <span className={styles.sliderName}>Mobile & Internet (SIM)</span>
+              </div>
+              <div>
+                <input
+                  type="number"
+                  value={dataEnabled ? dataQAR : 0}
+                  disabled={!dataEnabled}
+                  onChange={(e) => handleAmountChange("data", parseInt(e.target.value) || 0)}
+                  className={styles.categoryInput}
+                  aria-label="Mobile amount"
+                />
+                <span className={styles.sliderValue} style={{ color: "var(--ink-mute)", fontWeight: 500 }}> QR</span>
+              </div>
             </div>
             <input
               type="range"
-              min="20"
+              min="0"
               max="500"
               step="5"
-              value={dataQAR}
-              onChange={(e) => handleSliderChange("data", parseInt(e.target.value))}
+              value={dataEnabled ? dataQAR : 0}
+              disabled={!dataEnabled}
+              onChange={(e) => handleAmountChange("data", parseInt(e.target.value) || 0)}
               className={styles.slider}
               aria-label="Mobile slider"
             />
@@ -457,18 +593,38 @@ export default function QatarRunwayPage() {
           <div className={styles.divider} />
 
           {/* Job hunting misc */}
-          <div className={styles.sliderGroup}>
-            <div className={styles.sliderLabelRow}>
-              <span className={styles.sliderName}>Job Hunt Misc (CV, Copy, Clothes)</span>
-              <span className={styles.sliderValue}>QR {miscQAR} / mo</span>
+          <div className={`${styles.sliderGroup} ${!miscEnabled ? styles.sliderDisabled : ""}`}>
+            <div className={styles.sliderHeaderRow}>
+              <div className={styles.sliderTitleGroup}>
+                <input
+                  type="checkbox"
+                  checked={miscEnabled}
+                  onChange={(e) => handleToggle("misc", e.target.checked)}
+                  className={styles.toggleInput}
+                  aria-label="Toggle Job Hunt Misc"
+                />
+                <span className={styles.sliderName}>Job Hunt Misc (CV, Clothes)</span>
+              </div>
+              <div>
+                <input
+                  type="number"
+                  value={miscEnabled ? miscQAR : 0}
+                  disabled={!miscEnabled}
+                  onChange={(e) => handleAmountChange("misc", parseInt(e.target.value) || 0)}
+                  className={styles.categoryInput}
+                  aria-label="Misc amount"
+                />
+                <span className={styles.sliderValue} style={{ color: "var(--ink-mute)", fontWeight: 500 }}> QR</span>
+              </div>
             </div>
             <input
               type="range"
-              min="10"
+              min="0"
               max="800"
               step="10"
-              value={miscQAR}
-              onChange={(e) => handleSliderChange("misc", parseInt(e.target.value))}
+              value={miscEnabled ? miscQAR : 0}
+              disabled={!miscEnabled}
+              onChange={(e) => handleAmountChange("misc", parseInt(e.target.value) || 0)}
               className={styles.slider}
               aria-label="Miscellaneous slider"
             />

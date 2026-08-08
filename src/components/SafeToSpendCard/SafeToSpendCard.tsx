@@ -28,7 +28,7 @@ export function SafeToSpendCard({
   return (
     <section className={styles.card} aria-labelledby="sts-label">
       <div className={styles.header}>
-        <span className={styles.date}>{dateLabel}</span>
+        <span className={styles.date} suppressHydrationWarning>{dateLabel}</span>
         <span className={styles.status}>
           <span className={styles.dot} style={{ background: online ? "var(--ok)" : "var(--ink-faint)" }} />
           {online ? "synced" : "offline"}

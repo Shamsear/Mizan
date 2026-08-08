@@ -153,6 +153,11 @@ export interface Settings extends SyncMeta {
   qatarCustomTransportCents?: number;
   qatarCustomDataCents?: number;
   qatarCustomMiscCents?: number;
+  qatarRentEnabled?: boolean;
+  qatarFoodEnabled?: boolean;
+  qatarTransportEnabled?: boolean;
+  qatarDataEnabled?: boolean;
+  qatarMiscEnabled?: boolean;
 }
 
 export interface NotificationItem extends SyncMeta {
