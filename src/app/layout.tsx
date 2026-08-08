@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Space_Mono, Inter_Tight } from "next/font/google";
+import { Space_Mono, Inter_Tight, Instrument_Serif } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { PWARegister } from "@/components/PWARegister";
 import { OfflineBanner } from "@/components/OfflineBanner/OfflineBanner";
@@ -22,6 +22,14 @@ const mech = Space_Mono({
 const grotesk = Inter_Tight({
   variable: "--font-grotesk",
   subsets: ["latin"],
+});
+
+/* Display headings / editorial accents: Instrument Serif */
+const serif = Instrument_Serif({
+  variable: "--font-serif",
+  subsets: ["latin"],
+  weight: ["400"],
+  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
@@ -49,21 +57,22 @@ export default function RootLayout({
     <ClerkProvider
       appearance={{
         variables: {
-          colorBackground: "#171b22",
-          colorPrimary: "#2dd4e8",
-          borderRadius: "8px",
+          colorBackground: "#FFFFFF",
+          colorPrimary: "#18181B",
+          borderRadius: "12px",
           fontSize: "0.85rem",      // Compact text sizing (default is 0.9375rem)
         },
         elements: {
           card: { 
-            boxShadow: "0 12px 32px -12px rgba(0,0,0,0.6)",
+            boxShadow: "0 4px 20px rgba(0,0,0,0.05)",
             maxWidth: "380px",      // Narrower card for modern, compact layouts
             width: "100%",
+            border: "1px solid #E6E4DF",
           },
         },
       }}
     >
-      <html lang="en" className={`${mech.variable} ${grotesk.variable}`}>
+      <html lang="en" className={`${mech.variable} ${grotesk.variable} ${serif.variable}`}>
         <body>
           <div className="desktop-blocker">
             <div className="blocker-content">

@@ -6,9 +6,11 @@ import { useUser } from "@clerk/nextjs";
 import { db } from "@/lib/db/dexie";
 import { formatCents } from "@/lib/money";
 import { calculateCategoryBudgetPacing } from "@/lib/finance";
+import { useSafeToSpend } from "@/lib/finance/useSafeToSpend";
 import { startOfMonth, endOfMonth } from "date-fns";
 import { FAB } from "@/components/FAB/FAB";
 import { CategoryBudgetForm } from "@/components/CategoryBudgetForm/CategoryBudgetForm";
+import { Sheet } from "@/components/Sheet/Sheet";
 import { Icon } from "@/components/Icon/Icon";
 import { useToast } from "@/components/Toast/Toast";
 import { useConfirm } from "@/components/ConfirmDialog/ConfirmDialog";
@@ -18,10 +20,19 @@ export default function BudgetsPage() {
   const { user } = useUser();
   const categories = useCategories("expense");
   const transactions = useTransactions();
+  const safeToSpend = useSafeToSpend();
   const toast = useToast();
   const { confirm } = useConfirm();
+  
   const [showForm, setShowForm] = useState(false);
   const [editingCategory, setEditingCategory] = useState<string | null>(null);
+  
+  // Move Money state
+  const [showMoveMoney, setShowMoveMoney] = useState(false);
+  const [moveFromId, setMoveFromId] = useState("ready"); // "ready" or categoryId
+  const [moveToId, setMoveToId] = useState("");
+  const [moveAmount, setMoveAmount] = useState("");
+  const [isMoving, setIsMoving] = useState(false);
 
   const categorySpending = useMemo(() => {
     if (!transactions) return new Map<string, number>();
@@ -48,7 +59,7 @@ export default function BudgetsPage() {
   const budgetedCategories = sortedCategories.filter((c) => c.monthlyBudgetCents);
   const unbudgetedCategories = sortedCategories.filter((c) => !c.monthlyBudgetCents);
 
-  // Overall summary
+  // Overall envelope sums
   const totalBudgeted = budgetedCategories.reduce(
     (s, c) => s + (c.monthlyBudgetCents ?? 0),
     0
@@ -58,11 +69,17 @@ export default function BudgetsPage() {
     0
   );
 
+  const currency = useCurrency();
+  const totalBalance = safeToSpend.totalBalance || 0;
+  
+  // Zero-Based Envelope Budgeting Math
+  const readyToAssign = totalBalance - totalBudgeted;
+
   async function handleRemoveBudget(categoryId: string) {
     if (!user?.id) return;
     const ok = await confirm({
       title: "Remove budget?",
-      message: "This category will no longer be tracked.",
+      message: "This category envelope will no longer have allocated funds.",
       confirmLabel: "Remove",
       dangerous: true,
     });
@@ -74,32 +91,143 @@ export default function BudgetsPage() {
         updatedAt: now,
         dirty: true,
       });
-      toast.success("Budget removed");
+      toast.success("Envelope emptied");
     } catch {
       toast.error("Failed to remove budget.");
     }
   }
 
-  const currency = useCurrency();
+  // Quick allocation increment/decrement (+/- QR 50)
+  async function handleQuickAdjust(categoryId: string, deltaCents: number) {
+    if (!user?.id) return;
+    const category = categories?.find((c) => c.id === categoryId);
+    if (!category) return;
+
+    const currentBudget = category.monthlyBudgetCents || 0;
+    const newBudget = Math.max(0, currentBudget + deltaCents);
+    
+    try {
+      await db.categories.update(categoryId, {
+        monthlyBudgetCents: newBudget,
+        updatedAt: new Date(),
+        dirty: true,
+      });
+      toast.success(`Budget adjusted: ${formatCents(newBudget, currency)}`);
+    } catch {
+      toast.error("Failed to adjust budget");
+    }
+  }
+
+  // Shift cash between envelopes
+  async function handleMoveMoneySubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!user?.id || !moveToId) return;
+
+    const amountCents = parseFloat(moveAmount) * 100;
+    if (isNaN(amountCents) || amountCents <= 0) {
+      toast.error("Please enter a valid amount");
+      return;
+    }
+
+    setIsMoving(true);
+    try {
+      const now = new Date();
+
+      // Deduct from source if not Ready to Assign
+      if (moveFromId !== "ready") {
+        const sourceCategory = categories?.find((c) => c.id === moveFromId);
+        if (!sourceCategory) return;
+        const currentSourceBudget = sourceCategory.monthlyBudgetCents || 0;
+        if (currentSourceBudget < amountCents) {
+          toast.error(`Not enough funds in ${sourceCategory.name} envelope`);
+          setIsMoving(false);
+          return;
+        }
+
+        await db.categories.update(moveFromId, {
+          monthlyBudgetCents: currentSourceBudget - amountCents,
+          updatedAt: now,
+          dirty: true,
+        });
+      }
+
+      // Add to destination
+      const destCategory = categories?.find((c) => c.id === moveToId);
+      if (!destCategory) return;
+      const currentDestBudget = destCategory.monthlyBudgetCents || 0;
+      await db.categories.update(moveToId, {
+        monthlyBudgetCents: currentDestBudget + amountCents,
+        updatedAt: now,
+        dirty: true,
+      });
+
+      toast.success("Money moved successfully");
+      setShowMoveMoney(false);
+      setMoveAmount("");
+      setMoveToId("");
+    } catch {
+      toast.error("Failed to move money");
+    } finally {
+      setIsMoving(false);
+    }
+  }
 
   return (
     <>
       <main className={`app-shell page-enter ${styles.page}`}>
         <header className={styles.header}>
-          <h1 className={styles.title}>Budgets</h1>
+          <h1 className={styles.title}>Envelopes</h1>
         </header>
 
-        {/* Overall summary row */}
+        {/* ─── Ready to Assign Banner ─── */}
+        <div 
+          className={`${styles.readyBanner} ${
+            readyToAssign > 0 
+              ? styles.readyBannerPositive 
+              : readyToAssign === 0 
+              ? styles.readyBannerZero 
+              : styles.readyBannerNegative
+          }`}
+        >
+          <div className={styles.readyMeta}>
+            <span className={styles.readyLabel}>
+              {readyToAssign > 0 ? "Ready to Assign" : readyToAssign === 0 ? "Perfectly Budgeted" : "Over-allocated"}
+            </span>
+            <h2 className={styles.readyAmount}>
+              {formatCents(readyToAssign, currency, { symbol: true })}
+            </h2>
+            <p className={styles.readyDesc}>
+              {readyToAssign > 0 
+                ? "Assign these funds to envelopes to give every riyal a job." 
+                : readyToAssign === 0 
+                ? "Every riyal has been assigned to an envelope." 
+                : "You have assigned more cash than you currently have in hand."}
+            </p>
+          </div>
+          {categories && categories.length > 0 && (
+            <button 
+              onClick={() => {
+                setMoveFromId("ready");
+                setShowMoveMoney(true);
+              }}
+              className={styles.moveMoneyGlobalBtn}
+            >
+              <Icon name="repeat" size={14} /> Move Cash
+            </button>
+          )}
+        </div>
+
+        {/* Envelope Metrics Summary Row */}
         {budgetedCategories.length > 0 && (
           <div className={styles.overallRow}>
             <div className={styles.overallMeta}>
-              <span className={styles.overallLabel}>Total budgeted</span>
+              <span className={styles.overallLabel}>Total Envelope Limits</span>
               <span className={styles.overallBudget}>
                 {formatCents(totalBudgeted, currency, { symbol: true })}
               </span>
             </div>
             <div className={styles.overallRight}>
-              <span className={styles.overallLabel}>Spent this month</span>
+              <span className={styles.overallLabel}>Spent this Month</span>
               <span
                 className={styles.overallSpent}
                 style={{ color: totalSpent > totalBudgeted ? "var(--over)" : "var(--ok)" }}
@@ -107,25 +235,14 @@ export default function BudgetsPage() {
                 {formatCents(totalSpent, currency, { symbol: true })}
               </span>
             </div>
-            <div className={styles.overallRemaining}>
-              <span
-                style={{
-                  color:
-                    totalBudgeted - totalSpent >= 0 ? "var(--ok)" : "var(--over)",
-                }}
-              >
-                {formatCents(Math.abs(totalBudgeted - totalSpent), currency, { symbol: true })}
-                {totalBudgeted - totalSpent < 0 ? " over" : " left"}
-              </span>
-            </div>
           </div>
         )}
 
         <div className={styles.content}>
-          {/* Budgeted */}
+          {/* Active Envelopes List */}
           {budgetedCategories.length > 0 && (
             <section className={styles.section}>
-              <h2 className={styles.sectionTitle}>Budgeted</h2>
+              <h2 className={styles.sectionTitle}>Active Envelopes</h2>
               <div className={styles.list}>
                 {budgetedCategories.map((category) => {
                   const spentCents = categorySpending.get(category.id) ?? 0;
@@ -134,7 +251,6 @@ export default function BudgetsPage() {
                     spentCents,
                   });
                   const catIconName = (category.icon ?? "tag") as any;
-                  // FIX: paceDelta >= 0 means under budget = positive = good
                   const isUnderBudget = pacing.paceDelta >= 0;
 
                   return (
@@ -142,7 +258,7 @@ export default function BudgetsPage() {
                       <div className={styles.cardHeader}>
                         <span
                           className={styles.cardIcon}
-                          style={{ background: (category.color ?? "#888") + "22" }}
+                          style={{ background: (category.color ?? "#888") + "18" }}
                         >
                           <Icon
                             name={catIconName}
@@ -166,20 +282,20 @@ export default function BudgetsPage() {
                           if (overLimit) {
                             return (
                               <span className={`${styles.statusBadge} ${styles.over}`}>
-                                <Icon name="alert-triangle" size={11} /> Over budget
+                                <Icon name="alert-triangle" size={11} /> Overspent
                               </span>
                             );
                           }
                           if (nearLimit) {
                             return (
                               <span className={`${styles.statusBadge} ${styles.warn}`}>
-                                <Icon name="alert-triangle" size={11} /> Near limit
+                                <Icon name="alert-triangle" size={11} /> Near Limit
                               </span>
                             );
                           }
                           return (
                             <span className={`${styles.statusBadge} ${styles.onTrack}`}>
-                              <Icon name="check-circle" size={11} /> Within budget
+                              <Icon name="check-circle" size={11} /> Good Pacing
                             </span>
                           );
                         })()}
@@ -204,16 +320,16 @@ export default function BudgetsPage() {
                             Spent ({pacing.percentUsed}%)
                           </span>
                           <span className={styles.legendItem}>
-                            <span className={styles.legendDot} style={{ background: "var(--ink-faint)" }} />
+                            <span className={styles.legendDot} style={{ background: "var(--ink-mute)" }} />
                             Expected ({pacing.percentElapsed}%)
                           </span>
                         </div>
                       </div>
 
-                      {/* Details */}
+                      {/* Details Grid */}
                       <div className={styles.details}>
                         <div className={styles.detailItem}>
-                          <span className={styles.detailLabel}>Remaining</span>
+                          <span className={styles.detailLabel}>Left in Envelope</span>
                           <span
                             className={styles.detailValue}
                             style={{
@@ -222,18 +338,16 @@ export default function BudgetsPage() {
                           >
                             {pacing.remainingCents < 0 ? "−" : ""}
                             {formatCents(Math.abs(pacing.remainingCents), currency, { symbol: true })}
-                            {pacing.remainingCents < 0 && " over"}
                           </span>
                         </div>
                         <div className={styles.detailItem}>
-                          <span className={styles.detailLabel}>Daily allowance</span>
+                          <span className={styles.detailLabel}>Daily Cap</span>
                           <span className={styles.detailValue}>
                             {formatCents(pacing.dailyAllowance, currency, { symbol: true })}
                           </span>
                         </div>
                         <div className={styles.detailItem}>
-                          <span className={styles.detailLabel}>vs Pace</span>
-                          {/* FIX: paceDelta >= 0 means we spent less than expected = good */}
+                          <span className={styles.detailLabel}>vs Paceline</span>
                           <span
                             className={styles.detailValue}
                             style={{ color: isUnderBudget ? "var(--ok)" : "var(--over)" }}
@@ -244,20 +358,64 @@ export default function BudgetsPage() {
                         </div>
                       </div>
 
+                      {/* Quick Adjust & Move Actions */}
+                      <div className={styles.quickAdjustRow}>
+                        <button
+                          onClick={() => handleQuickAdjust(category.id, -5000)}
+                          className={styles.adjustBtn}
+                          title="Reduce envelope by 50"
+                        >
+                          -50
+                        </button>
+                        <button
+                          onClick={() => handleQuickAdjust(category.id, -1000)}
+                          className={styles.adjustBtn}
+                          title="Reduce envelope by 10"
+                        >
+                          -10
+                        </button>
+                        
+                        <button
+                          onClick={() => {
+                            setMoveFromId(category.id);
+                            setShowMoveMoney(true);
+                          }}
+                          className={styles.envelopeMoveBtn}
+                          title="Transfer money to other envelope"
+                        >
+                          <Icon name="repeat" size={12} /> Transfer
+                        </button>
+                        
+                        <button
+                          onClick={() => handleQuickAdjust(category.id, 1000)}
+                          className={styles.adjustBtn}
+                          title="Add 10 to envelope"
+                        >
+                          +10
+                        </button>
+                        <button
+                          onClick={() => handleQuickAdjust(category.id, 5000)}
+                          className={styles.adjustBtn}
+                          title="Add 50 to envelope"
+                        >
+                          +50
+                        </button>
+                      </div>
+
                       <div className={styles.cardActions}>
                         <button
                           className={styles.editBtn}
                           onClick={() => setEditingCategory(category.id)}
                         >
-                          <Icon name="pen" size={14} />
-                          Edit
+                          <Icon name="pen" size={13} />
+                          Configure
                         </button>
                         <button
                           className={`${styles.editBtn} ${styles.removeBtn}`}
                           onClick={() => handleRemoveBudget(category.id)}
                         >
-                          <Icon name="x" size={14} />
-                          Remove
+                          <Icon name="x" size={13} />
+                          Empty
                         </button>
                       </div>
                     </div>
@@ -267,10 +425,10 @@ export default function BudgetsPage() {
             </section>
           )}
 
-          {/* Unbudgeted */}
+          {/* Unbudgeted Categories */}
           {unbudgetedCategories.length > 0 && (
             <section className={styles.section}>
-              <h2 className={styles.sectionTitle}>No budget set</h2>
+              <h2 className={styles.sectionTitle}>Empty Envelopes</h2>
               <div className={styles.simpleList}>
                 {unbudgetedCategories.map((category) => {
                   const spentCents = categorySpending.get(category.id) ?? 0;
@@ -283,7 +441,7 @@ export default function BudgetsPage() {
                     >
                       <span
                         className={styles.simpleIcon}
-                        style={{ background: (category.color ?? "#888") + "22" }}
+                        style={{ background: (category.color ?? "#888") + "18" }}
                       >
                         <Icon
                           name={catIconName}
@@ -295,7 +453,7 @@ export default function BudgetsPage() {
                         <span className={styles.simpleName}>{category.name}</span>
                         {spentCents > 0 && (
                           <span className={styles.simpleSpent}>
-                            {formatCents(spentCents, currency, { symbol: true })} this month
+                            {formatCents(spentCents, currency, { symbol: true })} spent this month
                           </span>
                         )}
                       </div>
@@ -310,14 +468,102 @@ export default function BudgetsPage() {
           {budgetedCategories.length === 0 && unbudgetedCategories.length === 0 && (
             <div className={styles.empty}>
               <Icon name="wallet" size={40} color="var(--ink-faint)" />
-              <p className={styles.emptyText}>No categories yet</p>
-              <p className={styles.emptyHint}>Add transactions first, then set budgets</p>
+              <p className={styles.emptyText}>No envelopes yet</p>
+              <p className={styles.emptyHint}>Add categories first, then distribute your cash to them.</p>
             </div>
           )}
         </div>
       </main>
 
-      <FAB onClick={() => setShowForm(true)} icon="+" label="Set budget" />
+      <FAB onClick={() => setShowForm(true)} icon="+" label="Fill Envelope" />
+
+      {/* ─── Move Money Bottom Drawer ─── */}
+      <Sheet open={showMoveMoney} onClose={() => setShowMoveMoney(false)} label="Move Money">
+        <header className={styles.modalHeader}>
+          <h2 className={styles.modalTitle}>Move Cash</h2>
+          <button
+            type="button"
+            className={styles.modalClose}
+            onClick={() => setShowMoveMoney(false)}
+            aria-label="Close"
+          >
+            <Icon name="x" size={20} />
+          </button>
+        </header>
+
+        <form onSubmit={handleMoveMoneySubmit} className={styles.modalForm}>
+          <div className={styles.modalField}>
+            <label htmlFor="move-from" className={styles.modalLabel}>
+              From Envelope
+            </label>
+            <select
+              id="move-from"
+              value={moveFromId}
+              onChange={(e) => setMoveFromId(e.target.value)}
+              className={styles.modalSelect}
+              required
+            >
+              <option value="ready">Ready to Assign (QR {(readyToAssign / 100).toFixed(2)})</option>
+              {budgetedCategories.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name} (QR {((c.monthlyBudgetCents || 0) / 100).toFixed(2)})
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className={styles.modalField}>
+            <label htmlFor="move-to" className={styles.modalLabel}>
+              To Envelope
+            </label>
+            <select
+              id="move-to"
+              value={moveToId}
+              onChange={(e) => setMoveToId(e.target.value)}
+              className={styles.modalSelect}
+              required
+            >
+              <option value="">Select envelope...</option>
+              {categories?.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name} {c.monthlyBudgetCents ? `(QR ${((c.monthlyBudgetCents || 0) / 100).toFixed(2)})` : "(Empty)"}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className={styles.modalField}>
+            <label htmlFor="move-amount" className={styles.modalLabel}>
+              Amount (QAR)
+            </label>
+            <input
+              id="move-amount"
+              type="number"
+              inputMode="decimal"
+              step="0.01"
+              placeholder="0.00"
+              value={moveAmount}
+              onChange={(e) => setMoveAmount(e.target.value)}
+              className={styles.modalInput}
+              required
+            />
+          </div>
+
+          <div className={styles.modalActions}>
+            <button
+              type="button"
+              onClick={() => setShowMoveMoney(false)}
+              className={styles.modalCancelBtn}
+              disabled={isMoving}
+            >
+              Cancel
+            </button>
+            <button type="submit" className={styles.modalSubmitBtn} disabled={isMoving}>
+              {isMoving ? "Moving..." : "Move Cash"}
+            </button>
+          </div>
+        </form>
+      </Sheet>
 
       {showForm && (
         <CategoryBudgetForm

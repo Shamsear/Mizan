@@ -39,6 +39,7 @@
     "Segoe UI Mono", Menlo, Consolas, monospace;
   --font-body: var(--font-grotesk), system-ui, -apple-system, "Segoe UI", Roboto,
     Helvetica, Arial, sans-serif;
+  --font-display: var(--font-serif), Georgia, serif;
 
   --step--1: clamp(0.78rem, 0.74rem + 0.2vw, 0.86rem);
   --step-0: clamp(0.94rem, 0.9rem + 0.25vw, 1rem);
