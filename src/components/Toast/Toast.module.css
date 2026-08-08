@@ -1,6 +1,7 @@
 .region {
   position: fixed;
-  bottom: calc(var(--nav-h) + env(safe-area-inset-bottom) + 0.75rem);
+  /* Float at top, below safe area */
+  top: calc(env(safe-area-inset-top, 0px) + 0.75rem);
   left: 50%;
   transform: translateX(-50%);
   z-index: 9000;
@@ -16,20 +17,23 @@
   display: flex;
   align-items: center;
   gap: 0.625rem;
-  padding: 0.75rem 0.875rem;
-  border-radius: var(--r-lg);
-  border: 1px solid var(--panel-line);
-  background: var(--panel-2);
-  box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.5);
+  padding: 0.75rem 1rem;
+  border-radius: var(--r-pill);
+  /* Glass pill effect */
+  background: var(--glass);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-toast);
   pointer-events: all;
-  animation: toastIn 0.3s var(--ease-out) both;
+  animation: toastSlideDown 0.4s var(--ease-spring) both;
   overflow: hidden;
 }
 
-@keyframes toastIn {
+@keyframes toastSlideDown {
   from {
     opacity: 0;
-    transform: translateY(0.75rem) scale(0.97);
+    transform: translateY(-1rem) scale(0.95);
   }
   to {
     opacity: 1;
@@ -47,6 +51,7 @@
   flex: 1;
   font-size: var(--step--1);
   font-family: var(--font-body);
+  font-weight: 600;
   color: var(--ink);
   line-height: 1.4;
 }
@@ -61,10 +66,10 @@
   padding: 0;
   background: transparent;
   border: none;
-  border-radius: var(--r-sm);
+  border-radius: 50%;
   color: var(--ink-mute);
   cursor: pointer;
-  transition: color 0.15s, background 0.15s;
+  transition: color var(--duration-fast), background var(--duration-fast);
 }
 
 .close:hover {
@@ -79,7 +84,7 @@
   left: 0;
   height: 2px;
   width: 100%;
-  border-radius: 0 0 var(--r-lg) var(--r-lg);
+  border-radius: 0 0 var(--r-pill) var(--r-pill);
   animation: drain 3.5s linear forwards;
 }
 
@@ -88,7 +93,7 @@
   to   { width: 0%; }
 }
 
-/* ── Variants ────────────────────────────────────────────────────────────── */
+/* ── Variants ── */
 .success .icon { color: var(--ok); }
 .success .drain { background: var(--ok); }
 

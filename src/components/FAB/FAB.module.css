@@ -1,7 +1,8 @@
 .fab {
   position: fixed;
-  bottom: max(1.5rem, env(safe-area-inset-bottom, 1.5rem) + 1rem);
-  right: 1.5rem;
+  /* Sit above the frosted bottom nav */
+  bottom: calc(var(--nav-h) + env(safe-area-inset-bottom, 0px) + 1rem);
+  right: 1.25rem;
   z-index: 100;
 
   display: flex;
@@ -9,36 +10,43 @@
   justify-content: center;
   gap: 0.5rem;
 
-  width: 3.5rem;
+  /* Pill shape */
+  min-width: 3.5rem;
   height: 3.5rem;
-  padding: 0;
+  padding: 0 1.25rem;
 
   background: var(--electric);
-  color: var(--ink);
+  color: var(--on-electric);
   border: none;
-  border-radius: 1rem;
-  box-shadow:
-    0 4px 12px -2px rgba(45, 212, 232, 0.4),
-    0 8px 24px -4px rgba(0, 0, 0, 0.3);
+  border-radius: var(--r-pill);
+  box-shadow: var(--shadow-fab);
 
-  font-size: var(--step-3);
+  font-size: var(--step-2);
   font-weight: 700;
   cursor: pointer;
 
   transition:
-    transform 0.2s var(--ease-out),
-    box-shadow 0.2s var(--ease-out);
+    transform var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+  
+  /* Idle breathing pulse */
+  animation: fabBreathe 3s ease-in-out infinite;
+}
+
+@keyframes fabBreathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.03); }
 }
 
 .fab:hover {
-  transform: scale(1.05);
-  box-shadow:
-    0 6px 16px -2px rgba(45, 212, 232, 0.5),
-    0 12px 32px -4px rgba(0, 0, 0, 0.4);
+  transform: scale(1.06);
+  animation: none;
 }
 
 .fab:active {
-  transform: scale(0.95);
+  transform: scale(0.92);
+  animation: none;
+  transition: transform 80ms ease;
 }
 
 .icon {
@@ -46,9 +54,8 @@
   line-height: 1;
 }
 
-/* Extended FAB with label (optional variant) */
+/* Extended FAB with label */
 .fab[data-extended="true"] {
   width: auto;
-  padding: 0 1.25rem;
-  border-radius: 1.5rem;
+  padding: 0 1.5rem;
 }
