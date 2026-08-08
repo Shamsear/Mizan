@@ -1,7 +1,7 @@
 .board {
   display: inline-flex;
   gap: 3px;
-  padding: 6px;
+  padding: 8px;
   background: var(--flap-slot);
   border-radius: var(--r-md);
   box-shadow: var(--shadow-panel);
@@ -14,16 +14,18 @@
   align-items: center;
   justify-content: center;
   min-width: 0.72em;
-  height: 1.28em;
-  padding: 0 0.06em;
+  height: 1.32em;
+  padding: 0 0.08em;
   font-family: var(--font-board);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   line-height: 1;
-  color: var(--amber);
-  background: linear-gradient(180deg, #20252e 0%, #171b22 49%, #10141a 51%, #0c1015 100%);
+  color: var(--ink);
+  /* Warm-linen light mode cell — panels with a subtle inset */
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
   border-radius: var(--r-flap);
-  box-shadow: var(--shadow-flap);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04);
   overflow: hidden;
   isolation: isolate;
 }
@@ -35,7 +37,7 @@
   inset-inline: 0;
   top: 50%;
   height: 1px;
-  background: var(--flap-slot);
+  background: var(--panel-line);
   transform: translateY(-0.5px);
   z-index: 5;
 }
@@ -47,8 +49,11 @@
 
 /* Non-digit glyphs (currency, comma) sit quieter and don't flip */
 .static {
-  color: var(--amber-dim);
+  color: var(--ink-mute);
   min-width: 0.4em;
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
 }
 
 /* ---- Flip animation ---- */
@@ -70,11 +75,11 @@
   }
   50% {
     transform: rotateX(-90deg);
-    filter: brightness(0.6);
+    filter: brightness(0.85);
   }
   50.01% {
     transform: rotateX(90deg);
-    filter: brightness(0.6);
+    filter: brightness(0.85);
   }
   100% {
     transform: rotateX(0deg);
@@ -86,4 +91,21 @@
   .flipper {
     animation: none;
   }
+}
+
+/* ---- Dark Mode — restore the dramatic dark flap look ---- */
+:global(html.dark) .cell {
+  color: var(--amber);
+  background: linear-gradient(180deg, #20252e 0%, #171b22 49%, #10141a 51%, #0c1015 100%);
+  border-color: transparent;
+  box-shadow: var(--shadow-flap);
+}
+
+:global(html.dark) .cell::after {
+  background: var(--flap-slot);
+}
+
+:global(html.dark) .static {
+  color: var(--amber-dim);
+  background: transparent;
 }

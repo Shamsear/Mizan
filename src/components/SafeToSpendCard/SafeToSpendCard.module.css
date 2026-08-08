@@ -1,110 +1,141 @@
 .card {
   position: relative;
-  padding: var(--sp-5) var(--sp-4) var(--sp-6);
+  padding: var(--sp-5) var(--sp-4) var(--sp-5);
   background: var(--panel);
   border: 1px solid var(--panel-line);
-  border-radius: var(--r-lg);
-  box-shadow: var(--shadow-panel);
+  border-radius: var(--r-xl);
   overflow: hidden;
+  text-align: center;
 }
 
-/* subtle top scanline like a lit board header */
+/* Subtle radial glow behind the number */
 .card::before {
   content: "";
   position: absolute;
-  inset: 0 0 auto 0;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    color-mix(in srgb, var(--electric) 60%, transparent),
-    transparent
+  top: 40%;
+  left: 50%;
+  width: 200px;
+  height: 200px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--electric) 6%, transparent) 0%,
+    transparent 70%
   );
+  pointer-events: none;
+  z-index: 0;
 }
 
 .header {
+  position: relative;
+  z-index: 1;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   margin-bottom: var(--sp-4);
 }
 
 .date {
   font-family: var(--font-board);
-  font-size: var(--step--1);
+  font-size: var(--step--2);
   letter-spacing: 0.14em;
   color: var(--ink-mute);
   text-transform: uppercase;
+  font-weight: 700;
 }
 
 .status {
   display: inline-flex;
   align-items: center;
-  gap: var(--sp-2);
+  gap: 6px;
   font-family: var(--font-board);
-  font-size: var(--step--1);
-  letter-spacing: 0.1em;
+  font-size: var(--step--2);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--ink-mute);
+  font-weight: 700;
 }
 
 .dot {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: var(--ok);
-  box-shadow: 0 0 8px var(--ok);
+  box-shadow: 0 0 6px var(--ok);
+  animation: dotPulse 2s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--ok); }
+  50% { opacity: 0.6; box-shadow: 0 0 2px var(--ok); }
 }
 
 .label {
+  position: relative;
+  z-index: 1;
   display: block;
-  margin-bottom: var(--sp-3);
-  font-size: var(--step-0);
+  margin-bottom: var(--sp-2);
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-style: italic;
   color: var(--ink-mute);
 }
 
 .flapRow {
-  display: flex;
-  justify-content: center;
-  padding: var(--sp-2) 0 var(--sp-4);
-}
-
-.hint {
+  position: relative;
+  z-index: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: var(--sp-2);
-  font-size: var(--step--1);
+  padding: var(--sp-3) 0 var(--sp-4);
+}
+
+.currency {
+  font-family: var(--font-board);
+  font-size: calc(var(--step-hero) * 0.65);
+  font-weight: 700;
   color: var(--ink-mute);
+  margin-right: 8px;
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 1.32em;
+  padding: 0 0.45em;
+  background: var(--panel-2);
+  border-radius: var(--r-flap);
+  border: 1px solid var(--panel-line);
+}
+
+.hint {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: var(--step--1);
+  font-weight: 700;
+  font-family: var(--font-board);
+  letter-spacing: 0.04em;
+  /* Pill badge styling */
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--r-pill);
+  margin: 0 auto;
 }
 
 .hintAhead {
-  color: var(--ok);
+  background: var(--income-bg);
+  color: var(--income-text);
 }
+
 .hintBehind {
-  color: var(--over);
+  background: var(--expense-bg);
+  color: var(--expense-text);
 }
 
 .rule {
   height: 1px;
   margin: var(--sp-3) 0;
   background: var(--panel-line);
-}
-
-.currency {
-  font-family: var(--font-board);
-  font-size: calc(var(--step-hero) * 0.75);
-  font-weight: 700;
-  color: var(--amber-dim);
-  margin-right: 8px;
-  align-self: center;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 1.28em;
-  padding: 0 0.5em;
-  background: var(--flap-slot);
-  border-radius: var(--r-flap);
-  border: 1px solid var(--panel-line);
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
 }
