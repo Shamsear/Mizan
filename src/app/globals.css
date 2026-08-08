@@ -13,6 +13,7 @@ html {
   height: 100%;
   color-scheme: light;
   -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
 }
 
 html.dark {
@@ -20,7 +21,7 @@ html.dark {
 }
 
 body {
-  min-height: 100%;
+  min-height: 100dvh;
   background:
     radial-gradient(120% 80% at 50% -10%, var(--gradient-start) 0%, var(--canvas) 60%) fixed,
     var(--canvas);
@@ -32,6 +33,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: none;
 }
 
 a {
@@ -45,6 +47,13 @@ button {
   cursor: pointer;
   background: none;
   border: none;
+}
+
+/* Haptic press feedback — every button gets a micro-squeeze on tap */
+button:active:not(:disabled),
+a:active {
+  transform: scale(0.97);
+  transition: transform 80ms ease;
 }
 
 input,
@@ -76,24 +85,63 @@ ol {
   background: color-mix(in srgb, var(--electric) 35%, transparent);
 }
 
-/* App shell: single mobile-first column, centered on larger screens */
+/* ================================================================
+   App shell: single mobile-first column, centered on larger screens
+   ================================================================ */
 .app-shell {
   width: 100%;
   max-width: var(--maxw);
   margin-inline: auto;
-  /* Top padding includes safe area to prevent notch/time overlap on mobile */
   padding: calc(var(--sp-4) + env(safe-area-inset-top, 0px)) var(--sp-4)
     calc(var(--nav-h) + env(safe-area-inset-bottom) + var(--sp-5));
   min-height: 100dvh;
 }
 
-/* Page transition fade — applied to page wrappers */
+/* ================================================================
+   Page transitions — spring-based entry
+   ================================================================ */
 .page-enter {
-  animation: pageEnter 0.15s var(--ease-out) both;
+  animation: pageEnter 0.3s var(--ease-out) both;
 }
 
 @keyframes pageEnter {
-  from { opacity: 0; transform: translateY(4px); }
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ================================================================
+   Glass panel utility — frosted translucent background
+   ================================================================ */
+.glass-panel {
+  background: var(--glass);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+}
+
+/* ================================================================
+   Stagger animation — cascading fade-in for list items
+   Usage: add class "stagger-enter" to parent, children auto-stagger
+   ================================================================ */
+.stagger-enter > * {
+  opacity: 0;
+  animation: staggerIn 0.35s var(--ease-out) both;
+}
+
+.stagger-enter > *:nth-child(1)  { animation-delay: 0ms; }
+.stagger-enter > *:nth-child(2)  { animation-delay: 40ms; }
+.stagger-enter > *:nth-child(3)  { animation-delay: 80ms; }
+.stagger-enter > *:nth-child(4)  { animation-delay: 120ms; }
+.stagger-enter > *:nth-child(5)  { animation-delay: 160ms; }
+.stagger-enter > *:nth-child(6)  { animation-delay: 200ms; }
+.stagger-enter > *:nth-child(7)  { animation-delay: 240ms; }
+.stagger-enter > *:nth-child(8)  { animation-delay: 280ms; }
+.stagger-enter > *:nth-child(9)  { animation-delay: 320ms; }
+.stagger-enter > *:nth-child(10) { animation-delay: 360ms; }
+.stagger-enter > *:nth-child(n+11) { animation-delay: 400ms; }
+
+@keyframes staggerIn {
+  from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
@@ -112,22 +160,23 @@ ol {
 }
 
 .sticky-banner-offline {
-  background: color-mix(in srgb, var(--over) 12%, var(--panel));
-  color: var(--over);
+  background: var(--expense-bg);
+  color: var(--expense-text);
 }
 
 .sticky-banner-update {
-  background: color-mix(in srgb, var(--electric) 12%, var(--panel));
+  background: color-mix(in srgb, var(--electric) 8%, var(--panel));
   color: var(--electric);
 }
 
 /* Eyebrow / label treatment — mechanical, wide-tracked */
 .eyebrow {
   font-family: var(--font-board);
-  font-size: var(--step--1);
-  letter-spacing: 0.18em;
+  font-size: var(--step--2);
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--ink-mute);
+  font-weight: 700;
 }
 
 /* ---- Desktop Blocker ---- */
@@ -170,11 +219,11 @@ ol {
   }
   
   .blocker-brand {
-    font-family: var(--font-board);
-    font-size: var(--step-2);
-    letter-spacing: 0.1em;
-    color: var(--electric);
-    text-shadow: var(--shadow-glow);
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    font-style: italic;
+    color: var(--ink);
+    letter-spacing: 0.02em;
   }
   
   .blocker-graphic {
@@ -185,10 +234,10 @@ ol {
   
   .blocker-title {
     font-family: var(--font-board);
-    font-size: var(--step-1);
-    letter-spacing: 0.05em;
+    font-size: var(--step--1);
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--ink);
+    color: var(--ink-mute);
   }
   
   .blocker-text {
