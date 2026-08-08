@@ -11,8 +11,12 @@
 
 html {
   height: 100%;
-  color-scheme: dark;
+  color-scheme: light;
   -webkit-text-size-adjust: 100%;
+}
+
+html.dark {
+  color-scheme: dark;
 }
 
 body {

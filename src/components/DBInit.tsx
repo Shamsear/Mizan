@@ -50,13 +50,16 @@ export function DBInit() {
     const root = document.documentElement;
     
     const applyTheme = () => {
-      if (
-        theme === "light" ||
-        (theme === "system" && !window.matchMedia("(prefers-color-scheme: dark)").matches)
-      ) {
-        root.classList.add("light");
-      } else {
+      const isDark = 
+        theme === "dark" ||
+        (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+        
+      if (isDark) {
+        root.classList.add("dark");
         root.classList.remove("light");
+      } else {
+        root.classList.add("light");
+        root.classList.remove("dark");
       }
     };
 

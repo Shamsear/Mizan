@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "Personal finance PWA that shows how much you can safely spend today",
     start_url: "/",
     display: "standalone",
-    background_color: "#0a0a0f",
-    theme_color: "#0a0a0f",
+    background_color: "#F6F5F1",
+    theme_color: "#F6F5F1",
     orientation: "portrait-primary",
     icons: [
       {
