@@ -3,83 +3,88 @@
 }
 
 .header {
-  padding: 1.5rem 0 0.75rem;
+  display: flex;
+  align-items: center;
+  padding: max(1.25rem, env(safe-area-inset-top, 1rem)) 0 0.75rem;
 }
 
 .title {
-  font-family: var(--font-board);
+  font-family: var(--font-display);
   font-size: var(--step-3);
-  font-weight: 700;
+  font-weight: 400;
+  font-style: italic;
   color: var(--ink);
-  letter-spacing: 0.02em;
+  flex: 1;
 }
 
-/* ── Summary banner ──────────────────────────────────────────────────── */
+/* ── Summary banner — side-by-side metric pills ── */
 .summaryBanner {
   display: flex;
-  align-items: center;
-  background: var(--panel);
-  border: 1px solid var(--panel-line);
-  border-radius: var(--r-lg);
-  margin-bottom: 1rem;
-  overflow: hidden;
+  align-items: stretch;
+  gap: 0.625rem;
+  margin-bottom: 1.25rem;
 }
 
 .summaryItem {
   flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.2rem;
-  padding: 0.875rem 0.5rem;
+  padding: 0.875rem 1rem;
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--r-lg);
 }
 
 .summaryLabel {
   font-size: var(--step--2);
-  font-weight: 600;
+  font-weight: 700;
   color: var(--ink-mute);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   font-family: var(--font-board);
 }
 
 .summaryVal {
   font-family: var(--font-board);
-  font-size: var(--step-0);
+  font-size: var(--step-1);
   font-weight: 700;
   font-variant-numeric: tabular-nums;
   color: var(--ink);
 }
-.summaryVal.income { color: var(--ok); }
-.summaryVal.expense { color: var(--over); }
+.summaryVal.income { color: var(--income-text); }
+.summaryVal.expense { color: var(--expense-text); }
 
 .sumDivider {
-  width: 1px;
-  height: 36px;
-  background: var(--panel-line);
-  flex-shrink: 0;
+  display: none;
 }
 
-/* ── Filters ─────────────────────────────────────────────────────────── */
+/* ── Filters — pill toggles ── */
 .filters {
   display: flex;
   gap: 0.375rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
+  overflow-x: auto;
+  scrollbar-width: none;
 }
 
+.filters::-webkit-scrollbar { display: none; }
+
 .filterBtn {
-  flex: 1;
-  padding: 0.5rem;
+  flex-shrink: 0;
+  padding: 0.5rem 1rem;
   background: var(--panel);
   border: 1px solid var(--panel-line);
-  border-radius: var(--r-md);
+  border-radius: var(--r-pill);
   font-size: var(--step--2);
-  font-weight: 600;
+  font-weight: 700;
   font-family: var(--font-board);
   color: var(--ink-mute);
   cursor: pointer;
-  transition: all 0.15s;
-  letter-spacing: 0.04em;
+  transition: all var(--duration-fast);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .filterBtn.active {
@@ -88,7 +93,7 @@
   border-color: transparent;
 }
 
-/* ── Content ─────────────────────────────────────────────────────────── */
+/* ── Content ── */
 .content {
   display: flex;
   flex-direction: column;
@@ -105,8 +110,10 @@
 }
 
 .emptyText {
+  font-family: var(--font-display);
   font-size: var(--step-1);
-  font-weight: 600;
+  font-weight: 400;
+  font-style: italic;
   color: var(--ink);
 }
 
@@ -115,7 +122,7 @@
   color: var(--ink-faint);
 }
 
-/* ── Sections ────────────────────────────────────────────────────────── */
+/* ── Sections ── */
 .section {
   display: flex;
   flex-direction: column;
@@ -137,16 +144,15 @@
   gap: 0.5rem;
 }
 
-/* ── Card ────────────────────────────────────────────────────────────── */
+/* ── Card ── */
 .card {
   background: var(--panel);
   border: 1px solid var(--panel-line);
-  border-radius: var(--r-lg);
-  padding: 1rem;
+  border-radius: var(--r-xl);
+  padding: 1.125rem 1.25rem;
   display: flex;
   flex-direction: column;
   gap: 0.875rem;
-  /* border-left is set inline per type */
 }
 
 .cardHeader {
@@ -159,15 +165,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  border-radius: var(--r-lg);
   flex-shrink: 0;
 }
 
 .cardMeta {
   flex: 1;
   min-width: 0;
+  text-align: left;
 }
 
 .cardTitle {
@@ -189,14 +196,15 @@
 .badge {
   display: inline-flex;
   align-items: center;
-  padding: 0.1rem 0.45rem;
-  background: color-mix(in srgb, var(--electric) 20%, transparent);
-  color: var(--electric);
-  border-radius: var(--r-sm);
+  padding: 0.15rem 0.5rem;
+  background: var(--panel-2);
+  color: var(--ink-mute);
+  border-radius: var(--r-pill);
   font-size: var(--step--2);
-  font-weight: 600;
+  font-weight: 700;
   font-family: var(--font-board);
   letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .cardAmount {
@@ -215,22 +223,27 @@
 }
 
 .nextDue {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0.25rem;
   font-size: var(--step--2);
+  font-weight: 600;
   color: var(--ink-mute);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--r-pill);
+  background: var(--panel-2);
 }
 
 .nextDue.overdue {
-  color: var(--over);
+  color: var(--expense-text);
+  background: var(--expense-bg);
 }
 
-/* ── Card actions ────────────────────────────────────────────────────── */
+/* ── Card actions ── */
 .cardActions {
   display: flex;
   gap: 0.5rem;
-  padding-top: 0.625rem;
+  padding-top: 0.75rem;
   border-top: 1px solid var(--panel-line);
 }
 
@@ -241,26 +254,27 @@
   justify-content: center;
   gap: 0.375rem;
   padding: 0.5rem 0.75rem;
-  background: var(--panel-2);
-  border: 1px solid var(--panel-line);
+  background: transparent;
+  border: 1px solid transparent;
   border-radius: var(--r-md);
   font-size: var(--step--1);
-  font-weight: 600;
+  font-weight: 700;
   color: var(--ink-mute);
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all var(--duration-fast);
   min-height: 36px;
 }
 
 .editBtn:hover {
   color: var(--ink);
-  background: var(--surface-hover);
+  background: var(--panel-2);
+  border-color: var(--panel-line);
 }
 
 .deleteActionBtn:hover {
-  color: var(--over);
-  background: rgba(255, 107, 90, 0.06);
-  border-color: rgba(255, 107, 90, 0.25);
+  color: var(--expense-text);
+  background: var(--expense-bg);
+  border-color: transparent;
 }
 
 @media (max-width: 480px) {
@@ -275,13 +289,13 @@
   }
 }
 
-/* ── View Mode Switcher in Header ────────────────────────────────────── */
+/* ── View Mode — Segmented Control Pill ── */
 .viewToggle {
   display: flex;
   background: var(--panel-2);
   border: 1px solid var(--panel-line);
   padding: 0.15rem;
-  border-radius: var(--r-md);
+  border-radius: var(--r-pill);
   margin-left: auto;
 }
 
@@ -289,14 +303,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   background: transparent;
   border: none;
-  border-radius: calc(var(--r-md) - 2px);
+  border-radius: var(--r-pill);
   color: var(--ink-mute);
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all var(--duration-fast);
 }
 
 .toggleActive {
@@ -304,14 +318,14 @@
   color: var(--on-electric);
 }
 
-/* ── Calendar container ──────────────────────────────────────────────── */
+/* ── Calendar ── */
 .calendarContainer {
   display: flex;
   flex-direction: column;
   background: var(--panel);
   border: 1px solid var(--panel-line);
   border-radius: var(--r-xl);
-  padding: 1rem;
+  padding: 1.25rem;
   margin-bottom: 2rem;
 }
 
@@ -326,14 +340,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   background: var(--panel-2);
   border: 1px solid var(--panel-line);
-  border-radius: var(--r-md);
+  border-radius: 50%;
   color: var(--ink-mute);
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all var(--duration-fast);
 }
 
 .navBtn:hover {
@@ -347,6 +361,8 @@
   font-size: var(--step-0);
   font-weight: 700;
   color: var(--ink);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .daysGridHeader {
@@ -359,7 +375,7 @@
 .dayOfWeek {
   font-family: var(--font-board);
   font-size: var(--step--2);
-  font-weight: 600;
+  font-weight: 700;
   color: var(--ink-faint);
   text-transform: uppercase;
 }
@@ -378,15 +394,14 @@
   aspect-ratio: 1;
   padding: 0.25rem 0.1rem;
   background: var(--panel-2);
-  border: 1px solid var(--panel-line);
+  border: 1px solid transparent;
   border-radius: var(--r-md);
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all var(--duration-fast);
 }
 
 .dayCell:hover {
-  background: var(--surface-hover);
-  border-color: var(--ink-mute);
+  border-color: var(--ink-faint);
 }
 
 .dayCellOutside {
@@ -404,12 +419,13 @@
 }
 
 .dayCellToday {
-  border-color: var(--amber);
+  border-color: var(--ink);
+  border-width: 2px;
 }
 
 .dayNumber {
   font-size: var(--step--1);
-  font-weight: 600;
+  font-weight: 700;
   color: var(--ink);
 }
 
@@ -434,7 +450,7 @@
   background: var(--over);
 }
 
-/* ── Selected day details list ────────────────────────────────────────── */
+/* ── Selected day details ── */
 .selectedDayDetails {
   margin-top: 1.25rem;
   border-top: 1px solid var(--panel-line);
@@ -457,4 +473,3 @@
   text-align: center;
   padding: 1.5rem;
 }
-
