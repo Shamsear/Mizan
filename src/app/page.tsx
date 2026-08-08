@@ -205,7 +205,7 @@ export default function Home() {
   if (!isLoaded || recurringRules === undefined) {
     return (
       <div className={styles.loadingSplash}>
-        <div className={styles.splashBrand}>▸ MIZAN</div>
+        <div className={styles.splashBrand}>Mizan</div>
         <div className={styles.splashSpinner} />
       </div>
     );
@@ -216,8 +216,7 @@ export default function Home() {
       <main className={`app-shell page-enter ${styles.page}`}>
         {/* ── Header ── */}
         <header className={styles.brand}>
-          <span className={styles.mark}>▸</span>
-          <span className={styles.wordmark}>MIZAN</span>
+          <span className={styles.wordmark}>Mizan</span>
           <div className={styles.spacer} />
           <Link href="/search" className={styles.headerBtn} aria-label="Search">
             <Icon name="search" size={20} />
@@ -357,7 +356,7 @@ export default function Home() {
             </Link>
           </div>
 
-          <div className={styles.recentList}>
+          <div className={`${styles.recentList} stagger-enter`}>
             {transactions === undefined ? (
               // Loading state
               <>
