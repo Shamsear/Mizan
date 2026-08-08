@@ -235,6 +235,7 @@ export async function seedUserData(userId: string): Promise<void> {
     notificationsEnabled: false,
     billReminderDays: 1,
     rolloverEnabled: true,
+    profileType: "worker",
     deletedAt: null,
   };
 

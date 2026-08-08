@@ -8,7 +8,8 @@ import { useCategories, useSettings } from "@/lib/db/hooks";
 import { addMonths } from "date-fns";
 import { Icon } from "@/components/Icon/Icon";
 import { useToast } from "@/components/Toast/Toast";
-import { getCurrencySymbol } from "@/lib/currency";
+import { getCurrencySymbol, SUPPORTED_CURRENCIES, QAR_EXCHANGE_RATES } from "@/lib/currency";
+import { updateSettings } from "@/lib/db/repository";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import styles from "./OnboardingWizard.module.css";
@@ -45,6 +46,44 @@ function WelcomeIllustration() {
       <circle cx="30" cy="30" r="1" fill="var(--amber)" opacity="0.6" />
       <circle cx="100" cy="40" r="1" fill="var(--electric)" opacity="0.7" />
       <circle cx="15" cy="50" r="1.5" fill="var(--electric)" opacity="0.5" />
+    </svg>
+  );
+}
+
+function ProfileIllustration() {
+  return (
+    <svg viewBox="0 0 120 80" className={styles.illustration} aria-hidden="true">
+      <circle cx="60" cy="40" r="28" fill="var(--electric)" opacity="0.06" />
+      <circle cx="45" cy="40" r="10" stroke="var(--electric)" strokeWidth="1.5" fill="none" />
+      <path d="M35 56 A10 10 0 0 1 55 56" stroke="var(--electric)" strokeWidth="1.5" strokeLinecap="round" fill="none" />
+      <circle cx="75" cy="40" r="10" stroke="var(--amber)" strokeWidth="1.5" fill="none" />
+      <path d="M65 56 A10 10 0 0 1 85 56" stroke="var(--amber)" strokeWidth="1.5" strokeLinecap="round" fill="none" />
+      <line x1="60" y1="20" x2="60" y2="60" stroke="var(--panel-line)" strokeWidth="1" strokeDasharray="2 2" />
+    </svg>
+  );
+}
+
+function WorkerIllustration() {
+  return (
+    <svg viewBox="0 0 120 80" className={styles.illustration} aria-hidden="true">
+      <circle cx="60" cy="40" r="28" fill="var(--electric)" opacity="0.06" />
+      <rect x="42" y="24" width="36" height="42" rx="3" stroke="var(--ink)" strokeWidth="1.75" fill="var(--panel-2)" />
+      <rect x="52" y="20" width="16" height="6" rx="1.5" stroke="var(--ink)" strokeWidth="1.75" fill="var(--panel)" />
+      <line x1="48" y1="36" x2="64" y2="36" stroke="var(--electric)" strokeWidth="1.5" strokeLinecap="round" />
+      <line x1="48" y1="44" x2="72" y2="44" stroke="var(--ink-faint)" strokeWidth="1.5" strokeLinecap="round" />
+      <line x1="48" y1="52" x2="68" y2="52" stroke="var(--ink-faint)" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function JobSeekerIllustration() {
+  return (
+    <svg viewBox="0 0 120 80" className={styles.illustration} aria-hidden="true">
+      <circle cx="60" cy="40" r="28" fill="var(--amber)" opacity="0.06" />
+      <circle cx="55" cy="35" r="14" stroke="var(--amber)" strokeWidth="2" fill="none" />
+      <line x1="65" y1="45" x2="80" y2="60" stroke="var(--amber)" strokeWidth="2.5" strokeLinecap="round" />
+      <circle cx="52" cy="30" r="1.5" fill="var(--electric)" />
+      <circle cx="60" cy="36" r="1" fill="var(--electric)" />
     </svg>
   );
 }
@@ -119,22 +158,35 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
     return () => setMounted(false);
   }, []);
 
-  const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
+  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(1);
   const [direction, setDirection] = useState<"forward" | "back">("forward");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Step 2 — Income
+  // Role profile selection
+  const [profileType, setProfileType] = useState<"worker" | "jobseeker">("worker");
+
+  // Step 3 (Worker) — Income
   const [incomeAmount, setIncomeAmount] = useState("");
   const [incomeFrequency, setIncomeFrequency] = useState<"monthly" | "biweekly" | "weekly">("monthly");
   const [incomeError, setIncomeError] = useState("");
 
-  // Step 3 — Bills (dynamic list)
+  // Step 3 (Job Seeker) — Savings & Visa
+  const [jsSavingsAmount, setJsSavingsAmount] = useState("");
+  const [jsHomeCurrency, setJsHomeCurrency] = useState("INR");
+  const [jsVisaDays, setJsVisaDays] = useState<number>(90);
+  const [jsCustomVisaDays, setJsCustomVisaDays] = useState("");
+  const [jsSavingsError, setJsSavingsError] = useState("");
+
+  // Step 4 (Worker) — Bills (dynamic list)
   const [bills, setBills] = useState<BillRow[]>([
     { id: "bill-0", label: "Rent", amount: "" },
   ]);
   const [billError, setBillError] = useState("");
 
-  // Step 4 — Goal
+  // Step 4 (Job Seeker) — Budget Preset Selection
+  const [jsBudgetPreset, setJsBudgetPreset] = useState<"survival" | "standard" | "comfortable">("survival");
+
+  // Step 5 (Worker) — Goal
   const [goalName, setGoalName] = useState("Emergency Fund");
   const [goalAmount, setGoalAmount] = useState("");
   const [goalMonths, setGoalMonths] = useState(6);
@@ -144,12 +196,24 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
   const salaryCategory = categories?.find((c) => c.name === "Salary");
   const housingCategory = categories?.find((c) => c.name === "Housing");
 
-  function navigate(to: 1 | 2 | 3 | 4, dir: "forward" | "back") {
+  function navigate(to: 1 | 2 | 3 | 4 | 5, dir: "forward" | "back") {
     setDirection(dir);
     setStep(to);
   }
 
-  /* ── Step 2: Save Income ── */
+  // Dual Currency calculations for Job Seeker UI
+  const exchangeRate = QAR_EXCHANGE_RATES[jsHomeCurrency] || 1.0;
+  const jsSavingsCents = Math.round(parseFloat(jsSavingsAmount.replace(/,/g, "")) * 100) || 0;
+  const jsSavingsQAR = Math.round((jsSavingsCents / exchangeRate)); // in cents
+
+  // Presets definition
+  const presets = {
+    survival: { rent: 450, food: 200, transport: 70, data: 30, total: 750, name: "Survival Mode" },
+    standard: { rent: 900, food: 400, transport: 200, data: 100, total: 1600, name: "Standard Mode" },
+    comfortable: { rent: 1800, food: 700, transport: 400, data: 100, total: 3000, name: "Comfortable Mode" },
+  };
+
+  /* ── Step 3 (Worker): Save Income ── */
   async function handleIncomeSubmit() {
     const cents = Math.round(parseFloat(incomeAmount.replace(/,/g, "")) * 100);
     if (!incomeAmount || isNaN(cents) || cents <= 0) {
@@ -158,9 +222,8 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
     }
     setIncomeError("");
 
-    // Guest onboarding path: just navigate forward
     if (!user?.id) {
-      navigate(3, "forward");
+      navigate(4, "forward");
       return;
     }
 
@@ -193,7 +256,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
         dirty: true,
       });
 
-      navigate(3, "forward");
+      navigate(4, "forward");
     } catch {
       toast.error("Failed to save income. Please try again.");
     } finally {
@@ -201,7 +264,17 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
     }
   }
 
-  /* ── Step 3: Save Bills ── */
+  /* ── Step 3 (Job Seeker): Save Savings/Visa Setup ── */
+  async function handleJsSetupSubmit() {
+    if (!jsSavingsAmount || jsSavingsCents <= 0) {
+      setJsSavingsError("Please enter your current savings");
+      return;
+    }
+    setJsSavingsError("");
+    navigate(4, "forward");
+  }
+
+  /* ── Step 4 (Worker): Save Bills ── */
   async function handleBillsSubmit() {
     const filledBills = bills.filter((b) => b.label.trim() && b.amount.trim());
     if (filledBills.length === 0) {
@@ -210,9 +283,8 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
     }
     setBillError("");
 
-    // Guest onboarding path: just navigate forward
     if (!user?.id) {
-      navigate(4, "forward");
+      navigate(5, "forward");
       return;
     }
 
@@ -250,7 +322,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
         })
       );
 
-      navigate(4, "forward");
+      navigate(5, "forward");
     } catch {
       toast.error("Failed to save bills. Please try again.");
     } finally {
@@ -258,12 +330,19 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
     }
   }
 
-  /* ── Step 4: Save Goal ── */
+  /* ── Step 4 (Job Seeker): Save Preset ── */
+  async function handleJsPresetSubmit() {
+    navigate(5, "forward");
+  }
+
+  /* ── Step 5 (Worker): Save Goal & Finish ── */
   async function handleGoalSubmit() {
     const cents = Math.round(parseFloat(goalAmount.replace(/,/g, "")) * 100);
     if (!goalName.trim() || isNaN(cents) || cents <= 0) return;
+    
     if (!user?.id) {
       const setupData = {
+        profileType: "worker",
         incomeAmount,
         incomeFrequency,
         bills,
@@ -294,6 +373,12 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
         deletedAt: null,
         dirty: true,
       });
+
+      // Save profile type to settings
+      await updateSettings(user.id, {
+        profileType: "worker",
+      });
+
       onComplete();
     } catch {
       toast.error("Failed to save goal. Please try again.");
@@ -301,6 +386,106 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
       setIsSubmitting(false);
     }
   }
+
+  /* ── Step 5 (Job Seeker): Save All & Finish ── */
+  async function handleJsFinishSubmit() {
+    const visaDays = jsVisaDays === 0 ? parseInt(jsCustomVisaDays) || 30 : jsVisaDays;
+    
+    if (!user?.id) {
+      // Save data for guest signup transition
+      const setupData = {
+        profileType: "jobseeker",
+        qatarSavingsCents: jsSavingsCents,
+        qatarVisaDays: visaDays,
+        qatarHomeCurrency: jsHomeCurrency,
+        qatarExchangeRate: exchangeRate,
+        qatarBudgetPreset: jsBudgetPreset,
+      };
+      localStorage.setItem("mizan_onboarding_temp", JSON.stringify(setupData));
+      router.push("/sign-up");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      // 1. Update Settings with Job Seeker fields
+      const presetData = presets[jsBudgetPreset];
+      await updateSettings(user.id, {
+        profileType: "jobseeker",
+        baseCurrency: "QAR",
+        qatarSavingsCents: jsSavingsQAR, // convert to QAR cents
+        qatarVisaDays: visaDays,
+        qatarHomeCurrency: jsHomeCurrency,
+        qatarExchangeRate: exchangeRate,
+        qatarBudgetPreset: jsBudgetPreset,
+        qatarCustomRentCents: presetData.rent * 100,
+        qatarCustomFoodCents: presetData.food * 100,
+        qatarCustomTransportCents: presetData.transport * 100,
+        qatarCustomDataCents: presetData.data * 100,
+        qatarCustomMiscCents: 50 * 100, // CVs and Job Hunting miscellaneous
+      });
+
+      // 2. Set up initial transactions for their capital injection if they have transactions empty
+      const txnsCount = await db.transactions.where("userId").equals(user.id).count();
+      if (txnsCount === 0) {
+        const now = new Date();
+        await db.transactions.add({
+          id: `${Date.now()}-savings-capital`,
+          userId: user.id,
+          type: "income",
+          amountCents: jsSavingsQAR,
+          currency: "QAR",
+          categoryId: "income",
+          note: `Initial job seeker savings (${jsSavingsAmount} ${jsHomeCurrency})`,
+          date: now,
+          createdAt: now,
+          updatedAt: now,
+          deletedAt: null,
+          dirty: true,
+        });
+      }
+
+      onComplete();
+      router.push("/qatar-runway");
+    } catch (e) {
+      console.error(e);
+      toast.error("Failed to complete setup. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
+  // Check if we already have onboarding data stored from when they were a guest, and import it if now logged in
+  useEffect(() => {
+    if (user?.id) {
+      const guestDataStr = localStorage.getItem("mizan_onboarding_temp");
+      if (guestDataStr) {
+        try {
+          const guestData = JSON.parse(guestDataStr);
+          if (guestData.profileType === "jobseeker") {
+            setProfileType("jobseeker");
+            setJsSavingsAmount((guestData.qatarSavingsCents / 100).toString());
+            setJsHomeCurrency(guestData.qatarHomeCurrency || "INR");
+            setJsVisaDays(guestData.qatarVisaDays || 90);
+            setJsBudgetPreset(guestData.qatarBudgetPreset || "survival");
+            setStep(5); // Go directly to final step J5 for confirmation
+          } else {
+            setProfileType("worker");
+            setIncomeAmount(guestData.incomeAmount || "");
+            setIncomeFrequency(guestData.incomeFrequency || "monthly");
+            if (guestData.bills) setBills(guestData.bills);
+            setGoalName(guestData.goalName || "Emergency Fund");
+            setGoalAmount(guestData.goalAmount || "");
+            setGoalMonths(guestData.goalMonths || 6);
+            setStep(5); // Go to final step for confirmation
+          }
+          localStorage.removeItem("mizan_onboarding_temp");
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }
+  }, [user]);
 
   /* ── Bill list helpers ── */
   function addBillRow() {
@@ -316,7 +501,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
   }
 
   /* ── Render ── */
-  const TOTAL_STEPS = 4;
+  const TOTAL_STEPS = 5;
   const slideClass = direction === "forward" ? styles.slideForward : styles.slideBack;
 
   if (!mounted) return null;
@@ -330,7 +515,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
           {step > 1 && (
             <button
               className={styles.backBtn}
-              onClick={() => navigate((step - 1) as 1 | 2 | 3 | 4, "back")}
+              onClick={() => navigate((step - 1) as any, "back")}
               aria-label="Go back"
             >
               <Icon name="chevron-left" size={20} />
@@ -360,7 +545,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
             <WelcomeIllustration />
             <h1 className={styles.headline}>Know your balance.</h1>
             <p className={styles.body}>
-              Tell us about your income and bills — we'll calculate exactly how much is safe to spend each day.
+              Tell us about your finances — Mizan helps you stay within limits, roll over unused budget, and maximize your savings.
             </p>
             <button className={styles.primaryBtn} onClick={() => navigate(2, "forward")}>
               Get started
@@ -374,8 +559,56 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
           </div>
         )}
 
-        {/* ──────────── STEP 2: INCOME ──────────── */}
+        {/* ──────────── STEP 2: PROFILE SELECTION (NEW) ──────────── */}
         {step === 2 && (
+          <div className={styles.stepContent}>
+            <ProfileIllustration />
+            <h2 className={styles.headline}>Choose your path in Qatar</h2>
+            <p className={styles.body}>Tell us how you plan to use Mizan to track your budget.</p>
+
+            <div className={styles.profileSelectorGrid}>
+              <div
+                className={`${styles.profileCard} ${profileType === "worker" ? styles.profileCardActive : ""}`}
+                onClick={() => setProfileType("worker")}
+                id="profile-worker"
+              >
+                <span className={styles.profileIconWrap}>
+                  <Icon name="briefcase" size={24} />
+                </span>
+                <div className={styles.profileTextWrap}>
+                  <span className={styles.profileCardTitle}>Regular Worker / Resident</span>
+                  <span className={styles.profileCardDesc}>
+                    I live or work here. I want to budget monthly salary and track fixed monthly bills.
+                  </span>
+                </div>
+              </div>
+
+              <div
+                className={`${styles.profileCard} ${profileType === "jobseeker" ? styles.profileCardActive : ""}`}
+                onClick={() => setProfileType("jobseeker")}
+                id="profile-jobseeker"
+              >
+                <span className={styles.profileIconWrap} style={{ color: "var(--amber)", background: "rgba(245, 158, 11, 0.1)" }}>
+                  <Icon name="target" size={24} />
+                </span>
+                <div className={styles.profileTextWrap}>
+                  <span className={styles.profileCardTitle}>Job Seeker (Limited Budget)</span>
+                  <span className={styles.profileCardDesc}>
+                    I recently arrived in Qatar. I want to map my savings to cost of living and calculate my survival runway.
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <button className={styles.primaryBtn} onClick={() => navigate(3, "forward")}>
+              Continue
+              <Icon name="chevron-right" size={18} />
+            </button>
+          </div>
+        )}
+
+        {/* ──────────── STEP 3: WORKER INCOME OR JOB SEEKER SAVINGS ──────────── */}
+        {step === 3 && profileType === "worker" && (
           <div className={styles.stepContent}>
             <IncomeIllustration />
             <h2 className={styles.headline}>What comes in each month?</h2>
@@ -418,14 +651,90 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
               {isSubmitting ? "Saving..." : "Continue"}
               {!isSubmitting && <Icon name="chevron-right" size={18} />}
             </button>
-            <button className={styles.ghostBtn} onClick={() => navigate(3, "forward")}>
+            <button className={styles.ghostBtn} onClick={() => navigate(4, "forward")}>
               Skip for now
             </button>
           </div>
         )}
 
-        {/* ──────────── STEP 3: BILLS ──────────── */}
-        {step === 3 && (
+        {step === 3 && profileType === "jobseeker" && (
+          <div className={styles.stepContent}>
+            <JobSeekerIllustration />
+            <h2 className={styles.headline}>What are your current savings?</h2>
+            <p className={styles.body}>We'll use this to calculate how many days you can survive in Qatar.</p>
+
+            <div className={styles.inlineSelectWrap}>
+              <select
+                className={styles.inlineSelect}
+                value={jsHomeCurrency}
+                onChange={(e) => setJsHomeCurrency(e.target.value)}
+                aria-label="Select home currency"
+              >
+                {Object.keys(QAR_EXCHANGE_RATES).map((code) => (
+                  <option key={code} value={code}>
+                    {code}
+                  </option>
+                ))}
+              </select>
+              <input
+                type="number"
+                inputMode="decimal"
+                step="0.01"
+                placeholder="Savings amount"
+                className={`${styles.bigInput} ${styles.inlineInput}`}
+                value={jsSavingsAmount}
+                onChange={(e) => { setJsSavingsAmount(e.target.value); setJsSavingsError(""); }}
+                autoFocus
+              />
+            </div>
+            {jsSavingsError && <p className={styles.fieldError}>{jsSavingsError}</p>}
+
+            {/* Dynamic currency display */}
+            {jsSavingsAmount && jsHomeCurrency !== "QAR" && (
+              <div className={styles.conversionSubtitle}>
+                ≈ QR {(jsSavingsQAR / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} QAR
+              </div>
+            )}
+
+            <div className={styles.field}>
+              <label className={styles.fieldLabel}>Your Visa Expiry / Target Days</label>
+              <div className={styles.visaDurationSelect}>
+                {([30, 60, 90, 0] as const).map((days) => (
+                  <button
+                    key={days}
+                    type="button"
+                    className={`${styles.visaDurationBtn} ${jsVisaDays === days ? styles.visaDurationBtnActive : ""}`}
+                    onClick={() => setJsVisaDays(days)}
+                  >
+                    {days === 0 ? "Custom" : `${days} Days`}
+                  </button>
+                ))}
+              </div>
+              
+              {jsVisaDays === 0 && (
+                <input
+                  type="number"
+                  placeholder="Enter custom visa days"
+                  className={styles.textInput}
+                  value={jsCustomVisaDays}
+                  onChange={(e) => setJsCustomVisaDays(e.target.value)}
+                  style={{ marginTop: "-0.5rem" }}
+                />
+              )}
+            </div>
+
+            <button
+              className={styles.primaryBtn}
+              onClick={handleJsSetupSubmit}
+            >
+              Continue
+              <Icon name="chevron-right" size={18} />
+            </button>
+          </div>
+        )}
+
+        {/* ──────────── STEP 4: WORKER BILLS OR JOB SEEKER PRESETS ──────────── */}
+        {step === 4 && profileType === "worker" && (
           <div className={styles.stepContent}>
             <BillsIllustration />
             <h2 className={styles.headline}>What goes out each month?</h2>
@@ -481,14 +790,51 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
               {isSubmitting ? "Saving..." : "Continue"}
               {!isSubmitting && <Icon name="chevron-right" size={18} />}
             </button>
-            <button className={styles.ghostBtn} onClick={() => navigate(4, "forward")}>
+            <button className={styles.ghostBtn} onClick={() => navigate(5, "forward")}>
               Skip for now
             </button>
           </div>
         )}
 
-        {/* ──────────── STEP 4: GOAL ──────────── */}
-        {step === 4 && (
+        {step === 4 && profileType === "jobseeker" && (
+          <div className={styles.stepContent}>
+            <BillsIllustration />
+            <h2 className={styles.headline}>Select your survival budget</h2>
+            <p className={styles.body}>Based on realistic cost of living in Qatar. You can adjust details later.</p>
+
+            <div className={styles.presetSelectorGrid}>
+              {(["survival", "standard", "comfortable"] as const).map((presetKey) => {
+                const preset = presets[presetKey];
+                return (
+                  <div
+                    key={presetKey}
+                    className={`${styles.presetCard} ${jsBudgetPreset === presetKey ? styles.presetCardActive : ""}`}
+                    onClick={() => setJsBudgetPreset(presetKey)}
+                  >
+                    <div className={styles.presetHeader}>
+                      <span className={styles.presetName}>{preset.name}</span>
+                      <span className={styles.presetCost}>QR {preset.total} / mo</span>
+                    </div>
+                    <span className={styles.presetDetails}>
+                      Rent: QR {preset.rent} • Food: QR {preset.food} • Travel: QR {preset.transport} • Data: QR {preset.data}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+
+            <button
+              className={styles.primaryBtn}
+              onClick={handleJsPresetSubmit}
+            >
+              Continue
+              <Icon name="chevron-right" size={18} />
+            </button>
+          </div>
+        )}
+
+        {/* ──────────── STEP 5: WORKER GOAL OR JOB SEEKER SUMMARY ──────────── */}
+        {step === 5 && profileType === "worker" && (
           <div className={styles.stepContent}>
             <GoalIllustration />
             <h2 className={styles.headline}>Any savings goals?</h2>
@@ -554,6 +900,62 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
             </button>
             <button className={styles.ghostBtn} onClick={onComplete}>
               Set up later
+            </button>
+          </div>
+        )}
+
+        {step === 5 && profileType === "jobseeker" && (
+          <div className={styles.stepContent}>
+            <GoalIllustration />
+            <h2 className={styles.headline}>Your Qatar Runway Plan</h2>
+            <p className={styles.body}>We've calculated a preview of your finance strategy.</p>
+
+            <div className={styles.presetSelectorGrid} style={{ marginBottom: "2rem" }}>
+              <div className={styles.presetCard} style={{ cursor: "default", border: "1px solid var(--panel-line)", background: "var(--panel)" }}>
+                <div className={styles.presetHeader}>
+                  <span className={styles.presetName} style={{ color: "var(--ink-mute)" }}>Total Savings</span>
+                  <span className={styles.presetCost} style={{ color: "var(--ink)" }}>
+                    {parseFloat(jsSavingsAmount).toLocaleString()} {jsHomeCurrency}
+                  </span>
+                </div>
+                <div className={styles.presetHeader} style={{ marginTop: "0.25rem" }}>
+                  <span className={styles.presetName} style={{ color: "var(--ink-mute)" }}>In Qatari Riyals</span>
+                  <span className={styles.presetCost} style={{ color: "var(--ok)" }}>
+                    ≈ QR {(jsSavingsQAR / 100).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                  </span>
+                </div>
+                <div className={styles.presetHeader} style={{ marginTop: "0.25rem" }}>
+                  <span className={styles.presetName} style={{ color: "var(--ink-mute)" }}>Target Runway</span>
+                  <span className={styles.presetCost} style={{ color: "var(--electric)" }}>
+                    {jsVisaDays === 0 ? jsCustomVisaDays : jsVisaDays} Days
+                  </span>
+                </div>
+                <div className={styles.presetHeader} style={{ marginTop: "0.25rem" }}>
+                  <span className={styles.presetName} style={{ color: "var(--ink-mute)" }}>Monthly Expenses</span>
+                  <span className={styles.presetCost} style={{ color: "var(--over)" }}>
+                    QR {presets[jsBudgetPreset].total} / mo
+                  </span>
+                </div>
+                <div className={styles.divider} style={{ margin: "0.5rem 0", background: "var(--panel-line)" }} />
+                <div className={styles.presetHeader}>
+                  <span className={styles.presetName} style={{ color: "var(--electric)" }}>Runway Lifespan</span>
+                  <span className={styles.presetCost} style={{ color: "var(--electric)", fontSize: "var(--step-1)" }}>
+                    {Math.floor(jsSavingsQAR / ((presets[jsBudgetPreset].total * 100) / 30))} Days
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <button
+              className={styles.primaryBtn}
+              onClick={handleJsFinishSubmit}
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Generating..." : "Launch Qatar Runway"}
+              {!isSubmitting && <Icon name="sparkles" size={18} />}
+            </button>
+            <button className={styles.ghostBtn} onClick={onComplete}>
+              Cancel and set up later
             </button>
           </div>
         )}

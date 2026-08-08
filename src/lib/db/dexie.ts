@@ -140,6 +140,19 @@ export interface Settings extends SyncMeta {
   billReminderDays: number;
   /** Unspent allowance rollover enabled (default true). */
   rolloverEnabled: boolean;
+  
+  // Qatar Job Seeker profile fields
+  profileType?: "worker" | "jobseeker";
+  qatarSavingsCents?: number;
+  qatarVisaDays?: number;
+  qatarHomeCurrency?: string;
+  qatarExchangeRate?: number;
+  qatarBudgetPreset?: "survival" | "standard" | "comfortable" | "custom";
+  qatarCustomRentCents?: number;
+  qatarCustomFoodCents?: number;
+  qatarCustomTransportCents?: number;
+  qatarCustomDataCents?: number;
+  qatarCustomMiscCents?: number;
 }
 
 export interface NotificationItem extends SyncMeta {

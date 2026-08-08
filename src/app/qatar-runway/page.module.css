@@ -1,0 +1,600 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  background: var(--canvas);
+  min-height: 100vh;
+  padding-bottom: max(6rem, calc(5rem + env(safe-area-inset-bottom)));
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  padding: max(1.5rem, env(safe-area-inset-top, 1rem)) 1rem 0.75rem;
+  background: var(--canvas);
+  border-bottom: 1px solid var(--panel-line);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.backBtn {
+  background: transparent;
+  border: none;
+  color: var(--ink);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--r-md);
+  transition: background 0.15s;
+}
+
+.backBtn:hover {
+  background: var(--surface-hover);
+}
+
+.title {
+  font-family: var(--font-board);
+  font-size: var(--step-1);
+  font-weight: 700;
+  color: var(--ink);
+  margin-left: 0.5rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.headerSpacer {
+  width: 40px;
+}
+
+/* ── Runway Dashboard ── */
+.runwayDashboard {
+  position: relative;
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--r-lg);
+  padding: 1.5rem 1.25rem;
+  margin: 1.25rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.4);
+}
+
+.runwayGlow {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  right: -50%;
+  bottom: -50%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.8;
+}
+
+.runwayMetric {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+  margin-bottom: 1.25rem;
+}
+
+.metricLabel {
+  font-size: var(--step--1);
+  color: var(--ink-mute);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  font-family: var(--font-board);
+  margin-bottom: 0.25rem;
+}
+
+.metricVal {
+  font-family: var(--font-board);
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.metricUnit {
+  font-size: var(--step-0);
+  font-weight: 400;
+  color: var(--ink-mute);
+  text-transform: lowercase;
+}
+
+.positiveMetric {
+  color: var(--ok);
+  text-shadow: 0 0 20px rgba(87, 217, 163, 0.2);
+}
+
+.negativeMetric {
+  color: var(--over);
+  text-shadow: 0 0 20px rgba(255, 107, 90, 0.2);
+}
+
+.statusAlert {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  border-radius: var(--r-md);
+  font-size: var(--step--1);
+  font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: 1.25rem;
+  z-index: 1;
+  text-align: left;
+}
+
+.statusAlertOk {
+  background: rgba(87, 217, 163, 0.08);
+  border: 1px solid rgba(87, 217, 163, 0.15);
+  color: var(--ok);
+}
+
+.statusAlertWarning {
+  background: rgba(255, 107, 90, 0.08);
+  border: 1px solid rgba(255, 107, 90, 0.15);
+  color: var(--over);
+}
+
+.alertText {
+  flex: 1;
+}
+
+.dashboardStats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  width: 100%;
+  gap: 0.5rem;
+  z-index: 1;
+  border-top: 1px solid var(--panel-line);
+  padding-top: 1.25rem;
+}
+
+.miniStat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.miniLabel {
+  font-size: var(--step--2);
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.miniValue {
+  font-family: var(--font-board);
+  font-size: var(--step-0);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.miniHomeValue {
+  font-size: var(--step--2);
+  color: var(--ink-mute);
+  margin-top: 0.125rem;
+}
+
+/* ── Sections ── */
+.section {
+  display: flex;
+  flex-direction: column;
+  margin: 1.5rem 1rem 0;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.sectionTitle {
+  font-family: var(--font-board);
+  font-size: var(--step-0);
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--r-lg);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.divider {
+  height: 1px;
+  background: var(--panel-line);
+  margin: 1.25rem 0;
+}
+
+/* ── Forms ── */
+.formRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.inputLabel {
+  font-size: var(--step-0);
+  font-weight: 600;
+  color: var(--ink-mute);
+}
+
+.savingsFieldWrap {
+  display: flex;
+  background: var(--canvas);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  align-items: center;
+  flex: 0.7;
+}
+
+.currencySelect {
+  background: transparent;
+  border: none;
+  border-right: 1px solid var(--panel-line);
+  color: var(--ink);
+  font-family: var(--font-board);
+  font-size: var(--step--1);
+  padding: 0.5rem 0.5rem;
+  cursor: pointer;
+  outline: none;
+}
+
+.savingsInput {
+  background: transparent;
+  border: none;
+  color: var(--ink);
+  font-family: var(--font-board);
+  font-size: var(--step-0);
+  padding: 0.5rem 0.75rem;
+  width: 100%;
+  outline: none;
+  -moz-appearance: textfield;
+}
+
+.savingsInput::-webkit-inner-spin-button,
+.savingsInput::-webkit-outer-spin-button { appearance: none; }
+
+.rateCaption {
+  font-size: var(--step--2);
+  color: var(--ok);
+  text-align: right;
+  margin-top: 0.5rem;
+  font-weight: 600;
+}
+
+.visaDaysRow {
+  display: flex;
+  gap: 0.35rem;
+  flex: 0.7;
+}
+
+.visaPill {
+  flex: 1;
+  padding: 0.5rem 0;
+  background: var(--canvas);
+  border: 1px solid var(--panel-line);
+  color: var(--ink-mute);
+  font-family: var(--font-board);
+  font-size: var(--step--1);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.visaPillActive {
+  background: var(--electric);
+  color: var(--on-electric);
+  border-color: transparent;
+}
+
+.customVisaInput {
+  background: var(--canvas);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--r-md);
+  color: var(--ink);
+  font-family: var(--font-board);
+  font-size: var(--step--1);
+  padding: 0.5rem 0.75rem;
+  width: 80px;
+  outline: none;
+  text-align: center;
+}
+
+/* ── Expenses Sliders ── */
+.presetIndicator {
+  font-size: var(--step--1);
+  color: var(--ink-mute);
+}
+
+.presetHighlight {
+  color: var(--electric);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.presetButtons {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.presetBtn {
+  flex: 1;
+  padding: 0.625rem 0.5rem;
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--r-md);
+  color: var(--ink-mute);
+  font-size: var(--step--1);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.presetBtnActive {
+  background: rgba(45, 212, 232, 0.08);
+  border-color: var(--electric);
+  color: var(--electric);
+}
+
+.sliderGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sliderLabelRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sliderName {
+  font-size: var(--step-0);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.sliderValue {
+  font-family: var(--font-board);
+  font-size: var(--step-0);
+  font-weight: 700;
+  color: var(--electric);
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  background: var(--canvas);
+  border-radius: 3px;
+  outline: none;
+  margin: 0.5rem 0;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--electric);
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(45, 212, 232, 0.5);
+  transition: transform 0.1s;
+}
+
+.slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.sliderHint {
+  font-size: var(--step--2);
+  color: var(--ink-faint);
+  line-height: 1.4;
+}
+
+/* ── Job Hunting Expenses ── */
+.jobSearchSpentHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.jobSearchLabel {
+  font-size: var(--step-0);
+  color: var(--ink-mute);
+  font-weight: 600;
+}
+
+.jobSearchTotal {
+  font-family: var(--font-board);
+  font-size: var(--step-1);
+  color: var(--over);
+  font-weight: 700;
+}
+
+.emptyJobSearch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1.5rem;
+  color: var(--ink-mute);
+  gap: 0.5rem;
+}
+
+.emptyHint {
+  font-size: var(--step--1);
+  color: var(--ink-faint);
+  line-height: 1.4;
+}
+
+.jsTransactionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.jsTransactionRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+}
+
+.jsTxnMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.jsTxnNote {
+  font-size: var(--step-0);
+  font-weight: 600;
+  color: var(--ink);
+  text-transform: capitalize;
+}
+
+.jsTxnDate {
+  font-size: var(--step--2);
+  color: var(--ink-faint);
+}
+
+.jsTxnAmount {
+  font-family: var(--font-board);
+  font-size: var(--step-0);
+  font-weight: 700;
+  color: var(--over);
+}
+
+.moreTxnsText {
+  font-size: var(--step--2);
+  color: var(--ink-faint);
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+/* ── Cost Table ── */
+.costTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.costTable th,
+.costTable td {
+  padding: 0.75rem 0.5rem;
+  border-bottom: 1px solid var(--panel-line);
+}
+
+.costTable th {
+  font-family: var(--font-board);
+  font-size: var(--step--1);
+  color: var(--ink-faint);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.costTable td {
+  font-size: var(--step--1);
+  line-height: 1.4;
+}
+
+.costTable tr:last-child td {
+  border-bottom: none;
+}
+
+.costTable td:nth-child(2) {
+  font-family: var(--font-board);
+  font-weight: 700;
+  color: var(--electric);
+  white-space: nowrap;
+}
+
+/* ── Tips ── */
+.tipsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.tipItem {
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--r-md);
+  padding: 1rem;
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.tipIcon {
+  color: var(--amber);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.tipText {
+  font-size: var(--step--1);
+  color: var(--ink-mute);
+  line-height: 1.5;
+}
+
+.tipText strong {
+  color: var(--ink);
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+/* ── Loading Spinner ── */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: var(--canvas);
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--panel-line);
+  border-top-color: var(--electric);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

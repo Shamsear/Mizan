@@ -139,6 +139,9 @@ export const SUPPORTED_CURRENCIES = [
   { code: "EGP", name: "Egyptian Pound", symbol: "E£" },
   { code: "NGN", name: "Nigerian Naira", symbol: "₦" },
   { code: "PKR", name: "Pakistani Rupee", symbol: "₨" },
+  { code: "BDT", name: "Bangladeshi Taka", symbol: "৳" },
+  { code: "NPR", name: "Nepalese Rupee", symbol: "₨" },
+  { code: "LKR", name: "Sri Lankan Rupee", symbol: "Rs" },
   { code: "TRY", name: "Turkish Lira", symbol: "₺" },
   { code: "RUB", name: "Russian Ruble", symbol: "₽" },
   { code: "PLN", name: "Polish Zloty", symbol: "zł" },
@@ -148,3 +151,21 @@ export const SUPPORTED_CURRENCIES = [
   { code: "THB", name: "Thai Baht", symbol: "฿" },
   { code: "ILS", name: "Israeli New Shekel", symbol: "₪" },
 ];
+
+/** Standard QAR exchange rates (1 QAR to Home Currency) for job seeker runway calculations */
+export const QAR_EXCHANGE_RATES: Record<string, number> = {
+  USD: 0.27,
+  EUR: 0.25,
+  GBP: 0.21,
+  INR: 22.82,
+  PKR: 76.45,
+  BDT: 32.35,
+  NPR: 36.65,
+  LKR: 81.20,
+  PHP: 15.65,
+  EGP: 13.25,
+  NGN: 426.50,
+  NLG: 1.0,
+  QAR: 1.0,
+};
+

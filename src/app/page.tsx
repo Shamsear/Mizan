@@ -16,6 +16,7 @@ import {
   useCategories,
   useCurrency,
   useUnreadNotificationsCount,
+  useSettings,
 } from "@/lib/db/hooks";
 import { createTransaction } from "@/lib/db/repository";
 import { useSafeToSpend } from "@/lib/finance/useSafeToSpend";
@@ -32,6 +33,7 @@ export default function Home() {
   const transactions = useTransactions();
   const recurringRules = useRecurringRules();
   const categories = useCategories();
+  const settings = useSettings();
   const safeToSpendData = useSafeToSpend();
   const isOnline = useOnlineStatus();
   const toast = useToast();
@@ -242,6 +244,70 @@ export default function Home() {
           dateLabel={dateLabel}
           online={isOnline}
         />
+
+        {/* ── Qatar Job Seeker Runway Banner ── */}
+        {settings?.profileType === "jobseeker" && (
+          <div className={styles.runwayBanner}>
+            <div className={styles.runwayBannerHeader}>
+              <span className={styles.runwayBannerTitle}>
+                <Icon name="briefcase" size={16} color="var(--amber)" /> QATAR RUNWAY BUFFER
+              </span>
+              <Link href="/qatar-runway" className={styles.runwayBannerLink}>
+                Manage <Icon name="chevron-right" size={14} />
+              </Link>
+            </div>
+            
+            {(() => {
+              const exchange = settings.qatarExchangeRate || 1.0;
+              const savings = settings.qatarSavingsCents || 0;
+              
+              // Get custom expenses from settings
+              const rent = settings.qatarCustomRentCents || (450 * 100);
+              const food = settings.qatarCustomFoodCents || (200 * 100);
+              const transport = settings.qatarCustomTransportCents || (70 * 100);
+              const data = settings.qatarCustomDataCents || (30 * 100);
+              const misc = settings.qatarCustomMiscCents || (50 * 100);
+              
+              const totalMonthly = rent + food + transport + data + misc;
+              const dailySpendCents = totalMonthly / 30;
+              
+              // Runway days remaining
+              const daysRemaining = dailySpendCents > 0 ? Math.floor(savings / dailySpendCents) : 0;
+              const visaDays = settings.qatarVisaDays || 90;
+              const diff = daysRemaining - visaDays;
+              
+              return (
+                <div className={styles.runwayBannerContent}>
+                  <div className={styles.runwayBannerMetrics}>
+                    <div className={styles.runwayBannerMetric}>
+                      <span className={styles.runwayBannerVal}>{daysRemaining}</span>
+                      <span className={styles.runwayBannerUnit}>days of cash</span>
+                    </div>
+                    <div className={styles.runwayBannerStatus}>
+                      {diff >= 0 ? (
+                        <span className={styles.runwayStatusOk}>
+                          <Icon name="check-circle" size={14} /> Safe (+{diff}d buffer)
+                        </span>
+                      ) : (
+                        <span className={styles.runwayStatusWarning}>
+                          <Icon name="alert-triangle" size={14} /> Short ({Math.abs(diff)}d warning)
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {/* Progress bar towards visa duration */}
+                  <div className={styles.progressBarBg}>
+                    <div 
+                      className={`${styles.progressBarFill} ${diff >= 0 ? styles.fillOk : styles.fillWarning}`} 
+                      style={{ width: `${Math.min(100, (daysRemaining / visaDays) * 100)}%` }} 
+                    />
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
+        )}
 
         {/* ── Smart Log Bar ── */}
         <form onSubmit={handleSmartLog} className={styles.smartLogWrap}>

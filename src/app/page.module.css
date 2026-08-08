@@ -350,3 +350,133 @@
   border-color: var(--ink-mute);
   background: var(--surface-hover);
 }
+
+/* ── Job Seeker Runway Dashboard Banner ── */
+.runwayBanner {
+  background: var(--panel);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--r-lg);
+  padding: 1rem 1.25rem;
+  margin-top: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.runwayBanner::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: var(--amber);
+}
+
+.runwayBannerHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.runwayBannerTitle {
+  font-family: var(--font-board);
+  font-size: var(--step--2);
+  font-weight: 700;
+  color: var(--ink-mute);
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.runwayBannerLink {
+  font-size: var(--step--2);
+  font-weight: 600;
+  color: var(--electric);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: opacity 0.15s;
+}
+
+.runwayBannerLink:hover {
+  opacity: 0.75;
+}
+
+.runwayBannerContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.runwayBannerMetrics {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.runwayBannerMetric {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+.runwayBannerVal {
+  font-family: var(--font-board);
+  font-size: var(--step-2);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.runwayBannerUnit {
+  font-size: var(--step--2);
+  color: var(--ink-faint);
+}
+
+.runwayBannerStatus {
+  font-size: var(--step--2);
+  font-weight: 600;
+}
+
+.runwayStatusOk {
+  color: var(--ok);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.runwayStatusWarning {
+  color: var(--over);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.progressBarBg {
+  width: 100%;
+  height: 4px;
+  background: var(--canvas);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progressBarFill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.fillOk {
+  background: var(--ok);
+}
+
+.fillWarning {
+  background: var(--over);
+}
+
