@@ -20,9 +20,12 @@ export function useOnlineStatus(): boolean {
     window.addEventListener("offline", handleOffline);
 
     // Sync in case it changed between render and effect
-    setIsOnline(navigator.onLine);
+    const timer = setTimeout(() => {
+      setIsOnline(navigator.onLine);
+    }, 0);
 
     return () => {
+      clearTimeout(timer);
       window.removeEventListener("online", handleOnline);
       window.removeEventListener("offline", handleOffline);
     };

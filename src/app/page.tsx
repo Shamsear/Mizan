@@ -46,10 +46,14 @@ export default function Home() {
   const unreadCount = useUnreadNotificationsCount() ?? 0;
 
   useEffect(() => {
-    if (recurringRules !== undefined && recurringRules.length === 0) {
+    if (!isLoaded) return;
+    // Onboarding is only shown to non-logged in (guest) users who have no setup data
+    if (!user && recurringRules !== undefined && recurringRules.length === 0) {
       setShowOnboarding(true);
+    } else {
+      setShowOnboarding(false);
     }
-  }, [recurringRules]);
+  }, [recurringRules, user, isLoaded]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
