@@ -41,8 +41,7 @@
   border-radius: 28px; /* Smooth rounded bubble corners */
   box-shadow: 0 12px 48px rgba(0, 0, 0, 0.25), 0 0 0 1px var(--panel-line);
   
-  padding: 1.5rem;
-  padding-bottom: 2rem;
+  padding: 1rem 0 0 0; /* Shift side padding to .content so scrollbar aligns to the bubble edge */
   
   /* Originate scale up exactly from the point of the speech bubble tail */
   transform-origin: calc(100% - 30px) bottom;
@@ -53,6 +52,29 @@
   max-height: calc(70dvh - 3.5rem);
   overflow-y: auto;
   overscroll-behavior: contain;
+  padding: 0 1.5rem 2rem 1.5rem; /* Shifted padding here */
+  
+  /* Clean Custom Scrollbar styling for Mizan (thin, soft sepia/gray) */
+  scrollbar-width: thin;
+  scrollbar-color: var(--panel-line) transparent;
+}
+
+.content::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.content::-webkit-scrollbar-thumb {
+  background: var(--panel-line);
+  border-radius: var(--r-pill, 100px);
+}
+
+.content::-webkit-scrollbar-thumb:hover {
+  background: var(--ink-mute);
 }
 
 /* Custom Speech Bubble Curved SVG Tail styling */
@@ -98,7 +120,7 @@
   height: 4px;
   background: var(--panel-line);
   border-radius: var(--r-pill);
-  margin: -0.5rem auto 1rem;
+  margin: 0 auto 0.75rem; /* Centered, clean margins since padding has changed */
   flex-shrink: 0;
   opacity: 0.5;
 }
