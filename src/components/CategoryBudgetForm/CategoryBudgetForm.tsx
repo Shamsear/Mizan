@@ -25,6 +25,7 @@ export function CategoryBudgetForm({
   const categories = useCategories("expense");
   const toast = useToast();
   const currency = useCurrency();
+  const currencySymbol = currency === "QAR" ? "QR" : currency;
   const [selectedCategoryId, setSelectedCategoryId] = useState(categoryId || "");
   const [budgetAmount, setBudgetAmount] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -145,24 +146,25 @@ export function CategoryBudgetForm({
           </div>
         )}
 
-        {/* Budget Amount */}
-        <div className={styles.field}>
-          <label htmlFor="budget" className={styles.label}>
-            Monthly Budget *
-          </label>
-          <input
-            id="budget"
-            type="number"
-            inputMode="decimal"
-            step="0.01"
-            placeholder="0.00"
-            value={budgetAmount}
-            onChange={(e) => setBudgetAmount(e.target.value)}
-            className={styles.input}
-            required
-            autoFocus={!!categoryId}
-          />
-          <p className={styles.hint}>
+        {/* Giant Centered Budget Amount Input */}
+        <div className={styles.amountContainer}>
+          <span className={styles.amountLabel}>Monthly Budget</span>
+          <div className={styles.amountInputWrap}>
+            <span className={styles.amountCurrency}>{currencySymbol}</span>
+            <input
+              id="budget"
+              type="number"
+              inputMode="decimal"
+              step="0.01"
+              placeholder="0.00"
+              value={budgetAmount}
+              onChange={(e) => setBudgetAmount(e.target.value)}
+              className={styles.amountInput}
+              required
+              autoFocus={!!categoryId}
+            />
+          </div>
+          <p className={styles.hint} style={{ marginTop: "0.5rem" }}>
             This is how much you want to spend on this category per month
           </p>
         </div>
@@ -176,7 +178,7 @@ export function CategoryBudgetForm({
               className={styles.quickBtn}
               onClick={() => setBudgetAmount(amt)}
             >
-              ${parseFloat(amt).toLocaleString("en-US", { maximumFractionDigits: 0 })}
+              {currencySymbol} {parseFloat(amt).toLocaleString("en-US", { maximumFractionDigits: 0 })}
             </button>
           ))}
         </div>

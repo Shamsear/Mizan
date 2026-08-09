@@ -33,6 +33,7 @@ export function GoalForm({ goalId, onClose, onSuccess }: GoalFormProps) {
   const [isLoading, setIsLoading] = useState(!!goalId);
   const [selectedIcon, setSelectedIcon] = useState(GOAL_ICONS[0]);
   const currency = useCurrency();
+  const currencySymbol = currency === "QAR" ? "QR" : currency;
 
   const {
     register,
@@ -179,22 +180,25 @@ export function GoalForm({ goalId, onClose, onSuccess }: GoalFormProps) {
             {errors.name && <span className={styles.error}>{errors.name.message}</span>}
           </div>
 
-          {/* Target Amount */}
-          <div className={styles.field}>
-            <label htmlFor="targetAmount" className={styles.label}>
-              Target Amount *
-            </label>
-            <input
-              id="targetAmount"
-              type="number"
-              inputMode="decimal"
-              step="0.01"
-              placeholder="0.00"
-              className={styles.input}
-              onChange={handleTargetAmountChange}
-            />
+          {/* Giant Centered Target Amount Input */}
+          <div className={styles.amountContainer}>
+            <span className={styles.amountLabel}>Target Amount</span>
+            <div className={styles.amountInputWrap}>
+              <span className={styles.amountCurrency}>{currencySymbol}</span>
+              <input
+                id="targetAmount"
+                type="number"
+                inputMode="decimal"
+                step="0.01"
+                placeholder="0.00"
+                className={styles.amountInput}
+                onChange={handleTargetAmountChange}
+              />
+            </div>
             {errors.targetCents && (
-              <span className={styles.error}>{errors.targetCents.message}</span>
+              <span className={styles.error} style={{ marginTop: "0.5rem" }}>
+                {errors.targetCents.message}
+              </span>
             )}
           </div>
 
