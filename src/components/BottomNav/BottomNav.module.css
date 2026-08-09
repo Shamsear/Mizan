@@ -33,18 +33,17 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 6px;
   padding: 0;
   text-decoration: none;
   color: var(--ink-mute);
-  transition: color var(--duration-fast) ease;
+  transition: color var(--duration-fast) var(--ease-out);
   -webkit-tap-highlight-color: transparent;
   position: relative;
 }
 
 .tab:active {
-  transform: scale(0.85);
-  transition: transform 100ms var(--ease-spring);
+  transform: scale(0.95);
 }
 
 .tab.active {
@@ -56,33 +55,23 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 48px;
+  height: 28px;
   border-radius: var(--r-pill);
-  transition: background var(--duration-fast) ease;
+  background: transparent;
+  transition: 
+    background var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-spring);
 }
 
-/* Active pill highlight behind icon */
+/* Modern pill active highlight container around the icon */
 .tab.active .iconWrap {
   background: var(--panel-2);
+  transform: scale(1.05);
 }
 
-/* Underline active indicator */
-.dot {
-  position: absolute;
-  bottom: -2px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 16px;
-  height: 3px;
-  border-radius: var(--r-pill);
-  background: var(--ink);
-  animation: dotIn 0.25s var(--ease-spring) both;
-}
-
-@keyframes dotIn {
-  from { width: 0; opacity: 0; }
-  to   { width: 16px; opacity: 1; }
+.tab:active .iconWrap {
+  transform: scale(0.9);
 }
 
 .label {
@@ -92,5 +81,10 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   line-height: 1;
-  white-space: nowrap;
+  color: var(--ink-mute);
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.tab.active .label {
+  color: var(--ink);
 }

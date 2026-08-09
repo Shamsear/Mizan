@@ -173,10 +173,9 @@ export function BottomNav() {
             <span className={styles.iconWrap}>
               <Icon
                 name={tab.icon}
-                size={22}
-                strokeWidth={active ? 2.25 : 1.75}
+                size={20}
+                strokeWidth={active ? 2.25 : 1.6}
               />
-              {active && <span className={styles.dot} aria-hidden="true" />}
             </span>
             <span className={styles.label}>{tab.label}</span>
           </Link>

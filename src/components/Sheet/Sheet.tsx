@@ -13,8 +13,8 @@ interface SheetProps {
 
 /**
  * Reusable bottom-sheet container.
- * Slide-up animation, drag handle, backdrop, safe-area-aware.
- * Used by: ConfirmDialog, TransactionForm, all modals.
+ * Features: Sibling backdrop design to avoid WebKit blur rendering bugs,
+ * centered max-width layouts, and responsive transitions.
  */
 export function Sheet({ open, onClose, children, label }: SheetProps) {
   const sheetRef = useRef<HTMLDivElement>(null);
@@ -37,14 +37,16 @@ export function Sheet({ open, onClose, children, label }: SheetProps) {
   if (!open) return null;
 
   return (
-    <div className={styles.overlay} onClick={onClose} role="presentation">
+    <div className={styles.wrapper}>
+      {/* Sibling backdrop overlay element to prevent child rendering blur bug */}
+      <div className={styles.overlay} onClick={onClose} role="presentation" />
+      
       <div
         ref={sheetRef}
         className={styles.sheet}
         role="dialog"
         aria-modal="true"
         aria-label={label}
-        onClick={(e) => e.stopPropagation()}
       >
         {/* Drag handle */}
         <div className={styles.handle} aria-hidden="true" />

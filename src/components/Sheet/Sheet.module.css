@@ -1,12 +1,19 @@
-.overlay {
+.wrapper {
   position: fixed;
   inset: 0;
   z-index: 1000;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
   background: rgba(0, 0, 0, 0.45);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
-  display: flex;
-  align-items: flex-end;
+  z-index: 1;
   animation: fadeIn 0.2s ease both;
 }
 
@@ -16,7 +23,11 @@
 }
 
 .sheet {
+  position: relative;
+  z-index: 2;
   width: 100%;
+  max-width: var(--maxw);
+  margin-inline: auto;
   max-height: 92dvh;
   overflow-y: auto;
   background: var(--panel);
