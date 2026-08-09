@@ -109,6 +109,16 @@ ol {
   to   { opacity: 1; transform: translateY(0); }
 }
 
+.route-transition {
+  animation: routeFade 0.25s ease both;
+  width: 100%;
+}
+
+@keyframes routeFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
 /* ================================================================
    Glass panel utility — frosted translucent background
    ================================================================ */
