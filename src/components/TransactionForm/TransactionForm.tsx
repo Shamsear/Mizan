@@ -36,6 +36,7 @@ export function TransactionForm({
   const categories = useCategories();
   const toast = useToast();
   const currency = useCurrency();
+  const currencySymbol = currency === "QAR" ? "QR" : currency;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const isEditMode = !!editTransaction;
 
@@ -140,23 +141,26 @@ export function TransactionForm({
           </button>
         </div>
 
-        {/* Amount */}
-        <div className={styles.field}>
-          <label htmlFor="amount" className={styles.label}>
-            Amount *
-          </label>
-          <input
-            id="amount"
-            type="number"
-            inputMode="decimal"
-            step="0.01"
-            placeholder="0.00"
-            className={styles.input}
-            onChange={handleAmountChange}
-            autoFocus
-          />
+        {/* Giant Centered Amount Input */}
+        <div className={styles.amountContainer}>
+          <span className={styles.amountLabel}>Amount</span>
+          <div className={styles.amountInputWrap}>
+            <span className={styles.amountCurrency}>{currencySymbol}</span>
+            <input
+              id="amount"
+              type="number"
+              inputMode="decimal"
+              step="0.01"
+              placeholder="0.00"
+              className={styles.amountInput}
+              onChange={handleAmountChange}
+              autoFocus
+            />
+          </div>
           {errors.amountCents && (
-            <span className={styles.error}>{errors.amountCents.message}</span>
+            <span className={styles.error} style={{ marginTop: "0.5rem" }}>
+              {errors.amountCents.message}
+            </span>
           )}
         </div>
 
