@@ -3,15 +3,15 @@
 }
 
 .header {
-  padding: 1.5rem 0 0.75rem;
+  padding: max(1.25rem, env(safe-area-inset-top, 1rem)) 0 0.75rem;
 }
 
 .title {
-  font-family: var(--font-board);
+  font-family: var(--font-display);
   font-size: var(--step-3);
-  font-weight: 700;
+  font-weight: 400;
+  font-style: italic;
   color: var(--ink);
-  letter-spacing: 0.02em;
 }
 
 .content {
@@ -29,8 +29,10 @@
 }
 
 .emptyText {
+  font-family: var(--font-display);
   font-size: var(--step-1);
-  font-weight: 600;
+  font-weight: 400;
+  font-style: italic;
   color: var(--ink);
 }
 
@@ -45,7 +47,7 @@
   gap: 1rem;
 }
 
-/* ── Card ────────────────────────────────────────────────────────────── */
+/* ── Card ── */
 .card {
   background: var(--panel);
   border: 1px solid var(--panel-line);
@@ -66,10 +68,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
-  background: rgba(245, 185, 66, 0.12);
-  border-radius: 50%;
+  width: 46px;
+  height: 46px;
+  background: var(--panel-2);
+  border-radius: var(--r-lg);
   flex-shrink: 0;
 }
 
@@ -95,14 +97,15 @@
 }
 
 .daysLeft {
-  color: var(--amber);
+  color: var(--ink);
+  font-weight: 700;
 }
 
 .completeIcon {
   flex-shrink: 0;
 }
 
-/* ── Progress ────────────────────────────────────────────────────────── */
+/* ── Progress ── */
 .progressSection {
   display: flex;
   flex-direction: column;
@@ -132,16 +135,16 @@
 /* Animated progress track */
 .progressTrack {
   height: 8px;
-  background: var(--panel-line);
-  border-radius: 4px;
+  background: var(--panel-2);
+  border-radius: var(--r-pill);
   overflow: hidden;
 }
 
 .progressFill {
   height: 100%;
   width: var(--pct, 0%);
-  background: linear-gradient(90deg, var(--electric), var(--amber));
-  border-radius: 4px;
+  background: var(--ink);
+  border-radius: var(--r-pill);
   animation: barGrow 0.6s var(--ease-out) 0.1s both;
 }
 
@@ -162,7 +165,7 @@
 
 .progressPct {
   font-size: var(--step--2);
-  font-weight: 600;
+  font-weight: 700;
   color: var(--ink-mute);
   font-family: var(--font-board);
 }
@@ -172,30 +175,32 @@
   align-items: center;
   gap: 0.3rem;
   padding: 0.2rem 0.6rem;
-  border-radius: var(--r-sm);
+  border-radius: var(--r-pill);
   font-size: var(--step--2);
-  font-weight: 600;
+  font-weight: 700;
   font-family: var(--font-board);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .onTrack {
-  background: rgba(87, 217, 163, 0.12);
-  color: var(--ok);
+  background: var(--income-bg);
+  color: var(--income-text);
 }
 
 .behind {
-  background: rgba(245, 185, 66, 0.12);
-  color: var(--warn);
+  background: var(--warn-bg);
+  color: var(--warn-text);
 }
 
-/* ── Contribution stats ──────────────────────────────────────────────── */
+/* ── Contribution stats ── */
 .contributionGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0.5rem;
   background: var(--panel-2);
   border: 1px solid var(--panel-line);
-  border-radius: var(--r-md);
+  border-radius: var(--r-lg);
   padding: 0.875rem;
 }
 
@@ -212,6 +217,7 @@
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--ink-mute);
+  font-weight: 700;
 }
 
 .contValue {
@@ -222,21 +228,21 @@
   font-variant-numeric: tabular-nums;
 }
 
-/* ── Complete message ────────────────────────────────────────────────── */
+/* ── Complete message ── */
 .completeMessage {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
   padding: 0.875rem;
-  background: color-mix(in srgb, var(--electric) 10%, transparent);
-  border-radius: var(--r-md);
+  background: var(--income-bg);
+  border-radius: var(--r-lg);
   font-size: var(--step--1);
-  font-weight: 600;
-  color: var(--electric);
+  font-weight: 700;
+  color: var(--income-text);
 }
 
-/* ── Actions ─────────────────────────────────────────────────────────── */
+/* ── Actions ── */
 .cardActions {
   display: flex;
   gap: 0.5rem;
@@ -251,20 +257,21 @@
   justify-content: center;
   gap: 0.375rem;
   padding: 0.5rem 0.75rem;
-  background: var(--panel-2);
-  border: 1px solid var(--panel-line);
+  background: transparent;
+  border: 1px solid transparent;
   border-radius: var(--r-md);
   font-size: var(--step--1);
-  font-weight: 600;
+  font-weight: 700;
   color: var(--ink-mute);
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all var(--duration-fast);
   min-height: 36px;
 }
 
 .actionBtn:hover {
   color: var(--ink);
-  background: var(--surface-hover);
+  background: var(--panel-2);
+  border-color: var(--panel-line);
 }
 
 .addBtn {
@@ -279,11 +286,11 @@
 }
 
 .deleteBtn {
-  flex: 0 0 44px;
+  flex: 0 0 var(--tap);
 }
 
 .deleteBtn:hover {
-  color: var(--over);
-  background: rgba(255, 107, 90, 0.06);
-  border-color: rgba(255, 107, 90, 0.25);
+  color: var(--expense-text);
+  background: var(--expense-bg);
+  border-color: transparent;
 }

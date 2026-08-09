@@ -12,12 +12,12 @@
   overflow: hidden;
 }
 
-/* Ambient radial glow matching app background */
+/* Ambient radial glow matching warm-linen background */
 .overlay::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(120% 80% at 50% -10%, #12161d 0%, var(--canvas) 60%);
+  background: radial-gradient(120% 80% at 50% -10%, var(--gradient-start) 0%, var(--canvas) 60%);
   pointer-events: none;
 }
 
@@ -61,12 +61,11 @@
 }
 
 .wordmark {
-  font-family: var(--font-board);
-  font-size: var(--step-0);
-  font-weight: 700;
-  letter-spacing: 0.12em;
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: 400;
+  font-style: italic;
   color: var(--ink);
-  text-transform: uppercase;
 }
 
 .backBtn,
@@ -78,12 +77,12 @@
   justify-content: center;
   width: 40px;
   height: 40px;
-  border-radius: var(--r-md);
+  border-radius: 50%;
   background: transparent;
   border: none;
   color: var(--ink-mute);
   cursor: pointer;
-  transition: color 0.15s, background 0.15s;
+  transition: color var(--duration-fast), background var(--duration-fast);
 }
 
 .backBtn { left: 1rem; }
@@ -139,12 +138,12 @@
 
 /* ── Text ────────────────────────────────────────────────────────────── */
 .headline {
-  font-family: var(--font-board);
+  font-family: var(--font-display);
   font-size: var(--step-2);
-  font-weight: 700;
+  font-weight: 400;
+  font-style: italic;
   line-height: 1.2;
   color: var(--ink);
-  letter-spacing: 0.02em;
   margin-bottom: 1rem;
 }
 

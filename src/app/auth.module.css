@@ -1,7 +1,7 @@
 .container {
   display: flex;
   min-height: 100dvh;
-  background: var(--board);
+  background: var(--canvas);
   color: var(--ink);
 }
 
@@ -12,22 +12,10 @@
   align-items: center;
   justify-content: center;
   padding: var(--sp-8) var(--sp-6);
-  background: radial-gradient(120% 80% at 30% 30%, #171c26 0%, var(--board) 70%);
+  background: radial-gradient(120% 80% at 30% 30%, var(--gradient-start) 0%, var(--canvas) 70%);
   border-right: 1px solid var(--panel-line);
   position: relative;
   overflow: hidden;
-}
-
-/* Diagonal scanning line glow overlay for mechanical feel */
-.illustrationSide::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, transparent 40%, rgba(45, 212, 232, 0.03) 50%, transparent 60%);
-  pointer-events: none;
 }
 
 .illustratorWrap {
@@ -46,17 +34,14 @@
 }
 
 .visualMark {
-  font-family: var(--font-board);
-  color: var(--electric);
-  font-size: var(--step-3);
-  font-weight: 700;
+  display: none;
 }
 
 .visualWordmark {
-  font-family: var(--font-board);
-  font-weight: 700;
-  letter-spacing: 0.34em;
-  font-size: var(--step-2);
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-style: italic;
+  font-size: var(--step-3);
   color: var(--ink);
 }
 
@@ -69,10 +54,9 @@
 .svgGraphic {
   width: 100%;
   height: auto;
-  border-radius: var(--r-lg);
+  border-radius: var(--r-xl);
   background: var(--panel);
   border: 1px solid var(--panel-line);
-  box-shadow: var(--shadow-panel);
 }
 
 .authSide {
@@ -95,16 +79,14 @@
 }
 
 .mobileHeader .mark {
-  color: var(--electric);
-  font-size: var(--step-2);
-  line-height: 1;
+  display: none;
 }
 
 .mobileHeader .wordmark {
-  font-family: var(--font-board);
-  font-weight: 700;
-  letter-spacing: 0.3em;
-  font-size: var(--step-1);
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-style: italic;
+  font-size: var(--step-2);
   color: var(--ink);
 }
 

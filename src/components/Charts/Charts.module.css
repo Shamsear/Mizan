@@ -2,8 +2,7 @@
   padding: var(--sp-5) var(--sp-4);
   background: var(--panel);
   border: 1px solid var(--panel-line);
-  border-radius: var(--r-lg);
-  box-shadow: var(--shadow-panel);
+  border-radius: var(--r-xl);
   margin-bottom: var(--sp-4);
 }
 
@@ -17,18 +16,19 @@
 }
 
 .chartTitle {
-  font-family: var(--font-board);
+  font-family: var(--font-display);
   font-size: var(--step-1);
-  font-weight: 500;
-  letter-spacing: 0.02em;
+  font-weight: 400;
+  font-style: italic;
   color: var(--ink);
 }
 
 .chartTotal {
   font-family: var(--font-board);
   font-size: var(--step-0);
-  color: var(--ink-dim);
-  letter-spacing: 0.05em;
+  font-weight: 700;
+  color: var(--ink-mute);
+  letter-spacing: 0.04em;
 }
 
 /* Empty states */
@@ -40,29 +40,33 @@
   padding: var(--sp-6) var(--sp-4);
   background: var(--panel);
   border: 1px solid var(--panel-line);
-  border-radius: var(--r-lg);
+  border-radius: var(--r-xl);
   margin-bottom: var(--sp-4);
-  min-height: 300px;
+  min-height: 260px;
 }
 
 .emptyText {
+  font-family: var(--font-display);
   font-size: var(--step-1);
-  color: var(--ink-dim);
+  font-style: italic;
+  color: var(--ink);
   margin-bottom: var(--sp-2);
 }
 
 .emptyHint {
   font-size: var(--step--1);
-  color: var(--ink-mute);
+  color: var(--ink-faint);
 }
 
 /* Tooltip */
 .tooltip {
   padding: var(--sp-3);
-  background: var(--panel);
-  border: 1px solid var(--panel-line);
-  border-radius: var(--r-md);
-  box-shadow: var(--shadow-float);
+  background: var(--glass);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-toast);
   font-family: var(--font-board);
 }
 
@@ -81,20 +85,20 @@
 
 .tooltipName {
   font-size: var(--step-0);
-  font-weight: 500;
+  font-weight: 700;
   color: var(--ink);
 }
 
 .tooltipAmount {
   font-size: var(--step-1);
-  font-weight: 600;
+  font-weight: 700;
   color: var(--ink);
   margin-bottom: var(--sp-1);
 }
 
 .tooltipPercent {
   font-size: var(--step--1);
-  color: var(--ink-dim);
+  color: var(--ink-mute);
 }
 
 .tooltipRow {
@@ -107,12 +111,12 @@
 
 .tooltipLabel {
   font-size: var(--step--1);
-  color: var(--ink-dim);
+  color: var(--ink-mute);
 }
 
 .tooltipValue {
   font-size: var(--step-0);
-  font-weight: 500;
+  font-weight: 700;
   color: var(--ink);
 }
 
@@ -136,7 +140,7 @@
 .legendDot {
   width: 10px;
   height: 10px;
-  border-radius: 50%;
+  border-radius: var(--r-sm);
   flex-shrink: 0;
 }
 
@@ -148,11 +152,12 @@
 .legendName {
   flex: 1;
   color: var(--ink);
+  font-weight: 600;
 }
 
 .legendAmount {
   font-family: var(--font-board);
-  font-weight: 500;
-  color: var(--ink-dim);
+  font-weight: 700;
+  color: var(--ink-mute);
   letter-spacing: 0.02em;
 }

@@ -1,21 +1,31 @@
 .nav {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  left: 1rem;
+  right: 1rem;
   margin-inline: auto;
-  width: 100%;
-  max-width: var(--maxw);
-  z-index: 500;
+  width: calc(100% - 2rem);
+  max-width: calc(var(--maxw) - 2rem);
+  z-index: 1001;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  height: calc(var(--nav-h) + env(safe-area-inset-bottom));
-  padding-bottom: env(safe-area-inset-bottom);
-  /* Frosted glass navigation */
+  height: var(--nav-h);
+  /* Frosted glass floating navigation */
   background: var(--glass);
   -webkit-backdrop-filter: var(--glass-blur);
   backdrop-filter: var(--glass-blur);
-  border-top: 1px solid var(--glass-border);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-pill);
+  box-shadow: var(--shadow-toast);
+  transition: 
+    transform var(--duration-normal) var(--ease-spring),
+    opacity var(--duration-normal) var(--ease-spring),
+    bottom var(--duration-normal) var(--ease-spring);
+  transform-origin: bottom center;
+}
+
+.shrunk {
+  transform: scale(0.92) translateY(0.5rem);
+  opacity: 0.5;
 }
 
 .tab {
@@ -26,7 +36,7 @@
   gap: 4px;
   padding: 0;
   text-decoration: none;
-  color: var(--ink-faint);
+  color: var(--ink-mute);
   transition: color var(--duration-fast) ease;
   -webkit-tap-highlight-color: transparent;
   position: relative;
@@ -57,7 +67,7 @@
   background: var(--panel-2);
 }
 
-/* Replaced dot with a pill underline */
+/* Underline active indicator */
 .dot {
   position: absolute;
   bottom: -2px;

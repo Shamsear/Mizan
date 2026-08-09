@@ -2,14 +2,14 @@
   display: flex;
   flex-direction: column;
   background: var(--canvas);
-  min-height: 100vh;
+  min-height: 100dvh;
   padding-bottom: max(6rem, calc(5rem + env(safe-area-inset-bottom)));
 }
 
 .header {
   display: flex;
   align-items: center;
-  padding: max(1.5rem, env(safe-area-inset-top, 1rem)) 1rem 0.75rem;
+  padding: max(1.25rem, env(safe-area-inset-top, 1rem)) 1rem 0.75rem;
   background: var(--canvas);
   border-bottom: 1px solid var(--panel-line);
   position: sticky;
@@ -25,10 +25,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: var(--r-md);
-  transition: background 0.15s;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  transition: background var(--duration-fast);
 }
 
 .backBtn:hover {
@@ -36,17 +36,16 @@
 }
 
 .title {
-  font-family: var(--font-board);
-  font-size: var(--step-1);
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  font-weight: 400;
+  font-style: italic;
   color: var(--ink);
   margin-left: 0.5rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
 }
 
 .headerSpacer {
-  width: 40px;
+  width: 38px;
 }
 
 /* ── Runway Dashboard ── */
@@ -54,25 +53,17 @@
   position: relative;
   background: var(--panel);
   border: 1px solid var(--panel-line);
-  border-radius: var(--r-lg);
+  border-radius: var(--r-xl);
   padding: 1.5rem 1.25rem;
   margin: 1.25rem 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   overflow: hidden;
-  box-shadow: 0 12px 24px -10px rgba(0, 0, 0, 0.4);
 }
 
 .runwayGlow {
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  right: -50%;
-  bottom: -50%;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.8;
+  display: none;
 }
 
 .runwayMetric {
@@ -84,11 +75,11 @@
 }
 
 .metricLabel {
-  font-size: var(--step--1);
+  font-size: var(--step--2);
   color: var(--ink-mute);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-weight: 600;
+  letter-spacing: 0.08em;
+  font-weight: 700;
   font-family: var(--font-board);
   margin-bottom: 0.25rem;
 }
@@ -111,13 +102,11 @@
 }
 
 .positiveMetric {
-  color: var(--ok);
-  text-shadow: 0 0 20px rgba(87, 217, 163, 0.2);
+  color: var(--income-text);
 }
 
 .negativeMetric {
-  color: var(--over);
-  text-shadow: 0 0 20px rgba(255, 107, 90, 0.2);
+  color: var(--expense-text);
 }
 
 .statusAlert {
@@ -126,9 +115,9 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.875rem 1rem;
-  border-radius: var(--r-md);
+  border-radius: var(--r-lg);
   font-size: var(--step--1);
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.4;
   margin-bottom: 1.25rem;
   z-index: 1;
@@ -136,15 +125,13 @@
 }
 
 .statusAlertOk {
-  background: rgba(87, 217, 163, 0.08);
-  border: 1px solid rgba(87, 217, 163, 0.15);
-  color: var(--ok);
+  background: var(--income-bg);
+  color: var(--income-text);
 }
 
 .statusAlertWarning {
-  background: rgba(255, 107, 90, 0.08);
-  border: 1px solid rgba(255, 107, 90, 0.15);
-  color: var(--over);
+  background: var(--expense-bg);
+  color: var(--expense-text);
 }
 
 .alertText {
@@ -170,10 +157,10 @@
 
 .miniLabel {
   font-size: var(--step--2);
-  color: var(--ink-faint);
+  color: var(--ink-mute);
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  font-weight: 600;
+  font-weight: 700;
   margin-bottom: 0.25rem;
 }
 
@@ -205,22 +192,20 @@
 }
 
 .sectionTitle {
-  font-family: var(--font-board);
-  font-size: var(--step-0);
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: 400;
+  font-style: italic;
   color: var(--ink);
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
 }
 
 .card {
   background: var(--panel);
   border: 1px solid var(--panel-line);
-  border-radius: var(--r-lg);
+  border-radius: var(--r-xl);
   padding: 1.25rem;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .divider {
@@ -239,15 +224,15 @@
 
 .inputLabel {
   font-size: var(--step-0);
-  font-weight: 600;
+  font-weight: 700;
   color: var(--ink-mute);
 }
 
 .savingsFieldWrap {
   display: flex;
-  background: var(--canvas);
+  background: var(--panel-2);
   border: 1px solid var(--panel-line);
-  border-radius: var(--r-md);
+  border-radius: var(--r-lg);
   overflow: hidden;
   align-items: center;
   flex: 0.7;
@@ -282,10 +267,10 @@
 
 .rateCaption {
   font-size: var(--step--2);
-  color: var(--ok);
+  color: var(--income-text);
   text-align: right;
   margin-top: 0.5rem;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .visaDaysRow {
@@ -297,14 +282,15 @@
 .visaPill {
   flex: 1;
   padding: 0.5rem 0;
-  background: var(--canvas);
+  background: var(--panel-2);
   border: 1px solid var(--panel-line);
   color: var(--ink-mute);
   font-family: var(--font-board);
   font-size: var(--step--1);
-  border-radius: var(--r-md);
+  font-weight: 700;
+  border-radius: var(--r-pill);
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all var(--duration-fast);
 }
 
 .visaPillActive {
@@ -314,9 +300,9 @@
 }
 
 .customVisaInput {
-  background: var(--canvas);
+  background: var(--panel-2);
   border: 1px solid var(--panel-line);
-  border-radius: var(--r-md);
+  border-radius: var(--r-lg);
   color: var(--ink);
   font-family: var(--font-board);
   font-size: var(--step--1);
@@ -333,7 +319,7 @@
 }
 
 .presetHighlight {
-  color: var(--electric);
+  color: var(--ink);
   font-weight: 700;
   text-transform: uppercase;
 }
@@ -347,20 +333,20 @@
 .presetBtn {
   flex: 1;
   padding: 0.625rem 0.5rem;
-  background: var(--panel);
+  background: var(--panel-2);
   border: 1px solid var(--panel-line);
-  border-radius: var(--r-md);
+  border-radius: var(--r-pill);
   color: var(--ink-mute);
   font-size: var(--step--1);
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all var(--duration-fast);
 }
 
 .presetBtnActive {
-  background: rgba(45, 212, 232, 0.08);
-  border-color: var(--electric);
-  color: var(--electric);
+  background: var(--electric);
+  border-color: transparent;
+  color: var(--on-electric);
 }
 
 .sliderGroup {
@@ -377,7 +363,7 @@
 
 .sliderName {
   font-size: var(--step-0);
-  font-weight: 600;
+  font-weight: 700;
   color: var(--ink);
 }
 
@@ -385,15 +371,15 @@
   font-family: var(--font-board);
   font-size: var(--step-0);
   font-weight: 700;
-  color: var(--electric);
+  color: var(--ink);
 }
 
 .slider {
   -webkit-appearance: none;
   width: 100%;
   height: 6px;
-  background: var(--canvas);
-  border-radius: 3px;
+  background: var(--panel-2);
+  border-radius: var(--r-pill);
   outline: none;
   margin: 0.5rem 0;
 }
@@ -404,10 +390,9 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: var(--electric);
+  background: var(--ink);
   cursor: pointer;
-  box-shadow: 0 0 10px rgba(45, 212, 232, 0.5);
-  transition: transform 0.1s;
+  transition: transform var(--duration-fast) var(--ease-spring);
 }
 
 .slider::-webkit-slider-thumb:hover {
@@ -430,13 +415,13 @@
 .jobSearchLabel {
   font-size: var(--step-0);
   color: var(--ink-mute);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .jobSearchTotal {
   font-family: var(--font-board);
   font-size: var(--step-1);
-  color: var(--over);
+  color: var(--expense-text);
   font-weight: 700;
 }
 
@@ -477,7 +462,7 @@
 
 .jsTxnNote {
   font-size: var(--step-0);
-  font-weight: 600;
+  font-weight: 700;
   color: var(--ink);
   text-transform: capitalize;
 }
@@ -491,7 +476,7 @@
   font-family: var(--font-board);
   font-size: var(--step-0);
   font-weight: 700;
-  color: var(--over);
+  color: var(--expense-text);
 }
 
 .moreTxnsText {
@@ -519,7 +504,7 @@
   font-size: var(--step--1);
   color: var(--ink-faint);
   text-transform: uppercase;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .costTable td {
@@ -534,7 +519,7 @@
 .costTable td:nth-child(2) {
   font-family: var(--font-board);
   font-weight: 700;
-  color: var(--electric);
+  color: var(--ink);
   white-space: nowrap;
 }
 
@@ -548,7 +533,7 @@
 .tipItem {
   background: var(--panel);
   border: 1px solid var(--panel-line);
-  border-radius: var(--r-md);
+  border-radius: var(--r-lg);
   padding: 1rem;
   display: flex;
   gap: 0.75rem;
@@ -557,7 +542,7 @@
 }
 
 .tipIcon {
-  color: var(--amber);
+  color: var(--ink);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -582,7 +567,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  min-height: 100dvh;
   background: var(--canvas);
 }
 
@@ -590,7 +575,7 @@
   width: 32px;
   height: 32px;
   border: 3px solid var(--panel-line);
-  border-top-color: var(--electric);
+  border-top-color: var(--ink);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -624,8 +609,8 @@
   font-family: var(--font-board);
   font-size: var(--step-0);
   font-weight: 700;
-  color: var(--electric);
-  background: var(--canvas);
+  color: var(--ink);
+  background: var(--panel-2);
   border: 1px solid var(--panel-line);
   border-radius: var(--r-sm);
   width: 90px;
@@ -642,7 +627,7 @@
 }
 
 .categoryInput:focus {
-  border-color: var(--electric);
+  border-color: var(--ink-mute);
 }
 
 .categoryInput:disabled {
@@ -655,4 +640,3 @@
 .sliderDisabled {
   opacity: 0.45;
 }
-

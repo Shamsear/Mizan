@@ -14,33 +14,43 @@
   overflow-y: auto;
 }
 
+/* Ambient glow */
+.container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 80% at 50% -10%, var(--gradient-start) 0%, var(--canvas) 60%);
+  pointer-events: none;
+}
+
 .card {
+  position: relative;
   width: 100%;
   max-width: 360px;
   background: var(--panel);
   border: 1px solid var(--panel-line);
-  border-radius: var(--r-lg);
+  border-radius: var(--r-xl);
   padding: var(--sp-6) var(--sp-5);
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  box-shadow: var(--shadow-sm);
+  z-index: 10;
 }
 
 .brand {
-  font-family: var(--font-board);
-  font-size: var(--step-0);
-  color: var(--electric);
-  letter-spacing: 0.1em;
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--ink);
   margin-bottom: var(--sp-4);
-  text-shadow: var(--shadow-glow);
 }
 
 .appIconCircle {
   width: 72px;
   height: 72px;
-  border-radius: 50%;
+  border-radius: var(--r-xl);
   background: var(--panel-2);
   display: flex;
   align-items: center;
@@ -50,11 +60,11 @@
 }
 
 .title {
-  font-family: var(--font-board);
+  font-family: var(--font-display);
   font-size: var(--step-1);
+  font-weight: 400;
+  font-style: italic;
   color: var(--ink);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
   margin-bottom: var(--sp-2);
 }
 
@@ -62,7 +72,7 @@
   font-family: var(--font-body);
   font-size: var(--step--1);
   color: var(--ink-mute);
-  line-height: 1.5;
+  line-height: 1.55;
   margin-bottom: var(--sp-5);
 }
 
@@ -81,7 +91,7 @@
   background: var(--panel-2);
   border: 1px solid var(--panel-line);
   padding: var(--sp-3);
-  border-radius: var(--r-md);
+  border-radius: var(--r-lg);
 }
 
 .stepNum {
@@ -89,14 +99,14 @@
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: var(--electric);
-  color: var(--ink-invert);
+  background: var(--ink);
+  color: var(--canvas);
   font-family: var(--font-board);
   font-size: var(--step--2);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: bold;
+  font-weight: 700;
 }
 
 .stepText {
@@ -117,16 +127,16 @@
   height: 32px;
   background: var(--panel);
   border: 1px solid var(--panel-line);
-  border-radius: var(--r-sm);
-  color: var(--electric);
+  border-radius: var(--r-md);
+  color: var(--ink-mute);
 }
 
-/* ── Apple Notice (Wrong Browser) ── */
+/* ── Apple Notice ── */
 .appleNotice {
   width: 100%;
-  background: color-mix(in srgb, var(--over) 4%, var(--panel-2));
-  border: 1px dashed var(--over);
-  border-radius: var(--r-md);
+  background: var(--expense-bg);
+  border: 1px solid transparent;
+  border-radius: var(--r-lg);
   padding: var(--sp-4);
   display: flex;
   flex-direction: column;
@@ -135,20 +145,24 @@
 
 .warningIcon {
   margin-bottom: var(--sp-2);
+  color: var(--expense-text);
 }
 
 .warningTitle {
   font-family: var(--font-board);
   font-size: var(--step--1);
-  color: var(--ink);
+  font-weight: 700;
+  color: var(--expense-text);
   margin-bottom: var(--sp-2);
   text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .warningText {
   font-family: var(--font-body);
   font-size: var(--step--2);
-  color: var(--ink-mute);
+  color: var(--expense-text);
+  opacity: 0.9;
   line-height: 1.5;
   margin-bottom: var(--sp-4);
 }
@@ -157,16 +171,17 @@
   font-family: var(--font-board);
   font-size: var(--step--2);
   letter-spacing: 0.05em;
-  background: var(--over);
-  color: var(--ink-invert);
+  font-weight: 700;
+  background: var(--electric);
+  color: var(--on-electric);
   border: none;
   padding: 8px 16px;
-  border-radius: var(--r-sm);
+  border-radius: var(--r-pill);
   display: flex;
   align-items: center;
   gap: 8px;
   cursor: pointer;
-  transition: opacity 0.15s, background-color 0.25s ease, transform 0.1s ease;
+  transition: all var(--duration-fast) var(--ease-spring);
   text-transform: uppercase;
 }
 
@@ -175,11 +190,12 @@
 }
 
 .copyBtn:active {
-  transform: scale(0.97);
+  transform: scale(0.95);
 }
 
 .copyBtn.copied {
-  background: var(--ok);
+  background: var(--income-bg);
+  color: var(--income-text);
 }
 
 /* ── Android Prompt ── */
@@ -193,25 +209,29 @@
 .installBtn {
   width: 100%;
   background: var(--electric);
-  color: var(--ink-invert);
+  color: var(--on-electric);
   font-family: var(--font-board);
   font-size: var(--step--1);
   letter-spacing: 0.05em;
   font-weight: 700;
   border: none;
   padding: 12px;
-  border-radius: var(--r-md);
+  border-radius: var(--r-pill);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--sp-2);
   text-transform: uppercase;
-  transition: opacity 0.15s;
+  transition: all var(--duration-fast) var(--ease-spring);
 }
 
 .installBtn:hover {
   opacity: 0.9;
+}
+
+.installBtn:active {
+  transform: scale(0.96);
 }
 
 .installSub {

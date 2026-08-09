@@ -15,40 +15,40 @@
   gap: var(--sp-2);
 }
 
-/* A chip reads like a departures-board row: label left, amount right. */
+/* A chip reads like a departures-board row */
 .chip {
   display: flex;
   align-items: center;
   gap: var(--sp-3);
   min-height: var(--tap);
-  padding: var(--sp-3) var(--sp-3);
+  padding: var(--sp-3);
   background: var(--panel);
   border: 1px solid var(--panel-line);
-  border-radius: var(--r-md);
+  border-radius: var(--r-lg);
   text-align: left;
   transition:
-    transform 120ms var(--ease-out),
-    border-color 120ms,
-    background 120ms;
+    transform 100ms var(--ease-spring),
+    border-color var(--duration-fast),
+    background var(--duration-fast);
 }
 
 .chip:hover {
-  border-color: color-mix(in srgb, var(--electric) 45%, var(--panel-line));
+  border-color: var(--ink-faint);
 }
 
 .chip:active {
-  transform: translateY(1px) scale(0.99);
+  transform: scale(0.97);
   background: var(--panel-2);
 }
 
 .icon {
   display: grid;
   place-items: center;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   flex: none;
   font-size: 1rem;
-  border-radius: var(--r-sm);
+  border-radius: var(--r-md);
   background: var(--panel-2);
 }
 
@@ -61,6 +61,7 @@
 
 .chipLabel {
   font-size: var(--step-0);
+  font-weight: 700;
   color: var(--ink);
   white-space: nowrap;
   overflow: hidden;
@@ -70,18 +71,19 @@
 .amount {
   font-family: var(--font-board);
   font-size: var(--step--1);
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.02em;
 }
 
 .income {
-  color: var(--ok);
+  color: var(--income-text);
 }
 .expense {
-  color: var(--over);
+  color: var(--expense-text);
 }
 
-/* the "add new template" chip is quieter */
+/* "add new template" chip */
 .add {
   justify-content: center;
   color: var(--ink-mute);
@@ -94,11 +96,11 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--electric);
+  color: var(--ink-mute);
   cursor: pointer;
-  transition: opacity 0.15s;
+  transition: color var(--duration-fast);
 }
 
 .editLink:hover {
-  opacity: 0.8;
+  color: var(--ink);
 }
