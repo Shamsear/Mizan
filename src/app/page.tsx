@@ -75,6 +75,15 @@ export default function Home() {
         rec.onerror = (e: any) => {
           console.error("Speech recognition error:", e);
           setIsListening(false);
+          if (e.error === "not-allowed") {
+            toast.error("Microphone access denied. Please enable microphone permission in your browser settings.");
+          } else if (e.error === "no-speech") {
+            toast.error("No speech detected. Please speak clearly into your microphone.");
+          } else if (e.error === "network") {
+            toast.error("Speech recognition requires an internet connection.");
+          } else {
+            toast.error(`Voice recognition error: ${e.error || "unknown"}`);
+          }
         };
 
         rec.onresult = (event: any) => {
@@ -92,17 +101,22 @@ export default function Home() {
 
   function toggleListening() {
     if (!recognition) {
-      toast.error("Voice logging not supported on this browser.");
+      toast.error("Voice logging is not supported on this browser. Try Chrome, Edge, or Safari.");
       return;
     }
 
     if (isListening) {
-      recognition.stop();
+      try {
+        recognition.stop();
+      } catch (err) {
+        console.error("Failed to stop voice logging:", err);
+      }
     } else {
       try {
         recognition.start();
       } catch (err) {
         console.error("Failed to start voice logging:", err);
+        toast.error("Could not activate microphone. Check browser permissions.");
       }
     }
   }
