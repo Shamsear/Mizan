@@ -54,6 +54,7 @@
   background: var(--panel-2);
   border: 1px solid var(--panel-line);
   border-radius: var(--r-pill);
+  margin-bottom: 0.25rem;
 }
 
 .typeBtn {
@@ -150,9 +151,9 @@
 }
 
 .input,
-.select {
+.select,
+.textarea {
   width: 100%;
-  height: 38px;
   box-sizing: border-box;
   padding: 0;
   background: transparent;
@@ -161,6 +162,16 @@
   font-size: var(--step-0);
   color: var(--ink);
   outline: none;
+}
+
+.input,
+.select {
+  height: 38px;
+}
+
+.textarea {
+  resize: none;
+  padding-top: 0.25rem;
 }
 
 .select {
@@ -172,38 +183,89 @@
   background-size: 1.1rem;
 }
 
+/* iOS-style toggle switch row for auto-post */
 .checkboxField {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 1rem;
   border-bottom: 1px solid var(--panel-line);
   padding-bottom: 0.75rem;
 }
 
 .checkboxLabel {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-}
-
-.checkboxTitle {
+  font-family: var(--font-body);
   font-size: var(--step--1);
-  font-weight: 700;
-  color: var(--ink);
-}
-
-.checkboxDesc {
-  font-size: var(--step--2);
-  color: var(--ink-faint);
-}
-
-.checkboxInput {
-  width: 20px;
-  height: 20px;
-  border-radius: var(--r-sm);
-  border: 1px solid var(--panel-line);
-  accent-color: var(--electric);
+  font-weight: 500;
+  color: var(--ink-mute);
   cursor: pointer;
+  user-select: none;
+}
+
+.checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 44px;
+  height: 24px;
+  background: var(--panel-3);
+  border-radius: var(--r-pill);
+  position: relative;
+  outline: none;
+  cursor: pointer;
+  flex-shrink: 0;
+  border: 1px solid var(--panel-line);
+  transition: background-color var(--duration-fast) ease;
+}
+
+.checkbox::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--ink-mute);
+  transition: transform var(--duration-fast) var(--ease-spring);
+}
+
+.checkbox:checked {
+  background-color: var(--ok);
+  border-color: var(--ok);
+}
+
+.checkbox:checked::after {
+  transform: translateX(20px);
+  background: var(--canvas);
+}
+
+.quickDates {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.quickDateBtn {
+  flex: 1;
+  padding: 0.5rem;
+  background: var(--panel-2);
+  border: 1px solid var(--panel-line);
+  border-radius: var(--r-pill);
+  font-size: var(--step--2);
+  font-weight: 700;
+  font-family: var(--font-board);
+  color: var(--ink-mute);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-spring);
+}
+
+.quickDateBtn:hover {
+  color: var(--ink);
+  border-color: var(--ink-faint);
+}
+
+.quickDateBtn:active {
+  transform: scale(0.95);
 }
 
 .error {
