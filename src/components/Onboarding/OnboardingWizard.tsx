@@ -184,7 +184,12 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
   const [billError, setBillError] = useState("");
 
   // Step 4 (Job Seeker) — Budget Preset Selection
-  const [jsBudgetPreset, setJsBudgetPreset] = useState<"survival" | "standard" | "comfortable">("survival");
+  const [jsBudgetPreset, setJsBudgetPreset] = useState<"survival" | "standard" | "comfortable" | "custom">("survival");
+  const [customRent, setCustomRent] = useState("500");
+  const [customFood, setCustomFood] = useState("300");
+  const [customTransport, setCustomTransport] = useState("100");
+  const [customData, setCustomData] = useState("50");
+  const [customMisc, setCustomMisc] = useState("50");
 
   // Step 5 (Worker) — Goal
   const [goalName, setGoalName] = useState("Emergency Fund");
@@ -206,11 +211,20 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
   const jsSavingsCents = Math.round(parseFloat(jsSavingsAmount.replace(/,/g, "")) * 100) || 0;
   const jsSavingsQAR = Math.round((jsSavingsCents / exchangeRate)); // in cents
 
+  // Custom preset calculations
+  const parsedRent = parseFloat(customRent) || 0;
+  const parsedFood = parseFloat(customFood) || 0;
+  const parsedTransport = parseFloat(customTransport) || 0;
+  const parsedData = parseFloat(customData) || 0;
+  const parsedMisc = parseFloat(customMisc) || 0;
+  const customTotal = parsedRent + parsedFood + parsedTransport + parsedData + parsedMisc;
+
   // Presets definition
   const presets = {
     survival: { rent: 450, food: 200, transport: 70, data: 30, total: 750, name: "Survival Mode" },
     standard: { rent: 900, food: 400, transport: 200, data: 100, total: 1600, name: "Standard Mode" },
     comfortable: { rent: 1800, food: 700, transport: 400, data: 100, total: 3000, name: "Comfortable Mode" },
+    custom: { rent: parsedRent, food: parsedFood, transport: parsedTransport, data: parsedData, total: customTotal, name: "Custom Mode" },
   };
 
   /* ── Step 3 (Worker): Save Income ── */
@@ -400,6 +414,11 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
         qatarHomeCurrency: jsHomeCurrency,
         qatarExchangeRate: exchangeRate,
         qatarBudgetPreset: jsBudgetPreset,
+        qatarCustomRent: presets[jsBudgetPreset].rent,
+        qatarCustomFood: presets[jsBudgetPreset].food,
+        qatarCustomTransport: presets[jsBudgetPreset].transport,
+        qatarCustomData: presets[jsBudgetPreset].data,
+        qatarCustomMisc: jsBudgetPreset === "custom" ? parsedMisc : 50,
       };
       localStorage.setItem("mizan_onboarding_temp", JSON.stringify(setupData));
       router.push("/sign-up");
@@ -410,6 +429,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
     try {
       // 1. Update Settings with Job Seeker fields
       const presetData = presets[jsBudgetPreset];
+      const miscVal = jsBudgetPreset === "custom" ? parsedMisc : 50;
       await updateSettings(user.id, {
         profileType: "jobseeker",
         baseCurrency: "QAR",
@@ -422,7 +442,7 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
         qatarCustomFoodCents: presetData.food * 100,
         qatarCustomTransportCents: presetData.transport * 100,
         qatarCustomDataCents: presetData.data * 100,
-        qatarCustomMiscCents: 50 * 100, // CVs and Job Hunting miscellaneous
+        qatarCustomMiscCents: miscVal * 100, // CVs and Job Hunting miscellaneous
       });
 
       // 2. Set up initial transactions for their capital injection if they have transactions empty
@@ -803,8 +823,12 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
             <p className={styles.body}>Based on realistic cost of living in Qatar. You can adjust details later.</p>
 
             <div className={styles.presetSelectorGrid}>
-              {(["survival", "standard", "comfortable"] as const).map((presetKey) => {
+              {(["survival", "standard", "comfortable", "custom"] as const).map((presetKey) => {
                 const preset = presets[presetKey];
+                const presetTotal = preset.total;
+                const cardDailyBurn = presetTotal > 0 ? (presetTotal * 100) / 30 : 1;
+                const cardRunwayDays = Math.floor(jsSavingsQAR / cardDailyBurn);
+
                 return (
                   <div
                     key={presetKey}
@@ -813,15 +837,74 @@ export function OnboardingWizard({ onComplete }: OnboardingWizardProps) {
                   >
                     <div className={styles.presetHeader}>
                       <span className={styles.presetName}>{preset.name}</span>
-                      <span className={styles.presetCost}>QR {preset.total} / mo</span>
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "2px" }}>
+                        <span className={styles.presetCost}>QR {presetTotal} / mo</span>
+                        <span style={{ fontSize: "10px", color: "var(--electric)", fontWeight: 600 }}>
+                          {cardRunwayDays} Days Runway
+                        </span>
+                      </div>
                     </div>
                     <span className={styles.presetDetails}>
-                      Rent: QR {preset.rent} • Food: QR {preset.food} • Travel: QR {preset.transport} • Data: QR {preset.data}
+                      {presetKey === "custom" ? (
+                        "Set custom monthly limits for rent, food, travel, and mobile data caps."
+                      ) : (
+                        `Rent: QR ${preset.rent} • Food: QR ${preset.food} • Travel: QR ${preset.transport} • Data: QR ${preset.data}`
+                      )}
                     </span>
                   </div>
                 );
               })}
             </div>
+
+            {jsBudgetPreset === "custom" && (
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginTop: "1rem", width: "100%" }}>
+                <div className={styles.field}>
+                  <label className={styles.fieldLabel}>Rent (QR)</label>
+                  <input
+                    type="number"
+                    className={styles.textInput}
+                    value={customRent}
+                    onChange={(e) => setCustomRent(e.target.value)}
+                  />
+                </div>
+                <div className={styles.field}>
+                  <label className={styles.fieldLabel}>Food (QR)</label>
+                  <input
+                    type="number"
+                    className={styles.textInput}
+                    value={customFood}
+                    onChange={(e) => setCustomFood(e.target.value)}
+                  />
+                </div>
+                <div className={styles.field}>
+                  <label className={styles.fieldLabel}>Travel (QR)</label>
+                  <input
+                    type="number"
+                    className={styles.textInput}
+                    value={customTransport}
+                    onChange={(e) => setCustomTransport(e.target.value)}
+                  />
+                </div>
+                <div className={styles.field}>
+                  <label className={styles.fieldLabel}>Data (QR)</label>
+                  <input
+                    type="number"
+                    className={styles.textInput}
+                    value={customData}
+                    onChange={(e) => setCustomData(e.target.value)}
+                  />
+                </div>
+                <div className={styles.field} style={{ gridColumn: "span 2" }}>
+                  <label className={styles.fieldLabel}>Misc Job-Hunting (QR)</label>
+                  <input
+                    type="number"
+                    className={styles.textInput}
+                    value={customMisc}
+                    onChange={(e) => setCustomMisc(e.target.value)}
+                  />
+                </div>
+              </div>
+            )}
 
             <button
               className={styles.primaryBtn}
