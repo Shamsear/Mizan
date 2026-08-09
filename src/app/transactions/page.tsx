@@ -295,8 +295,9 @@ export default function TransactionsPage() {
       <FAB
         onClick={() => {
           setEditingTransaction(null);
-          setShowForm(true);
+          setShowForm(!showForm);
         }}
+        isOpen={showForm}
       />
 
       {showForm && (

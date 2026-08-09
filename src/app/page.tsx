@@ -425,7 +425,7 @@ export default function Home() {
         </section>
       </main>
 
-      <FAB onClick={() => setShowForm(true)} />
+      <FAB onClick={() => setShowForm(!showForm)} isOpen={showForm} />
 
       {showForm && (
         <TransactionForm

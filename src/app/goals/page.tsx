@@ -214,7 +214,7 @@ export default function GoalsPage() {
         </div>
       </main>
 
-      <FAB onClick={() => setShowForm(true)} icon="+" label="Add goal" />
+      <FAB onClick={() => setShowForm(!showForm)} isOpen={showForm} icon="+" label="Add goal" />
 
       {showForm && (
         <GoalForm

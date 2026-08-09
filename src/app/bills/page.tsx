@@ -357,7 +357,7 @@ export default function BillsPage() {
         )}
       </main>
 
-      <FAB onClick={() => setShowForm(true)} icon="+" label="Add recurring item" />
+      <FAB onClick={() => setShowForm(!showForm)} isOpen={showForm} icon="+" label="Add recurring item" />
 
       {showForm && (
         <RecurringRuleForm

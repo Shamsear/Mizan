@@ -475,7 +475,7 @@ export default function BudgetsPage() {
         </div>
       </main>
 
-      <FAB onClick={() => setShowForm(true)} icon="+" label="Fill Envelope" />
+      <FAB onClick={() => setShowForm(!showForm)} isOpen={showForm} icon="+" label="Fill Envelope" />
 
       {/* ─── Move Money Bottom Drawer ─── */}
       <Sheet open={showMoveMoney} onClose={() => setShowMoveMoney(false)} label="Move Money">

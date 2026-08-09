@@ -1,9 +1,10 @@
 .fab {
   position: fixed;
   /* Align bottom position to float directly above the navigation bar */
-  bottom: calc(var(--nav-h) + env(safe-area-inset-bottom, 16px) + 1rem);
+  bottom: calc(var(--nav-h) + env(safe-area-inset-bottom, 16px) + 1.25rem);
   right: 1.5rem;
-  z-index: 100;
+  /* z-index floats above backdrop overlay (which is 1000) so it remains clickable */
+  z-index: 1005;
 
   display: flex;
   align-items: center;
@@ -25,11 +26,25 @@
   cursor: pointer;
 
   transition:
-    transform var(--duration-fast) var(--ease-out),
-    box-shadow var(--duration-fast) var(--ease-out);
+    transform var(--duration-normal) var(--ease-spring),
+    background var(--duration-normal) var(--ease-spring),
+    box-shadow var(--duration-normal) var(--ease-spring);
   
   /* Idle breathing pulse */
   animation: fabBreathe 3s ease-in-out infinite;
+}
+
+/* Open Morphing Animation (+ becomes X, background becomes terracotta) */
+.fab[data-open="true"] {
+  background: var(--over);
+  color: var(--ink);
+  transform: rotate(135deg) scale(1.05);
+  box-shadow: 0 4px 16px rgba(210, 114, 99, 0.4);
+  animation: none;
+}
+
+.fab[data-open="true"] .icon {
+  transform: translateY(-0.5px); /* Optical alignment during rotation */
 }
 
 /* Symmetrical lock: floats in line with the centered navigation bar column */
@@ -49,8 +64,20 @@
   animation: none;
 }
 
+/* If already open, hover scaling stays centered on the rotate transform */
+.fab[data-open="true"]:hover {
+  transform: rotate(135deg) scale(1.12);
+  animation: none;
+}
+
 .fab:active {
   transform: scale(0.9);
+  animation: none;
+  transition: transform 80ms ease;
+}
+
+.fab[data-open="true"]:active {
+  transform: rotate(135deg) scale(0.95);
   animation: none;
   transition: transform 80ms ease;
 }
@@ -61,4 +88,5 @@
   justify-content: center;
   line-height: 1;
   transform: translateY(-1px); /* optical alignment centering the "+" */
+  transition: transform var(--duration-normal) var(--ease-spring);
 }
