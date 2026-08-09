@@ -40,9 +40,13 @@ export function BottomNav() {
     if (typeof window === "undefined") return;
     const isMqlStandalone =
       window.matchMedia("(display-mode: standalone)").matches ||
-      (window.navigator as any).standalone ||
+      (window.navigator as Navigator & { standalone?: boolean }).standalone ||
       document.referrer.includes("android-app://");
-    setIsStandalone(!!isMqlStandalone);
+    
+    const timer = setTimeout(() => {
+      setIsStandalone(!!isMqlStandalone);
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
 
   // 2. Keyboard detection using visualViewport API
