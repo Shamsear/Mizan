@@ -134,46 +134,47 @@
 
 /* ---- Dark Theme Overrides ---- */
 html.dark {
-  --canvas: #0e1116;
-  --gradient-start: #12161d;
-  --panel: #171b22;
-  --panel-2: #1f2530;
-  --panel-line: #2a3140;
-  --flap-slot: #05070a;
-  --flap-bg: #2d3440;
+  --canvas: #12100E;         /* Deep espresso black */
+  --gradient-start: #1D1916; /* Warm roast dark brown */
+  --panel: #1A1715;          /* Warm cocoa panel */
+  --panel-2: #24201D;        /* Warm clay inputs */
+  --panel-line: #332E2A;     /* Soft dark wood border */
+  --flap-slot: #090807;
+  --flap-bg: #2B2622;
 
-  --glass: rgba(14, 17, 22, 0.82);
-  --glass-border: rgba(42, 49, 64, 0.5);
+  --glass: rgba(18, 16, 14, 0.85);
+  --glass-border: rgba(51, 46, 42, 0.5);
+  --glass-blur: blur(20px) saturate(180%);
 
-  --ink: #eef2f8;
-  --ink-mute: #8a93a2;
-  --ink-faint: #5b6474;
-  --ink-invert: #0e1116;
+  --ink: #F5EFEB;            /* Warm linen off-white */
+  --ink-mute: #A39B94;       /* Soft sepia slate */
+  --ink-faint: #6E665F;       /* Dark taupe */
+  --ink-invert: #12100E;     /* Dark ink on white highlights */
 
-  --amber: #f5b942;
-  --amber-dim: #b98a2e;
+  --amber: #E2A76F;          /* Warm bronze/gold */
+  --amber-dim: #A8784B;
 
-  --electric: #2dd4e8;
-  --electric-press: #1fb4c7;
-  --on-electric: #05171b;
+  --electric: #F5EFEB;       /* High-contrast linen white */
+  --electric-press: #DDD7D3;
+  --on-electric: #12100E;
 
-  --ok: #57d9a3;
-  --warn: #f5b942;
-  --over: #ff6b5a;
+  --ok: #6BAF8D;             /* Glowing soft sage green */
+  --warn: #E5A962;
+  --over: #D27263;           /* Glowing warm terracotta */
 
-  --income-bg: rgba(87, 217, 163, 0.1);
-  --income-text: #57d9a3;
-  --expense-bg: rgba(255, 107, 90, 0.1);
-  --expense-text: #ff6b5a;
-  --warn-bg: rgba(245, 185, 66, 0.1);
-  --warn-text: #f5b942;
+  --income-bg: rgba(107, 175, 141, 0.12);
+  --income-text: #6BAF8D;
+  --expense-bg: rgba(210, 114, 99, 0.12);
+  --expense-text: #D27263;
+  --warn-bg: rgba(229, 169, 98, 0.12);
+  --warn-text: #E5A962;
 
-  --shadow-panel: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 2px 8px rgba(0, 0, 0, 0.4);
-  --shadow-flap: 0 2px 4px rgba(0, 0, 0, 0.5);
-  --shadow-glow: 0 0 20px rgba(45, 212, 232, 0.2);
-  --shadow-sheet: 0 -8px 40px rgba(0, 0, 0, 0.4);
-  --shadow-fab: 0 4px 24px rgba(45, 212, 232, 0.3), 0 2px 8px rgba(0, 0, 0, 0.4);
-  --shadow-toast: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  --shadow-panel: 0 1px 0 rgba(255, 255, 255, 0.02) inset, 0 2px 8px rgba(0, 0, 0, 0.5);
+  --shadow-flap: 0 2px 4px rgba(0, 0, 0, 0.6);
+  --shadow-glow: 0 0 20px rgba(245, 239, 235, 0.05);
+  --shadow-sheet: 0 -8px 40px rgba(0, 0, 0, 0.5);
+  --shadow-fab: 0 4px 24px rgba(245, 239, 235, 0.15), 0 2px 8px rgba(0, 0, 0, 0.5);
+  --shadow-toast: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
 
   --surface:       var(--panel);
   --surface-2:     var(--panel-2);
