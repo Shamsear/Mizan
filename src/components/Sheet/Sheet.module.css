@@ -5,7 +5,6 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  pointer-events: none; /* Let clicks pass to background if needed, but overlay handles blocking */
 }
 
 .overlay {
