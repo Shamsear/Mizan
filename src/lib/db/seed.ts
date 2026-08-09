@@ -1,4 +1,4 @@
-import { db, type Category, type Settings, type QuickAddTemplate } from "./dexie";
+import { db, type Category, type Settings } from "./dexie";
 import { detectCurrency } from "@/lib/currency";
 import { addMonths } from "date-fns";
 
@@ -79,7 +79,6 @@ export async function seedUserData(userId: string): Promise<void> {
       kind: "expense",
       color: "#ef4444",
       icon: "home",
-      monthlyBudgetCents: 80000,
       sortOrder: 10,
       deletedAt: null,
     },
@@ -90,7 +89,6 @@ export async function seedUserData(userId: string): Promise<void> {
       kind: "expense",
       color: "#f59e0b",
       icon: "utensils",
-      monthlyBudgetCents: 30000,
       sortOrder: 11,
       deletedAt: null,
     },
@@ -101,7 +99,6 @@ export async function seedUserData(userId: string): Promise<void> {
       kind: "expense",
       color: "#3b82f6",
       icon: "car",
-      monthlyBudgetCents: 15000,
       sortOrder: 12,
       deletedAt: null,
     },
@@ -112,7 +109,6 @@ export async function seedUserData(userId: string): Promise<void> {
       kind: "expense",
       color: "#22c55e",
       icon: "shopping-cart",
-      monthlyBudgetCents: 25000,
       sortOrder: 13,
       deletedAt: null,
     },
@@ -123,7 +119,6 @@ export async function seedUserData(userId: string): Promise<void> {
       kind: "expense",
       color: "#eab308",
       icon: "zap",
-      monthlyBudgetCents: 12000,
       sortOrder: 14,
       deletedAt: null,
     },
@@ -144,7 +139,6 @@ export async function seedUserData(userId: string): Promise<void> {
       kind: "expense",
       color: "#a855f7",
       icon: "clapperboard",
-      monthlyBudgetCents: 10000,
       sortOrder: 16,
       deletedAt: null,
     },
@@ -155,7 +149,6 @@ export async function seedUserData(userId: string): Promise<void> {
       kind: "expense",
       color: "#f43f5e",
       icon: "shopping-bag",
-      monthlyBudgetCents: 20000,
       sortOrder: 17,
       deletedAt: null,
     },
@@ -176,7 +169,6 @@ export async function seedUserData(userId: string): Promise<void> {
       kind: "expense",
       color: "#8b5cf6",
       icon: "smartphone",
-      monthlyBudgetCents: 5000,
       sortOrder: 19,
       deletedAt: null,
     },
@@ -246,114 +238,9 @@ export async function seedUserData(userId: string): Promise<void> {
   });
 
   /* ───────────────────────────────────────────────────────────────
-     Starter Quick-Add Templates
+     Import temporary guest onboarding data if present
      ─────────────────────────────────────────────────────────────── */
-
-  // Get category IDs for templates
-  const salaryCategory = await db.categories
-    .where("userId")
-    .equals(userId)
-    .filter((cat) => cat.name === "Salary")
-    .first();
-  
-  const housingCategory = await db.categories
-    .where("userId")
-    .equals(userId)
-    .filter((cat) => cat.name === "Housing")
-    .first();
-  
-  const foodCategory = await db.categories
-    .where("userId")
-    .equals(userId)
-    .filter((cat) => cat.name === "Food & Dining")
-    .first();
-  
-  const groceriesCategory = await db.categories
-    .where("userId")
-    .equals(userId)
-    .filter((cat) => cat.name === "Groceries")
-    .first();
-  
-  const transportCategory = await db.categories
-    .where("userId")
-    .equals(userId)
-    .filter((cat) => cat.name === "Transport")
-    .first();
-
-  if (salaryCategory && housingCategory && foodCategory && groceriesCategory && transportCategory) {
-    const starterTemplates: Omit<QuickAddTemplate, "createdAt" | "updatedAt">[] = [
-      {
-        id: generateId(),
-        userId,
-        label: "Salary",
-        amountCents: 400000,
-        currency: detected || "QAR",
-        type: "income",
-        categoryId: salaryCategory.id,
-        icon: "briefcase",
-        sortOrder: 0,
-        deletedAt: null,
-      },
-      {
-        id: generateId(),
-        userId,
-        label: "Room Rent",
-        amountCents: 80000,
-        currency: detected || "QAR",
-        type: "expense",
-        categoryId: housingCategory.id,
-        icon: "home",
-        sortOrder: 1,
-        deletedAt: null,
-      },
-      {
-        id: generateId(),
-        userId,
-        label: "Coffee",
-        amountCents: 300,
-        currency: detected || "QAR",
-        type: "expense",
-        categoryId: foodCategory.id,
-        icon: "coffee",
-        sortOrder: 2,
-        deletedAt: null,
-      },
-      {
-        id: generateId(),
-        userId,
-        label: "Groceries",
-        amountCents: 4500,
-        currency: detected || "QAR",
-        type: "expense",
-        categoryId: groceriesCategory.id,
-        icon: "shopping-cart",
-        sortOrder: 3,
-        deletedAt: null,
-      },
-      {
-        id: generateId(),
-        userId,
-        label: "Transport",
-        amountCents: 250,
-        currency: detected || "QAR",
-        type: "expense",
-        categoryId: transportCategory.id,
-        icon: "bus",
-        sortOrder: 4,
-        deletedAt: null,
-      },
-    ];
-
-    await db.quickAddTemplates.bulkAdd(
-      starterTemplates.map((tpl) => ({
-        ...tpl,
-        createdAt: now,
-        updatedAt: now,
-      })),
-    );
-
-    // Check for temporary guest onboarding data to import
-    if (typeof window !== "undefined" && window.localStorage) {
+  if (typeof window !== "undefined" && window.localStorage) {
       const temp = localStorage.getItem("mizan_onboarding_temp");
       if (temp) {
         try {
