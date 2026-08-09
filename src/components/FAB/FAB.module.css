@@ -43,10 +43,6 @@
   animation: none;
 }
 
-.fab[data-open="true"] .icon {
-  transform: translateY(-0.5px); /* Optical alignment during rotation */
-}
-
 /* Symmetrical lock: floats in line with the centered navigation bar column */
 @media (min-width: 480px) {
   .fab {
@@ -87,6 +83,5 @@
   align-items: center;
   justify-content: center;
   line-height: 1;
-  transform: translateY(-1px); /* optical alignment centering the "+" */
   transition: transform var(--duration-normal) var(--ease-spring);
 }
