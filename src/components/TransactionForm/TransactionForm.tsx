@@ -154,7 +154,6 @@ export function TransactionForm({
               placeholder="0.00"
               className={styles.amountInput}
               onChange={handleAmountChange}
-              autoFocus
             />
           </div>
           {errors.amountCents && (

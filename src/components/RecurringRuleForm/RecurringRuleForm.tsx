@@ -175,7 +175,6 @@ export function RecurringRuleForm({ ruleId, onClose, onSuccess }: RecurringRuleF
               placeholder="e.g. Netflix, Rent, Salary"
               {...register("label")}
               className={styles.input}
-              autoFocus
             />
             {errors.label && (
               <span className={styles.error}>{errors.label.message}</span>

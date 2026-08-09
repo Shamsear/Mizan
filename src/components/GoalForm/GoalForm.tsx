@@ -175,7 +175,6 @@ export function GoalForm({ goalId, onClose, onSuccess }: GoalFormProps) {
               placeholder="e.g. Emergency Fund, Laptop"
               {...register("name")}
               className={styles.input}
-              autoFocus
             />
             {errors.name && <span className={styles.error}>{errors.name.message}</span>}
           </div>

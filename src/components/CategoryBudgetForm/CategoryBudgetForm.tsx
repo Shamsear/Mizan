@@ -117,7 +117,6 @@ export function CategoryBudgetForm({
               onChange={(e) => setSelectedCategoryId(e.target.value)}
               className={styles.select}
               required
-              autoFocus
             >
               <option value="">Select a category</option>
               {categories?.map((cat) => (
@@ -161,7 +160,6 @@ export function CategoryBudgetForm({
               onChange={(e) => setBudgetAmount(e.target.value)}
               className={styles.amountInput}
               required
-              autoFocus={!!categoryId}
             />
           </div>
           <p className={styles.hint} style={{ marginTop: "0.5rem" }}>

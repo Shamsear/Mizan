@@ -52,6 +52,34 @@
   overscroll-behavior: contain;
 }
 
+/* Speech Bubble Triangular Pointer (Border shadow segment) */
+.sheet::before {
+  content: "";
+  position: absolute;
+  bottom: -11px; /* Align boundary */
+  right: 19px; /* Symmetrical FAB lock offset */
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 11px 11px 0 11px;
+  border-color: var(--panel-line) transparent transparent transparent;
+  z-index: 2;
+}
+
+/* Speech Bubble Triangular Pointer (Inner background segment) */
+.sheet::after {
+  content: "";
+  position: absolute;
+  bottom: -10px; /* Align slightly above border triangle to mask it */
+  right: 20px; /* Symmetrical FAB lock offset */
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 10px 10px 0 10px;
+  border-color: var(--panel) transparent transparent transparent;
+  z-index: 3;
+}
+
 /* On desktop/tablet, originate from bottom-right column alignment */
 @media (min-width: 480px) {
   .sheet {
