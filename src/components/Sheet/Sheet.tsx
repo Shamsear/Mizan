@@ -50,7 +50,11 @@ export function Sheet({ open, onClose, children, label }: SheetProps) {
       >
         {/* Drag handle */}
         <div className={styles.handle} aria-hidden="true" />
-        {children}
+        
+        {/* Scrollable inner content container */}
+        <div className={styles.content}>
+          {children}
+        </div>
         
         {/* Curved Speech Bubble Tail SVG */}
         <div className={styles.tailContainer} aria-hidden="true">

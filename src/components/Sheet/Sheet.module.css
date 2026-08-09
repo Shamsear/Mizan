@@ -28,15 +28,13 @@
   z-index: 2;
   pointer-events: auto; /* Handle form clicks */
   
-  /* Floating Cloud bubble parameters */
+  /* Floating directly above the bottom navigation bar, leaving room for FAB */
   width: calc(100% - 2rem);
   max-width: calc(var(--maxw) - 2rem);
   margin-inline: 1rem;
-  /* Floating directly above the bottom navigation bar */
-  margin-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom, 16px) + 2rem);
+  margin-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom, 16px) + 90px);
   
-  max-height: 70dvh;
-  overflow-y: auto;
+  overflow: visible; /* Prevent clipping the speech bubble tail */
   
   background: var(--panel);
   border: 1px solid var(--panel-line);
@@ -49,6 +47,11 @@
   /* Originate scale up exactly from the point of the speech bubble tail */
   transform-origin: calc(100% - 30px) bottom;
   animation: cloudScaleUp 0.38s var(--ease-spring) both;
+}
+
+.content {
+  max-height: calc(70dvh - 3.5rem);
+  overflow-y: auto;
   overscroll-behavior: contain;
 }
 
@@ -56,7 +59,7 @@
 .tailContainer {
   position: absolute;
   bottom: -27px; /* Overlap by 1px (height is 28px) to hide parent border */
-  right: 10px; /* Aligns pointer tip perfectly with FAB center on mobile */
+  right: 24px; /* Aligns pointer tip perfectly with FAB center on mobile */
   width: 40px;
   height: 28px;
   pointer-events: none;
@@ -75,7 +78,7 @@
     transform-origin: calc(100% - 70px) bottom;
   }
   .tailContainer {
-    right: 50px; /* Aligns pointer tip perfectly with FAB center on desktop/tablet */
+    right: 64px; /* Aligns pointer tip perfectly with FAB center on desktop/tablet */
   }
 }
 
