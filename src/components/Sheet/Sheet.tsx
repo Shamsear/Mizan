@@ -51,6 +51,23 @@ export function Sheet({ open, onClose, children, label }: SheetProps) {
         {/* Drag handle */}
         <div className={styles.handle} aria-hidden="true" />
         {children}
+        
+        {/* Curved Speech Bubble Tail SVG */}
+        <div className={styles.tailContainer} aria-hidden="true">
+          <svg
+            className={styles.tailSvg}
+            viewBox="0 0 40 28"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M 30,0 C 28,10 28,20 34,26 C 20,20 12,12 6,0"
+              fill="var(--panel)"
+              stroke="var(--panel-line)"
+              strokeWidth="1"
+            />
+          </svg>
+        </div>
       </div>
     </div>
   );

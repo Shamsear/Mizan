@@ -40,50 +40,42 @@
   
   background: var(--panel);
   border: 1px solid var(--panel-line);
-  border-radius: var(--r-card); /* Fully rounded cloud card */
+  border-radius: 28px; /* Smooth rounded bubble corners */
   box-shadow: 0 12px 48px rgba(0, 0, 0, 0.25), 0 0 0 1px var(--panel-line);
   
   padding: 1.5rem;
   padding-bottom: 2rem;
   
-  /* Originate scale up from bottom-right where the FAB button is located */
-  transform-origin: bottom right;
+  /* Originate scale up exactly from the point of the speech bubble tail */
+  transform-origin: calc(100% - 30px) bottom;
   animation: cloudScaleUp 0.38s var(--ease-spring) both;
   overscroll-behavior: contain;
 }
 
-/* Speech Bubble Triangular Pointer (Border shadow segment) */
-.sheet::before {
-  content: "";
+/* Custom Speech Bubble Curved SVG Tail styling */
+.tailContainer {
   position: absolute;
-  bottom: -11px; /* Align boundary */
-  right: 19px; /* Symmetrical FAB lock offset */
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 11px 11px 0 11px;
-  border-color: var(--panel-line) transparent transparent transparent;
-  z-index: 2;
+  bottom: -27px; /* Overlap by 1px (height is 28px) to hide parent border */
+  right: 10px; /* Aligns pointer tip perfectly with FAB center on mobile */
+  width: 40px;
+  height: 28px;
+  pointer-events: none;
+  z-index: 10;
 }
 
-/* Speech Bubble Triangular Pointer (Inner background segment) */
-.sheet::after {
-  content: "";
-  position: absolute;
-  bottom: -10px; /* Align slightly above border triangle to mask it */
-  right: 20px; /* Symmetrical FAB lock offset */
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 10px 10px 0 10px;
-  border-color: var(--panel) transparent transparent transparent;
-  z-index: 3;
+.tailSvg {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
-/* On desktop/tablet, originate from bottom-right column alignment */
+/* On desktop/tablet, originate from bottom-right column alignment and adjust tail offset */
 @media (min-width: 480px) {
   .sheet {
-    transform-origin: bottom right;
+    transform-origin: calc(100% - 70px) bottom;
+  }
+  .tailContainer {
+    right: 50px; /* Aligns pointer tip perfectly with FAB center on desktop/tablet */
   }
 }
 
