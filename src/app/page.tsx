@@ -82,6 +82,10 @@ export default function Home() {
         rec.onerror = (e: any) => {
           console.error("Speech recognition error:", e);
           setIsListening(false);
+          if (e.error === "aborted") {
+            // User manually stopped the recognition, ignore this error
+            return;
+          }
           if (e.error === "not-allowed") {
             toastRef.current.error("Microphone access denied. Please enable microphone permission in your browser settings.");
           } else if (e.error === "no-speech") {
