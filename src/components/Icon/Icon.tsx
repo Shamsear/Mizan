@@ -18,7 +18,8 @@ export type IconName =
   | "trash-2" | "alert-triangle" | "check-circle" | "plus" | "plus-circle"
   | "x" | "chevron-left" | "chevron-right" | "chevron-down" | "chevron-up"
   | "search" | "info" | "sparkles" | "arrow-up" | "arrow-down" | "tag" | "pen"
-  | "heart" | "users" | "bell" | "copy" | "check" | "star" | "gift" | "minus" | "mic" | "mic-off";
+  | "heart" | "users" | "bell" | "copy" | "check" | "star" | "gift" | "minus" | "mic" | "mic-off"
+  | "wifi-off" | "download" | "refresh-cw" | "moon" | "arrow-down-circle";
 
 interface IconProps {
   name: IconName | string;
@@ -485,6 +486,48 @@ export function Icon({
           <path d="M18.89 13.23A7.12 7.12 0 0 0 19 11v-1M5 10v1a7 7 0 0 0 12 5" />
           <path d="M15 9.34V5a3 3 0 0 0-5.68-1.33" />
           <line x1="12" x2="12" y1="19" y2="22" />
+        </svg>
+      );
+    case "wifi-off":
+      return (
+        <svg {...baseProps}>
+          <line x1="1" y1="1" x2="23" y2="23" />
+          <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.5" />
+          <path d="M5 12.5a10.94 10.94 0 0 1 5.83-2.84" />
+          <path d="M12 12.5a4.25 4.25 0 0 1 1-.5" />
+          <path d="M9.09 9.09A16.5 16.5 0 0 1 20 6" />
+          <path d="M4 6a16.54 16.54 0 0 1 7.15-2.07" />
+          <line x1="12" y1="20" x2="12.01" y2="20" />
+        </svg>
+      );
+    case "download":
+      return (
+        <svg {...baseProps}>
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+          <polyline points="7 10 12 15 17 10" />
+          <line x1="12" y1="15" x2="12" y2="3" />
+        </svg>
+      );
+    case "refresh-cw":
+      return (
+        <svg {...baseProps}>
+          <polyline points="23 4 23 10 17 10" />
+          <polyline points="1 20 1 14 7 14" />
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+        </svg>
+      );
+    case "moon":
+      return (
+        <svg {...baseProps}>
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        </svg>
+      );
+    case "arrow-down-circle":
+      return (
+        <svg {...baseProps}>
+          <circle cx="12" cy="12" r="10" />
+          <polyline points="8 12 12 16 16 12" />
+          <line x1="12" y1="8" x2="12" y2="16" />
         </svg>
       );
     default:
