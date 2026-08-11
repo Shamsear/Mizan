@@ -72,7 +72,26 @@ export default function RootLayout({
         },
       }}
     >
-      <html lang="en" className={`${mech.variable} ${grotesk.variable} ${serif.variable}`}>
+      <html lang="en" className={`${mech.variable} ${grotesk.variable} ${serif.variable}`} suppressHydrationWarning>
+        <head>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                try {
+                  const theme = localStorage.getItem("mizan_theme") || "system";
+                  const isDark = theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+                  if (isDark) {
+                    document.documentElement.classList.add("dark");
+                    document.documentElement.classList.remove("light");
+                  } else {
+                    document.documentElement.classList.add("light");
+                    document.documentElement.classList.remove("dark");
+                  }
+                } catch (e) {}
+              `,
+            }}
+          />
+        </head>
         <body>
           <div className="desktop-blocker">
             <div className="blocker-content">

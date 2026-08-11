@@ -69,7 +69,7 @@ export default function Home() {
         rec = new SpeechRecognition();
         rec.lang = "en-US";
         rec.continuous = false;
-        rec.interimResults = false;
+        rec.interimResults = true; // Real-time feedback for instant typing
 
         rec.onstart = () => {
           setIsListening(true);
@@ -92,16 +92,29 @@ export default function Home() {
             toastRef.current.error("No speech detected. Please speak clearly into your microphone.");
           } else if (e.error === "network") {
             toastRef.current.error("Speech recognition requires an internet connection.");
+          } else if (e.error === "audio-capture") {
+            toastRef.current.error("Microphone hardware error. Check if another app is using your mic.");
           } else {
             toastRef.current.error(`Voice recognition error: ${e.error || "unknown"}`);
           }
         };
 
         rec.onresult = (event: any) => {
-          const transcript = event.results[0][0].transcript;
+          let transcript = "";
+          let isFinal = false;
+
+          for (let i = 0; i < event.results.length; i++) {
+            transcript += event.results[i][0].transcript;
+            if (event.results[i].isFinal) {
+              isFinal = true;
+            }
+          }
+
           if (transcript) {
             setSmartInput(transcript);
-            toastRef.current.success("Voice captured! Tap + to log.");
+            if (isFinal) {
+              toastRef.current.success("Voice captured! Tap + to log.");
+            }
           }
         };
 

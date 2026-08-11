@@ -61,6 +61,10 @@ export function DBInit() {
         root.classList.add("light");
         root.classList.remove("dark");
       }
+
+      try {
+        localStorage.setItem("mizan_theme", theme);
+      } catch (e) {}
     };
 
     applyTheme();
