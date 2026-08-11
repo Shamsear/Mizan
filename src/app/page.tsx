@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import { UserButton } from "@clerk/nextjs";
 import { SafeToSpendCard } from "@/components/SafeToSpendCard/SafeToSpendCard";
 import { FAB } from "@/components/FAB/FAB";
@@ -37,6 +37,11 @@ export default function Home() {
   const safeToSpendData = useSafeToSpend();
   const isOnline = useOnlineStatus();
   const toast = useToast();
+  const toastRef = useRef(toast);
+  useEffect(() => {
+    toastRef.current = toast;
+  }, [toast]);
+
   const [showForm, setShowForm] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -56,10 +61,12 @@ export default function Home() {
   }, [recurringRules, user, isLoaded]);
 
   useEffect(() => {
+    let rec: any = null;
+
     if (typeof window !== "undefined") {
       const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
       if (SpeechRecognition) {
-        const rec = new SpeechRecognition();
+        rec = new SpeechRecognition();
         rec.lang = "en-US";
         rec.continuous = false;
         rec.interimResults = false;
@@ -76,13 +83,13 @@ export default function Home() {
           console.error("Speech recognition error:", e);
           setIsListening(false);
           if (e.error === "not-allowed") {
-            toast.error("Microphone access denied. Please enable microphone permission in your browser settings.");
+            toastRef.current.error("Microphone access denied. Please enable microphone permission in your browser settings.");
           } else if (e.error === "no-speech") {
-            toast.error("No speech detected. Please speak clearly into your microphone.");
+            toastRef.current.error("No speech detected. Please speak clearly into your microphone.");
           } else if (e.error === "network") {
-            toast.error("Speech recognition requires an internet connection.");
+            toastRef.current.error("Speech recognition requires an internet connection.");
           } else {
-            toast.error(`Voice recognition error: ${e.error || "unknown"}`);
+            toastRef.current.error(`Voice recognition error: ${e.error || "unknown"}`);
           }
         };
 
@@ -90,14 +97,24 @@ export default function Home() {
           const transcript = event.results[0][0].transcript;
           if (transcript) {
             setSmartInput(transcript);
-            toast.success("Voice captured! Tap + to log.");
+            toastRef.current.success("Voice captured! Tap + to log.");
           }
         };
 
         setRecognition(rec);
       }
     }
-  }, [toast]);
+
+    return () => {
+      if (rec) {
+        try {
+          rec.abort();
+        } catch (err) {
+          console.error("Failed to abort recognition on cleanup:", err);
+        }
+      }
+    };
+  }, []);
 
   function toggleListening() {
     if (!recognition) {
